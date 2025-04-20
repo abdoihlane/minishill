@@ -3,11 +3,10 @@
 void CommandOrnot(pars_T *pars,c_list **clist,w_list **wlist)
 {
     int i = 1;
-
     clst_addback(clist,ccreate_node(pars->content1[0]));
     while(pars->content1[i])
     {
-        if(ft_strcmp(pars->content1[i],"|") == 0)
+        if(pars->content1[i] && ft_strcmp(pars->content1[i],"|") == 0)
         {
             wlst_addback(wlist,wcreate_node(pars->content1[i]));
             i++;
@@ -20,9 +19,8 @@ void CommandOrnot(pars_T *pars,c_list **clist,w_list **wlist)
             i++;
         }
     }
-
 }
-
+// quets single or double ---> checki flag open = 0 if u find a quets flag = 1 --> cmp char ' or "   
 void checkClosedQuote(pars_T *pars, char c ,int start)
 {
     int len = 0;
@@ -36,15 +34,17 @@ void checkClosedQuote(pars_T *pars, char c ,int start)
             pars->i++;
             len++;
         }
+        // if(pars->content[pars->i] == '\0' || pars->content[pars->i] != c)
+        //     //flag = 0;
         len++;
         pars->content1[pars->k] = malloc(len + 1);
         int j =0;
-        while(j <= len)
+        while(j < len)
         {
             pars->content1[pars->k][j] = pars->content[start + j];
             j++;
         }
-        pars->content1[pars->k][len+1] = '\0';
+        pars->content1[pars->k][len] = '\0';
         pars->k++;
         pars->i++;
     }
@@ -75,12 +75,12 @@ void print_list1(w_list *list)
 
 int valid(char c)
 {
-    return (c > 32);
+    return (c !=  32 && !(c >= 9 && c <= 13));
 }
 
 void SkipWhiteSpaces(pars_T *pars)
 {
-    while (pars->content[pars->i] && pars->content[pars->i] <= 32)
+    while (pars->content[pars->i] && valid(pars->content[pars->i]))
         pars->i++;
     pars->c = pars->content[pars->i];
 }
@@ -115,7 +115,7 @@ void fill_the_array(pars_T *pars)
     {
         SkipWhiteSpaces(pars);
         if (pars->content[pars->i] == '\0')
-        break;
+            break;
         if (pars->content[pars->i] == '\'' ||  pars->content[pars->i] == '\"')
         {
                 if(pars->content[pars->i] == '\"')
@@ -178,22 +178,23 @@ void call_all(char *in,pars_T *pars,c_list **clist,w_list **wlist)
 {
     pars = count_and_allocate(in,pars);
     fill_the_array(pars);
+    printf("ss\n");
     CommandOrnot(pars,clist,wlist);
 }
-int main(int ac, char **av)
+int main()
 {
     // if (ac < 2)
     //     return 1;
     char *in;
     c_list *clist = NULL;
     w_list *wlist = NULL;
-    pars_T *pars;
+    pars_T *pars = NULL;
     while(1)
     {
         in = readline("➜  mini_with_salah ");
         call_all(in,pars,&clist,&wlist);
-        print_list1(wlist);
-        print_list(clist);
+        // print_list(clist);
+        // print_list1(wlist);
         // free_wlist(&wlist);
         // free_clist(&clist);
     }

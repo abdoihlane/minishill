@@ -35,6 +35,7 @@ int ft_strcmp(char *s1, char *s2)
 	}
 	return 0;
 }
+
 void	clst_addback(c_list **lst, c_list *node)
 {
 	c_list	*tmp;
