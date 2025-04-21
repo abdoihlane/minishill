@@ -1,6 +1,6 @@
 NAME = minishell
 
-SRC = parsing.c linked_list.c 
+SRC = parsing1.c linked_list.c 
 
 CC = cc
 

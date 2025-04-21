@@ -2,26 +2,128 @@
 
 void CommandOrnot(pars_T *pars, c_list **clist, w_list **wlist)
 {
-    int i = 1;
-    clst_addback(clist, ccreate_node(pars->content1[0]));
+    int i = 0;
+    // clst_addback(clist, ccreate_node(pars->content1[0]));
     while (pars->content1[i])
     {
-        if (ft_strcmp(pars->content1[i], "|") == 0)
-        {
+        // if (ft_strcmp(pars->content1[i], "|") == 0)
+        // {
+        //     wlst_addback(wlist, wcreate_node(pars->content1[i]));
+        //     i++;
+        //     if (pars->content1[i])
+        //         clst_addback(clist, ccreate_node(pars->content1[i]));
+        //     i++;
+        // }
+        // else
+        // {
             wlst_addback(wlist, wcreate_node(pars->content1[i]));
             i++;
-            if (pars->content1[i])
-                clst_addback(clist, ccreate_node(pars->content1[i]));
-            i++;
-        }
-        else
-        {
-            wlst_addback(wlist, wcreate_node(pars->content1[i]));
-            i++;
-        }
+        // }
     }
 }
 
+void   *typesee(w_list **list)
+{
+    w_list *begin = *list;
+    T_list *tokens = NULL;
+    T_list *last = NULL;
+    T_list *new_token;
+
+    if (!begin)
+        return NULL;
+
+    new_token = malloc(sizeof(T_list));
+    if (!new_token)
+        return *list;
+
+    new_token->value = begin->content;
+    new_token->type = TOKEN_WORD;
+    new_token->next = NULL;
+
+    tokens = new_token;
+    last = new_token;
+    begin = begin->next;
+
+    while (begin)
+    {
+        new_token = malloc(sizeof(T_list));
+        if (!new_token)
+            break;
+
+        new_token->value = begin->content;
+        new_token->next = NULL;
+
+        if (ft_strcmp(begin->content, "|") == 0)
+            new_token->type = TOKEN_PIPE;
+        else if (ft_strcmp(begin->content, "<") == 0)
+            new_token->type = TOKEN_REDIRECT_INPUT;
+        else if (ft_strcmp(begin->content, ">") == 0)
+            new_token->type = TOKEN_REDIRECT_OUTPUT;
+        else if (ft_strcmp(begin->content, "<<") == 0)
+            new_token->type = TOKEN_DELIMITER;
+        else if (ft_strcmp(begin->content, ">>") == 0)
+            new_token->type = TOKEN_REDIREC_OUTPUT_AM;
+        else
+            new_token->type = TOKEN_WORD;
+
+        last->next = new_token;
+        last = new_token;
+        begin = begin->next;
+    }
+    return tokens;
+    // Now `tokens` holds your full typed list starting with a word.
+}
+
+// void typesee(w_list **list)
+// {
+//     T_list *tokens = NULL;
+//     w_list *begin = *list;
+//     if(begin)
+//     {
+//         tokens->value = begin->content;
+//         tokens->type = TOKEN_WORD;
+//         begin = begin->next;
+//     }
+//     while(begin)
+//     {
+//         if(ft_strcmp(begin->content,"|"))
+//         {
+//             tokens->value = begin->content;
+//             tokens->type = TOKEN_PIPE;
+//             begin = begin->next;            
+//         }
+//         else if(ft_strcmp(begin->content,"<"))
+//         {
+//             tokens->value = begin->content;
+//             tokens->type = TOKEN_REDIRECT_INPUT;
+//             begin = begin->next;            
+//         }
+//         else if(ft_strcmp(begin->content,">"))
+//         {
+//             tokens->value = begin->content;
+//             tokens->type = TOKEN_REDIRECT_OUTPUT;
+//             begin = begin->next;            
+//         }
+//         else if(ft_strcmp(begin->content,"<<"))
+//         {
+//             tokens->value = begin->content;
+//             tokens->type = TOKEN_DELIMITER;
+//             begin = begin->next;            
+//         }
+//         else if(ft_strcmp(begin->content,">>"))
+//         {
+//             tokens->value = begin->content;
+//             tokens->type = TOKEN_REDIREC_OUTPUT_AM;
+//             begin = begin->next;            
+//         }
+//         else 
+//         {
+//             tokens->value = begin->content;
+//             tokens->type = TOKEN_WORD;
+//             begin = begin->next;
+//         }
+//     }
+// }
 void checkClosedQuote(pars_T *pars, char c, int start)
 {
     pars->i++; //to check later wsch ndekhleha wla la " "
@@ -42,22 +144,22 @@ void checkClosedQuote(pars_T *pars, char c, int start)
         pars->i++; //to check later wsch ndekhleha wla la " "
 }
 
-void print_list(c_list *list)
+void print_list(T_list *list)
 {
-    static int i = 0;
     while (list)
     {
-        printf("commands number %d: %s\n", i++, list->content);
+        printf("token : %s     ", list->value);
+        printf("type: %s\n", list->type);
         list = list->next;
     }
 }
 
 void print_list1(w_list *list)
 {
-    static int i = 0;
+    static int i = 1;
     while (list)
     {
-        printf("args of command %d: %s\n", i++, list->content);
+        printf("word %d: %s\n", i++, list->content);
         list = list->next;
     }
 }
@@ -169,6 +271,7 @@ int main()
     char *in;
     c_list *clist = NULL;
     w_list *wlist = NULL;
+    T_list *token = NULL;
 
     while (1)
     {
@@ -176,9 +279,10 @@ int main()
         if (!in)
             break;
         call_all(in, &clist, &wlist);
-        print_list(clist);
-        print_list1(wlist);
-        free_clist(&clist);
+        token = typesee(&wlist);
+        // print_list1(wlist);
+        print_list(token);
+        // free_clist(&clist);
         free_wlist(&wlist);
         free(in);
     }

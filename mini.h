@@ -5,7 +5,8 @@
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-// #include <>
+
+
 typedef struct PARSING_STRUCT 
 {
     unsigned int i;
@@ -28,14 +29,14 @@ typedef struct commands_list
 
 typedef struct token_list
 {
+	struct T_list	*next;
 	enum token{
 		TOKEN_PIPE,
 		TOKEN_WORD,
-		TOKEN_ENV_VARIABLE,
+		TOKEN_REDIREC_OUTPUT_AM,
 		TOKEN_DELIMITER,
 		TOKEN_REDIRECT_INPUT,
 		TOKEN_REDIRECT_OUTPUT,
-
 	} type;
 	char *value;
 }T_list;
@@ -54,7 +55,7 @@ typedef struct TOKENS_STRUCT
 }token_T;
 void SkipWhiteSpaces(pars_T *pars);
 void Comands(pars_T *pars);
-void print_list(c_list *list);
+void print_list(T_list *list);
 void print_list1(w_list *list);
 pars_T *init_pars(char *in);
 c_list	*ccreate_node(char  *value);
