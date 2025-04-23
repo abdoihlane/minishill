@@ -60,7 +60,7 @@ void   *typesee(w_list **list)
         else if (ft_strcmp(begin->content, ">") == 0)
             new_token->type = TOKEN_REDIRECT_OUTPUT;
         else if (ft_strcmp(begin->content, "<<") == 0)
-            new_token->type = TOKEN_DELIMITER;
+            new_token->type = TOKEN_HERDOC;
         else if (ft_strcmp(begin->content, ">>") == 0)
             new_token->type = TOKEN_REDIREC_OUTPUT_AM;
         else

@@ -1,6 +1,55 @@
 #include "mini.h"
 
-void CommandOrnot(pars_T *pars, c_list **clist, w_list **wlist)
+#include "libft.h"
+
+void handle_redirection(c_cmd *list, T_list *token)
+{
+	if (!list->file)
+	{
+		list->file = malloc(sizeof(T_list));
+		list->file->content = NULL;
+	}
+	list->file->content = token->value;
+	if (token->type == TOKEN_REDIRECT_INPUT)
+		list->file->inout = 1;
+	else
+		list->file->inout = 0;
+}
+
+void splitit(T_list *token, c_cmd **final)
+{
+	int k = 0;
+
+	*final = malloc(sizeof(c_cmd));
+	(*final)->array = malloc(sizeof(char *) * (token->index + 1));
+	(*final)->file = NULL;
+
+	while (token)
+	{
+		(*final)->array[k] = ft_strdup("");
+
+		while (token && token->type != TOKEN_PIPE)
+		{
+			if (token->type == TOKEN_REDIRECT_INPUT || token->type == TOKEN_REDIRECT_OUTPUT)
+			{
+				handle_redirection(*final, token);
+				token = token->next;
+				continue;
+			}
+
+			char *tmp = (*final)->array[k];
+			(*final)->array[k] = ft_strjoin(tmp, token->value);
+			free(tmp);
+			token = token->next;
+		}
+
+		k++;
+		if (token)
+			token = token->next;
+	}
+}
+
+void CommandOrnot(pars_T *pars, w_list **wlist)
 {
 	int i = 0;
 	while (pars->content1[i])
@@ -16,7 +65,7 @@ T_list *typesee(w_list **list)
 	T_list *tokens = NULL;
 	T_list *last = NULL;
 	T_list *new_token;
-
+	tokens->index = 0;
 	if (!begin)
 		return NULL;
 
@@ -36,7 +85,7 @@ T_list *typesee(w_list **list)
 		else if (!ft_strcmp(begin->content, ">"))
 			new_token->type = TOKEN_REDIRECT_OUTPUT;
 		else if (!ft_strcmp(begin->content, "<<"))
-			new_token->type = TOKEN_DELIMITER;
+			new_token->type = TOKEN_HERDOC;
 		else if (!ft_strcmp(begin->content, ">>"))
 			new_token->type = TOKEN_REDIREC_OUTPUT_AM;
 		else
@@ -49,27 +98,31 @@ T_list *typesee(w_list **list)
 
 		last = new_token;
 		begin = begin->next;
+		tokens->index++;
 	}
 	return tokens;
 }
 
 void checkClosedQuote(pars_T *pars, char c)
 {
-	pars->i++; // skip the opening quote
+	pars->i++; 
 	int start = pars->i;
 
 	while (pars->content[pars->i] && pars->content[pars->i] != c)
 		pars->i++;
-
 	int len = pars->i - start;
 	pars->content1[pars->k] = malloc(len + 1);
-	for (int j = 0; j < len; j++)
-		pars->content1[pars->k][j] = pars->content[start + j];
+    int j = 0;
+    while(j < len)
+    {
+        pars->content1[pars->k][j] = pars->content[start + j];
+        j++;
+    }
 	pars->content1[pars->k][len] = '\0';
 	pars->k++;
 
 	if (pars->content[pars->i] == c)
-		pars->i++; // skip the closing quote
+		pars->i++;
 }
 
 int is_whitespace(char c)
@@ -142,15 +195,18 @@ void print_list(T_list *list)
 	while (list)
 	{
 		printf("token : %s     ", list->value);
-		switch (list->type)
-		{
-			case TOKEN_PIPE: printf("type: PIPE\n"); break;
-			case TOKEN_WORD: printf("type: WORD\n"); break;
-			case TOKEN_REDIRECT_INPUT: printf("type: REDIRECT_INPUT\n"); break;
-			case TOKEN_REDIRECT_OUTPUT: printf("type: REDIRECT_OUTPUT\n"); break;
-			case TOKEN_DELIMITER: printf("type: DELIMITER\n"); break;
-			case TOKEN_REDIREC_OUTPUT_AM: printf("type: REDIRECT_OUTPUT_APPEND\n"); break;
-		}
+        if (list->type == TOKEN_PIPE)
+            printf("type: PIPE\n");
+        else if (list->type == TOKEN_WORD)
+            printf("type: WORD\n");
+        else if (list->type == TOKEN_REDIRECT_INPUT)
+            printf("type: REDIRECT_INPUT\n");
+        else if (list->type == TOKEN_REDIRECT_OUTPUT)
+            printf("type: REDIRECT_OUTPUT\n");
+        else if (list->type == TOKEN_HERDOC)
+            printf("type: HERDOC\n");
+        else if (list->type == TOKEN_REDIREC_OUTPUT_AM)
+            printf("type: REDIRECT_OUTPUT_APPEND\n");
 		list = list->next;
 	}
 }
@@ -176,24 +232,54 @@ void free_wlist(w_list **list)
 		*list = temp;
 	}
 }
-
-void free_clist(c_list **list)
+int count_wanted_char(char *str, char c)
 {
-	c_list *temp;
-	while (*list)
+	int i = 0;
+	int z = 0;
+	while(str[i])
 	{
-		temp = (*list)->next;
-		free((*list)->content);
-		free(*list);
-		*list = temp;
+		if(str[i] == c)
+			z++;
+		i++;
+	}
+	return z;
+}
+
+int HardcodeChecks(char *str)
+{
+	int i = ft_strlen(str);
+	int dquote = count_wanted_char(str,'\"');
+	int quote = count_wanted_char(str,'\'');
+	if(dquote % 2 != 0 && quote % 2 !=0)
+		return 0;
+	if(str[0] == '|'  || str[i] == '|')
+		return 0;
+	i = 0;
+	while(str[i])
+	{
+		if(str[i] == '|')
+			{
+				if(str[i+1] == '|')
+					return 0;
+			}
+		i++;
+	}
+	i = 0;
+	while(str[i])
+	{
+		if(str[i] ==  '<' && str[i+1] == '<' && str[i+1] == '<')
+			return 0;
+		if(str[i] ==  '>' && str[i+1] == '>' && str[i+1] == '>')
+			return 0;
+		i++;
 	}
 }
 
-void call_all(char *in, c_list **clist, w_list **wlist)
+void call_all(char *in, w_list **wlist)
 {
 	pars_T *pars = init_pars(in);
 	fill_the_array(pars);
-	CommandOrnot(pars, clist, wlist);
+	CommandOrnot(pars,wlist);
 	free(pars);
 }
 
@@ -209,7 +295,7 @@ int main()
         in = readline("➜  mini_with_salah ");
         if (!in)
             break;
-        call_all(in, &clist, &wlist);
+        call_all(in,&wlist);
         token = typesee(&wlist);
         // print_list1(wlist);
         print_list(token);

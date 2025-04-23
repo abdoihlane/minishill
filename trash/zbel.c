@@ -88,3 +88,66 @@ else if(ft_strcmp(pars->content1[i],"export") == 0)
 
 
 
+
+
+void splitit(T_list *token  ,c_cmd *final)
+{
+	int k = 0;
+	final = malloc(sizeof(c_cmd));
+	final->array = malloc(sizeof(char *)*(token->index +1));
+	while(token)
+	{
+		final->array[k] = ft_strdup("");
+		while(token->type != TOKEN_PIPE && token)
+		{
+
+			final->array[k] = ft_strjoin(final->array[k],token->value);
+			token = token->next;
+		}
+			k++;
+		if(token->next)
+			token = token->next;
+	}
+}
+
+
+
+
+
+void handle_redirection(c_cmd *list,T_list *token)
+{
+	int i= 0;
+	list->file->content = token->value;
+	if(token->type == TOKEN_REDIRECT_INPUT)
+		list->file->inout = 1;
+	else 
+		list->file->inout = 0;
+	// if(token->next)
+		// token = token->next;
+}
+
+void splitit(T_list *token, c_cmd **final)
+{
+    int k = 0;
+    
+    *final = malloc(sizeof(c_cmd));  
+    (*final)->array = malloc(sizeof(char *) * (token->index + 1));
+
+    while (token)
+	{
+        (*final)->array[k] = ft_strdup("");  
+        while (token->type != TOKEN_PIPE && token) 
+		{
+			if(token->type == TOKEN_REDIRECT_INPUT || token->type == TOKEN_REDIRECT_OUTPUT)
+			{
+				handle_redirection(final,token);
+				token = token->next;
+			}
+				(*final)->array[k] = ft_strjoin((*final)->array[k], token->value);
+            token = token->next;
+        }
+		k++;
+        if (token && token->next) 
+            token = token->next;
+    }
+}
