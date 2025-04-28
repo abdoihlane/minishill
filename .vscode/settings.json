@@ -57,6 +57,9 @@
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
-    "mini.h": "c"
+    "mini.h": "c",
+    "libft.h": "c",
+    "readline.h": "c",
+    "chrono": "c"
   }
 }

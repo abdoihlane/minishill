@@ -1,7 +1,9 @@
 #include "mini.h"
 
-#include "libft.h"
-
+void substingingFor$()
+{
+	
+}
 void handle_redirection(c_cmd *list, T_list *token)
 {
 	if (!list->file)
@@ -61,49 +63,50 @@ void CommandOrnot(pars_T *pars, w_list **wlist)
 
 T_list *typesee(w_list **list)
 {
-	w_list *begin = *list;
-	T_list *tokens = NULL;
-	T_list *last = NULL;
-	T_list *new_token;
-	tokens->index = 0;
-	if (!begin)
-		return NULL;
+    w_list *begin = *list;
+    T_list *tokens = NULL;
+    T_list *last = NULL;
+    T_list *new_token;
+    int index = 0;
 
-	while (begin)
-	{
-		new_token = malloc(sizeof(T_list));
-		if (!new_token)
-			break;
+    while (begin)
+    {
+        new_token = malloc(sizeof(T_list));
+        if (!new_token)
+            return NULL;
 
-		new_token->value = begin->content;
-		new_token->next = NULL;
-
-		if (!ft_strcmp(begin->content, "|"))
-			new_token->type = TOKEN_PIPE;
-		else if (!ft_strcmp(begin->content, "<"))
-			new_token->type = TOKEN_REDIRECT_INPUT;
-		else if (!ft_strcmp(begin->content, ">"))
-			new_token->type = TOKEN_REDIRECT_OUTPUT;
-		else if (!ft_strcmp(begin->content, "<<"))
-			new_token->type = TOKEN_HERDOC;
-		else if (!ft_strcmp(begin->content, ">>"))
-			new_token->type = TOKEN_REDIREC_OUTPUT_AM;
-		else
+        new_token->value = begin->content;
+        new_token->next = NULL;
+        new_token->index = index++;
+		// printf("-%d-\n",index);
+		if(!ft_strcmp(begin->content, ""))
 			new_token->type = TOKEN_WORD;
+        else if (!ft_strcmp(begin->content, "|"))
+            new_token->type = TOKEN_PIPE;
+        else if (!ft_strcmp(begin->content, "<"))
+            new_token->type = TOKEN_REDIRECT_INPUT;
+        else if (!ft_strcmp(begin->content, ">"))
+            new_token->type = TOKEN_REDIRECT_OUTPUT;
+        else if (!ft_strcmp(begin->content, "<<"))
+            new_token->type = TOKEN_HERDOC;
+        else if (!ft_strcmp(begin->content, ">>"))
+            new_token->type = TOKEN_REDIREC_OUTPUT_AM;
+        else
+            new_token->type = TOKEN_WORD;
 
-		if (!tokens)
-			tokens = new_token;
-		else
-			last->next = new_token;
+        if (!tokens)
+            tokens = new_token;
+        else
+            last->next = new_token;
 
-		last = new_token;
-		begin = begin->next;
-		tokens->index++;
-	}
-	return tokens;
+        last = new_token;
+        begin = begin->next;
+    }
+    return tokens;
 }
 
-void checkClosedQuote(pars_T *pars, char c)
+
+void Handlequotes(pars_T *pars, char c)
 {
 	pars->i++; 
 	int start = pars->i;
@@ -172,7 +175,7 @@ void fill_the_array(pars_T *pars)
 
 		if (pars->content[pars->i] == '\'' || pars->content[pars->i] == '\"')
 		{
-			checkClosedQuote(pars, pars->content[pars->i]);
+			Handlequotes(pars, pars->content[pars->i]);
 			continue;
 		}
 
@@ -182,8 +185,12 @@ void fill_the_array(pars_T *pars)
 
 		int len = pars->i - start;
 		pars->content1[pars->k] = malloc(len + 1);
-		for (int j = 0; j < len; j++)
+		int j = 0;
+		while(j < len)
+		{
 			pars->content1[pars->k][j] = pars->content[start + j];
+			j++;
+		}
 		pars->content1[pars->k][len] = '\0';
 		pars->k++;
 	}
@@ -247,11 +254,15 @@ int count_wanted_char(char *str, char c)
 
 int HardcodeChecks(char *str)
 {
+	
 	int i = ft_strlen(str);
 	int dquote = count_wanted_char(str,'\"');
 	int quote = count_wanted_char(str,'\'');
-	if(dquote % 2 != 0 && quote % 2 !=0)
+	if(dquote % 2 != 0 && quote % 2 != 0)
 		return 0;
+	while(str[i] <= 32)
+		i--;
+	printf("-%c--%d--\n",str[i],i);
 	if(str[0] == '|'  || str[i] == '|')
 		return 0;
 	i = 0;
@@ -267,12 +278,14 @@ int HardcodeChecks(char *str)
 	i = 0;
 	while(str[i])
 	{
-		if(str[i] ==  '<' && str[i+1] == '<' && str[i+1] == '<')
+		if(str[i] ==  '<' && str[i+1] == '<' && str[i+2] == '<')
 			return 0;
-		if(str[i] ==  '>' && str[i+1] == '>' && str[i+1] == '>')
+		if((str[i] ==  '>' )&& (str[i+1] == '>') && (str[i+2] == '>'))
 			return 0;
 		i++;
 	}
+
+	return 1;
 }
 
 void call_all(char *in, w_list **wlist)
@@ -286,7 +299,7 @@ void call_all(char *in, w_list **wlist)
 int main()
 {
     char *in;
-    c_list *clist = NULL;
+    c_cmd **clist;
     w_list *wlist = NULL;
     T_list *token = NULL;
 
@@ -295,14 +308,18 @@ int main()
         in = readline("➜  mini_with_salah ");
         if (!in)
             break;
+		if(HardcodeChecks(in) == 0)
+			{
+				printf("syntax error");
+				exit(1);
+			}
         call_all(in,&wlist);
         token = typesee(&wlist);
-        // print_list1(wlist);
+		printf("%d",token->index);
         print_list(token);
-        // free_clist(&clist);
         free_wlist(&wlist);
         free(in);
     }
-
+	
     return 0;
 }

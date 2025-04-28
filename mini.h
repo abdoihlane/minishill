@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include "./libft/libft.h"
+
 
 
 typedef struct PARSING_STRUCT 
@@ -23,13 +25,13 @@ typedef struct commands_list
 {
 	char			*content; // file name
 	int				inout; // in or out (append) in = 1 out = 0;
-	struct s_list	*next;
+	struct commands_list	*next;
 
 }					c_list;
 
 typedef struct token_list
 {
-	struct T_list	*next;
+	struct token_list	*next;
 	int index;
 	enum token{
 		TOKEN_PIPE,
@@ -53,7 +55,7 @@ typedef struct t_cmd
 typedef struct words_list
 {
 	char			*content;
-	struct s_list	*next;
+	struct words_list	*next;
 	int				index;
 
 }					w_list;
