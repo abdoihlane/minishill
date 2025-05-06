@@ -13,37 +13,6 @@ void handle_redirection(c_cmd *list, T_list *token)
 	else
 		list->file->inout = 0;
 }
-// void splitit(T_list *token, c_cmd **final)
-// {
-// 	*final = malloc(sizeof(c_cmd));
-// 	(*final)->array = malloc(sizeof(char *) * (token->index + 1));
-// 	(*final)->file = NULL;
-// 	(*final)->index = 0;
-	
-// 	while (token)
-// 	{
-// 		printf("dddddddddddddddddddddd\n");
-// 		(*final)->array[(*final)->index] = ft_strdup("");
-
-// 		while (token && token->type != TOKEN_PIPE)
-// 		{
-// 			if (token->type == TOKEN_REDIRECT_INPUT || token->type == TOKEN_REDIRECT_OUTPUT)
-// 			{
-// 				handle_redirection(*final, token);
-// 				token = token->next;
-// 				continue;
-// 			}
-
-// 			char *tmp = (*final)->array[(*final)->index];
-// 			(*final)->array[(*final)->index] = ft_strjoin(tmp, token->value);
-// 			free(tmp);
-// 			token = token->next;
-// 		}
-// 		(*final)->index++;
-// 		if (token)
-// 			token = token->next;
-// 	}
-// }
 void splitit(T_list *token, c_cmd **final)
 {
 	int array_size = 0;
@@ -70,8 +39,6 @@ void splitit(T_list *token, c_cmd **final)
 	
 	while (token)
 	{
-		// printf("__---------------------------___\n");
-		// expand_variables(token);
 		(*final)->array[(*final)->index] = ft_strdup("");
 
 		while (token && token->type != TOKEN_PIPE)
@@ -90,9 +57,7 @@ void splitit(T_list *token, c_cmd **final)
 			}
 			token = token->next;
 			
-			// char *tmp_str = (*final)->array[(*final)->index];
-			// (*final)->array[(*final)->index] = ft_strjoin(tmp_str, token->value);
-			// free(tmp_str);
+
 		}
 
 		(*final)->index++;
@@ -112,7 +77,6 @@ void CommandOrnot(pars_T *pars, w_list **wlist)
 		i++;
 	}
 }
-
 T_list *typesee(w_list **list)
 {
     w_list *begin = *list;
@@ -160,7 +124,6 @@ void expand_variables(T_list *tokens)
 {
     while (tokens)
     {
-		// printf("__---------------------------___\n");
         if (tokens->type == TOKEN_WORD && ft_strchr(tokens->value, '$'))
         {
             char *pos = ft_strchr(tokens->value, '$');
@@ -218,32 +181,6 @@ void expand_variables(T_list *tokens)
         tokens = tokens->next;
     }
 }
-
-// void Handlequotes(pars_T *pars, char c)
-// {
-// 	pars->i++; 
-// 	int start = pars->i;
-
-// 	while (pars->content[pars->i] && pars->content[pars->i] != c)
-// 		pars->i++;
-// 	int len = pars->i - start;
-// 	pars->content1[pars->k] = malloc(len + 1);
-// 	if(!pars->content1[pars->k])
-// 		return;
-
-//     int j = 0;
-//     while(j < len)
-//     {
-//         pars->content1[pars->k][j] = pars->content[start + j];
-//         j++;
-//     }
-// 	pars->content1[pars->k][len] = '\0';
-// 	if(pars->k < pars->lenOFarray)
-// 		pars->k++;
-// 	if (pars->content[pars->i] == c)
-// 		pars->i++;
-
-// }
 void Handlequotes(pars_T *pars, char c)
 {
 	pars->i++;
@@ -256,7 +193,6 @@ void Handlequotes(pars_T *pars, char c)
 	while (pars->content[pars->i] && pars->content[pars->i] != c)
 		pars->i++;
 	int len = pars->i - start;
-	// printf("DEBUG: malloc for k=%d, len=%d, str='%.*s'\n", pars->k, len, len, &pars->content[start]);
 	pars->content1[pars->k] = malloc(len + 1);
 	if (!pars->content1[pars->k])
 		return;
@@ -273,20 +209,16 @@ void Handlequotes(pars_T *pars, char c)
 		pars->k++;
 	pars->i++; 
 }
-
-
 int is_whitespace(char c)
 {
 	return (c == 32 || (c >= 9 && c <= 13));
 }
-
 void SkipWhiteSpaces(pars_T *pars)
 {
 	while (pars->content[pars->i] && is_whitespace(pars->content[pars->i]))
 		pars->i++;
 	pars->c = pars->content[pars->i];
 }
-
 pars_T *init_pars(char *in)
 {
 	pars_T *pars = malloc(sizeof(pars_T));
@@ -309,7 +241,6 @@ pars_T *init_pars(char *in)
 	pars->content1 = malloc(sizeof(char *) * (pars->lenOFarray + 2));
 	return pars;
 }
-
 void fill_the_array(pars_T *pars)
 {
 	pars->i = 0;
@@ -321,7 +252,6 @@ void fill_the_array(pars_T *pars)
 		if (pars->content[pars->i] == '\0')
 			break;
 			
-		// printf("DEBUG: malloc for k=%d, len=%d, str='%.*s'\n", pars->k, len, len, &pars->content[start]);
 		if (pars->content[pars->i] == '\'' || pars->content[pars->i] == '\"')
 		{
 			Handlequotes(pars, pars->content[pars->i]);
@@ -336,7 +266,6 @@ void fill_the_array(pars_T *pars)
 		while (!is_whitespace(pars->content[pars->i]) && pars->content[pars->i])
 			pars->i++;
 		int len = pars->i - start;
-		// printf("DEBUG: malloc for k=%d, len=%d, str='%.*s'\n", pars->k, len, len, &pars->content[start]);
 		pars->content1[pars->k] = malloc((len + 1));
 		int j = 0;
 		while(j < len)
@@ -414,7 +343,6 @@ int count_wanted_char(char *str, char c)
 	}
 	return z;
 }
-
 int HardcodeChecks(char *str)
 {
 	if(!str)
@@ -450,7 +378,6 @@ int HardcodeChecks(char *str)
 
 	return 1;
 }
-
 void call_all(char *in, w_list **wlist)
 {
 	pars_T *pars = init_pars(in);
@@ -458,7 +385,6 @@ void call_all(char *in, w_list **wlist)
 	CommandOrnot(pars,wlist);
 	free(pars);
 }
-
 int main()
 {
     char *in;
@@ -482,7 +408,6 @@ int main()
         call_all(in,&wlist);
         token = typesee(&wlist);
 		expand_variables(token);
-		// printf("%d",token->index);
 		splitit(token,&clist);
 		add_history(in);
         print_list(token);
