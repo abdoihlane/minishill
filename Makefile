@@ -1,22 +1,50 @@
+# NAME = minishell
+
+# SRC = parsing1.c linked_list.c 
+
+# CC = cc
+
+# CFLAGS = -lreadline  
+
+# OBJS = $(SRC:.c=.o)
+
+# all : $(NAME)
+
+# $(NAME) : $(OBJS)
+# 	$(CC) $(SRC) $(CFLAGS) -o $(NAME)
+
+# clean :
+# 	rm -f $(OBJS)
+
+# fclean : 
+# 	rm -f $(NAME) $(OBJS)
+
+# re : fclean all
 NAME = minishell
 
-SRC = parsing1.c linked_list.c 
+SRC = parsing1.c linked_list.c
+LIBFT_DIR = libft
+LIBFT = $(LIBFT_DIR)/libft.a
 
 CC = cc
-
-CFLAGS = -lreadline  
+CFLAGS = -lreadline -g3 #-fsanitize=address
 
 OBJS = $(SRC:.c=.o)
 
-all : $(NAME)
+all: $(NAME)
 
-$(NAME) : $(OBJS)
-	$(CC) $(SRC) $(CFLAGS) -o $(NAME)
+$(NAME): $(OBJS) $(LIBFT)
+	$(CC) $(SRC) $(LIBFT) $(CFLAGS) -o $(NAME)
 
-clean :
+$(LIBFT):
+	make -C $(LIBFT_DIR)
+
+clean:
 	rm -f $(OBJS)
+	make -C $(LIBFT_DIR) clean
 
-fclean : 
-	rm -f $(NAME) $(OBJS)
+fclean: clean
+	rm -f $(NAME)
+	make -C $(LIBFT_DIR) fclean
 
-re : fclean all
+re: fclean all

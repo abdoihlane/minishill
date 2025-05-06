@@ -65,11 +65,11 @@ char	*ft_strjoin(char const *s1, char const *s2)
 }
 
 
-c_list	*ccreate_node(char *value)
+r_list	*ccreate_node(char *value)
 {
-	c_list	*new_node;
+	r_list	*new_node;
 
-	new_node = malloc(sizeof(c_list));
+	new_node = malloc(sizeof(r_list));
 	if (!new_node)
 		return (NULL);
 	new_node->content = value;
