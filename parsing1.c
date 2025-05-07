@@ -90,7 +90,7 @@ T_list *typesee(w_list **list)
         new_token = malloc(sizeof(T_list));
         if (!new_token)
             return NULL;
-
+		printf("------------%s---------\n",begin->content);
         new_token->value = begin->content;
         new_token->next = NULL;
         new_token->index = index++;
@@ -107,7 +107,7 @@ T_list *typesee(w_list **list)
             new_token->type = TOKEN_HERDOC;
         else if (!ft_strcmp(begin->content, ">>"))
             new_token->type = TOKEN_REDIREC_OUTPUT_AM;
-        else
+		else
             new_token->type = TOKEN_WORD;
 
         if (!tokens)
@@ -184,7 +184,7 @@ void expand_variables(T_list *tokens)
 void Handlequotes(pars_T *pars, char c)
 {
 	pars->i++;
-	if(pars->content1[pars->i] && pars->content[pars->i] == c)
+	if(pars->content[pars->i]&& pars->content[pars->i] == c)
 		{
 			pars->content1[pars->k] = ft_strdup("");
 			return;
@@ -207,7 +207,7 @@ void Handlequotes(pars_T *pars, char c)
 
 	if (pars->k < pars->lenOFarray)
 		pars->k++;
-	pars->i++; 
+	pars->i++;
 }
 int is_whitespace(char c)
 {
@@ -238,8 +238,39 @@ pars_T *init_pars(char *in)
 			pars->i++;
 		pars->lenOFarray++;
 	}
-	pars->content1 = malloc(sizeof(char *) * (pars->lenOFarray + 2));
+	pars->content1 = malloc(sizeof(char *) * (pars->lenOFarray + 1));
 	return pars;
+}
+void Handlered(pars_T *pars, char c, int flag)
+{
+	if(pars->content[pars->i] && flag == 1)
+	{
+		pars->content1[pars->k] = ft_strdup("<<");
+		pars->i +=2;
+		pars->k++;
+		return;
+	}
+	else if(pars->content[pars->i] && flag == 2)
+	{
+		pars->content1[pars->k] = ft_strdup(">>");
+		pars->i +=2;
+		pars->k++;
+		return;
+	}
+	else if(pars->content[pars->i] && pars->content[pars->i] == '<')
+	{
+		pars->content1[pars->k] = ft_strdup("<");
+		pars->k++;
+		pars->i++;
+		return;
+	}
+	else if(pars->content[pars->i] && pars->content[pars->i] == '>')
+	{
+		pars->content1[pars->k] = ft_strdup(">");
+		pars->k++;
+		pars->i++;
+		return;
+	}
 }
 void fill_the_array(pars_T *pars)
 {
@@ -257,11 +288,16 @@ void fill_the_array(pars_T *pars)
 			Handlequotes(pars, pars->content[pars->i]);
 			continue;
 		}
-		// if (pars->content[pars->i] == '<' || pars->content[pars->i] == '>')
-		// {
-		// 	Handlequotes(pars, pars->content[pars->i]);
-		// 	continue;
-		// }
+		if (pars->content[pars->i] == '<' || pars->content[pars->i] == '>')
+		{
+			if(pars->content[pars->i+1] == '<' && pars->content[pars->i] == '<' )
+				Handlered(pars, pars->content[pars->i],1);
+			else if(pars->content[pars->i] == '>' && pars->content[pars->i+1] == '>')
+				Handlered(pars, pars->content[pars->i],2);
+			else 
+				Handlered(pars, pars->content[pars->i],0);
+			continue;
+		}
 		int start = pars->i;
 		while (!is_whitespace(pars->content[pars->i]) && pars->content[pars->i])
 			pars->i++;
