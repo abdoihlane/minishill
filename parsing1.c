@@ -7,12 +7,14 @@ void handle_redirection(c_cmd *list, T_list *token)
 		list->file = malloc(sizeof(T_list));
 		list->file->content = NULL;
 	}
-	list->file->content = token->value;
+	if(token->next)
+		list->file->content = token->next->value;
 	if (token->type == TOKEN_REDIRECT_INPUT)
 		list->file->inout = 1;
 	else
 		list->file->inout = 0;
 }
+
 void splitit(T_list *token, c_cmd **final)
 {
 	int array_size = 0;
@@ -21,7 +23,7 @@ void splitit(T_list *token, c_cmd **final)
 	while (tmp)
 	{
 		if (tmp->type == TOKEN_PIPE)
-		array_size++;
+			array_size++;
 		tmp = tmp->next;
 	}
 	array_size++; 
@@ -54,10 +56,11 @@ void splitit(T_list *token, c_cmd **final)
 				char *tmp_str = (*final)->array[(*final)->index];
 				(*final)->array[(*final)->index] = ft_strjoin(tmp_str, token->value);
 				free(tmp_str);
+				tmp_str = (*final)->array[(*final)->index];
+				(*final)->array[(*final)->index] = ft_strjoin(tmp_str, " ");
+				free(tmp_str);
 			}
 			token = token->next;
-			
-
 		}
 
 		(*final)->index++;
@@ -68,6 +71,7 @@ void splitit(T_list *token, c_cmd **final)
 
 	(*final)->array[(*final)->index] = NULL;
 }
+
 void CommandOrnot(pars_T *pars, w_list **wlist)
 {
 	int i = 0;
@@ -77,6 +81,7 @@ void CommandOrnot(pars_T *pars, w_list **wlist)
 		i++;
 	}
 }
+
 T_list *typesee(w_list **list)
 {
     w_list *begin = *list;
@@ -120,6 +125,7 @@ T_list *typesee(w_list **list)
     }
     return tokens;
 }
+
 void expand_variables(T_list *tokens)
 {
     while (tokens)
@@ -181,6 +187,7 @@ void expand_variables(T_list *tokens)
         tokens = tokens->next;
     }
 }
+
 void Handlequotes(pars_T *pars, char c)
 {
 	pars->i++;
@@ -209,16 +216,19 @@ void Handlequotes(pars_T *pars, char c)
 		pars->k++;
 	pars->i++;
 }
+
 int is_whitespace(char c)
 {
 	return (c == 32 || (c >= 9 && c <= 13));
 }
+
 void SkipWhiteSpaces(pars_T *pars)
 {
 	while (pars->content[pars->i] && is_whitespace(pars->content[pars->i]))
 		pars->i++;
 	pars->c = pars->content[pars->i];
 }
+
 pars_T *init_pars(char *in)
 {
 	pars_T *pars = malloc(sizeof(pars_T));
@@ -241,6 +251,7 @@ pars_T *init_pars(char *in)
 	pars->content1 = malloc(sizeof(char *) * (pars->lenOFarray + 1));
 	return pars;
 }
+
 void Handlered(pars_T *pars, char c, int flag)
 {
 	if(pars->content[pars->i] && flag == 1)
@@ -272,6 +283,7 @@ void Handlered(pars_T *pars, char c, int flag)
 		return;
 	}
 }
+
 void fill_the_array(pars_T *pars)
 {
 	pars->i = 0;
@@ -336,6 +348,37 @@ void print_list(T_list *list)
 	}
 }
 
+#include <stdio.h>
+
+void print_cmd_list(c_cmd *cmd)
+{
+	if (!cmd)
+	{
+		printf("Command list is NULL\n");
+		return;
+	}
+
+	printf("=== Command List ===\n");
+	for (int i = 0; i < cmd->index; i++)
+	{
+		if (cmd->array[i])
+			printf("Command[%d]: %s\n", i, cmd->array[i]);
+		else
+			printf("Command[%d]: (null)\n", i);
+	}
+
+	if (cmd->file)
+	{
+		printf("Redirection file: %s\n", cmd->file->content);
+		printf("Redirection type: %s\n", cmd->file->inout ? "INPUT" : "OUTPUT");
+	}
+	else
+	{
+		printf("No redirection file.\n");
+	}
+}
+
+
 void print_list1(w_list *list)
 {
 	int i = 1;
@@ -359,14 +402,10 @@ void free_wlist(w_list **list)
 			if(temp)
 				free(temp);
 			temp = temp2;
-			// if(*list && *list && (*list)->content)
-				// free((*list)->content);
-			// if(temp && *list)
-				// free(*list);
-			// *list = temp;
 		}
 	}
 }
+
 int count_wanted_char(char *str, char c)
 {
 	int i = 0;
@@ -414,6 +453,7 @@ int HardcodeChecks(char *str)
 
 	return 1;
 }
+
 void call_all(char *in, w_list **wlist)
 {
 	pars_T *pars = init_pars(in);
@@ -421,6 +461,7 @@ void call_all(char *in, w_list **wlist)
 	CommandOrnot(pars,wlist);
 	free(pars);
 }
+
 int main()
 {
     char *in;
@@ -447,6 +488,7 @@ int main()
 		splitit(token,&clist);
 		add_history(in);
         print_list(token);
+		print_cmd_list(clist);
         free_wlist(&wlist);
 		wlist = NULL;
         free(in);
