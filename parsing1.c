@@ -95,7 +95,7 @@ T_list *typesee(w_list **list)
         new_token = malloc(sizeof(T_list));
         if (!new_token)
             return NULL;
-		printf("------------%s---------\n",begin->content);
+		// printf("------------%s---------\n",begin->content);
         new_token->value = begin->content;
         new_token->next = NULL;
         new_token->index = index++;
@@ -126,67 +126,101 @@ T_list *typesee(w_list **list)
     return tokens;
 }
 
-void expand_variables(T_list *tokens)
+char *expand_variables(char *input)
 {
-    while (tokens)
-    {
-        if (tokens->type == TOKEN_WORD && ft_strchr(tokens->value, '$'))
-        {
-            char *pos = ft_strchr(tokens->value, '$');
-            char *key = pos + 1;
+    if (!input || !ft_strchr(input, '$'))
+        return ft_strdup(input);
 
-            if (*key == '\0')
-            {
-                tokens = tokens->next;
-                continue;
-            }
+    char *pos = ft_strchr(input, '$');
+    if (!pos)
+        return ft_strdup(input);
 
-            int i = 0;
-            while (key[i] && (ft_isalnum(key[i]) || key[i] == '_'))
-                i++;
+    char *key = pos + 1;
+    if (*key == '\0')
+        return ft_strdup(input);
 
-            char *varname = ft_substr(key, 0, i);
-            char *env = getenv(varname);
-            if (env)
-            {
-                int prefix_len = pos - tokens->value;
-                char *prefix = ft_substr(tokens->value, 0, prefix_len);
-                char *suffix = ft_strdup(pos + 1 + i);
+    int i = 0;
+    while (key[i] && (ft_isalnum(key[i]) || key[i] == '_'))
+        i++;
 
-                char *tmp1 = ft_strjoin(prefix, env);
-                char *newval = ft_strjoin(tmp1, suffix);
+    char *varname = ft_substr(key, 0, i);
+    char *env = getenv(varname);
 
-				if (tokens->value)
-					free(tokens->value);
-				tokens->value = newval;
+    char *prefix = ft_substr(input, 0, pos - input);
+    char *suffix = ft_strdup(pos + 1 + i);
 
-				if(prefix)
-                	free(prefix);
-                if(suffix)
-					free(suffix);
-				if(tmp1)
-                	free(tmp1);
-            }
+    char *tmp1 = ft_strjoin(prefix, env ? env : "");
+    char *result = ft_strjoin(tmp1, suffix);
 
-			else
-			{
-				int prefix_len = pos - tokens->value;
-                char *prefix = ft_substr(tokens->value, 0, prefix_len);
-                char *suffix = ft_strdup(pos + 1 + i);
+    free(varname);
+    free(prefix);
+    free(suffix);
+    free(tmp1);
 
-                char *tmp1 = ft_strjoin(prefix, ft_strdup(""));
-                char *newval = ft_strjoin(tmp1, suffix);
-				if(tokens->value)
-					free(tokens->value);
-				tokens->value = newval;
-			}
-
-            free(varname);
-			continue;
-		}
-        tokens = tokens->next;
-    }
+    return result;
 }
+
+// void expand_variables(T_list *tokens)
+// {
+//     while (tokens)
+//     {
+//         if (tokens->type == TOKEN_WORD && ft_strchr(tokens->value, '$'))
+//         {
+//             char *pos = ft_strchr(tokens->value, '$');
+//             char *key = pos + 1;
+
+//             if (*key == '\0')
+//             {
+//                 tokens = tokens->next;
+//                 continue;
+//             }
+
+//             int i = 0;
+//             while (key[i] && (ft_isalnum(key[i]) || key[i] == '_'))
+//                 i++;
+
+//             char *varname = ft_substr(key, 0, i);
+//             char *env = getenv(varname);
+//             if (env)
+//             {
+//                 int prefix_len = pos - tokens->value;
+//                 char *prefix = ft_substr(tokens->value, 0, prefix_len);
+//                 char *suffix = ft_strdup(pos + 1 + i);
+
+//                 char *tmp1 = ft_strjoin(prefix, env);
+//                 char *newval = ft_strjoin(tmp1, suffix);
+
+// 				if (tokens->value)
+// 					free(tokens->value);
+// 				tokens->value = newval;
+
+// 				if(prefix)
+//                 	free(prefix);
+//                 if(suffix)
+// 					free(suffix);
+// 				if(tmp1)
+//                 	free(tmp1);
+//             }
+
+// 			else
+// 			{
+// 				int prefix_len = pos - tokens->value;
+//                 char *prefix = ft_substr(tokens->value, 0, prefix_len);
+//                 char *suffix = ft_strdup(pos + 1 + i);
+
+//                 char *tmp1 = ft_strjoin(prefix, ft_strdup(""));
+//                 char *newval = ft_strjoin(tmp1, suffix);
+// 				if(tokens->value)
+// 					free(tokens->value);
+// 				tokens->value = newval;
+// 			}
+
+//             free(varname);
+// 			continue;
+// 		}
+//         tokens = tokens->next;
+//     }
+// }
 
 void Handlequotes(pars_T *pars, char c)
 {
@@ -211,7 +245,12 @@ void Handlequotes(pars_T *pars, char c)
 		j++;
 	}
 	pars->content1[pars->k][len] = '\0';
-
+	if(c == '\"')
+		{
+			char *expanded = expand_variables(pars->content1[pars->k]);
+			free(pars->content1[pars->k]);
+			pars->content1[pars->k] = expanded;
+		}
 	if (pars->k < pars->lenOFarray)
 		pars->k++;
 	pars->i++;
@@ -322,7 +361,11 @@ void fill_the_array(pars_T *pars)
 			j++;
 		}
 		pars->content1[pars->k][len] = '\0';
-			pars->k++;
+		char *expanded = expand_variables(pars->content1[pars->k]);
+		free(pars->content1[pars->k]);
+		pars->content1[pars->k] = expanded;
+		pars->k++;
+			
 	}
 	pars->content1[pars->k] = NULL;
 }
@@ -484,11 +527,11 @@ int main()
 			}
         call_all(in,&wlist);
         token = typesee(&wlist);
-		expand_variables(token);
+		// expand_variables(token);
 		splitit(token,&clist);
 		add_history(in);
         print_list(token);
-		print_cmd_list(clist);
+		// print_cmd_list(clist);
         free_wlist(&wlist);
 		wlist = NULL;
         free(in);

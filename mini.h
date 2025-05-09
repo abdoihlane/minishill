@@ -73,6 +73,8 @@ int ft_strcmp(char *s1, char *s2);
 void	clst_addback(r_list **lst, r_list *node);
 void	wlst_addback(w_list **lst, w_list *node);
 int valid(char c);
-void expand_variables(T_list *tokens);
+// void expand_variables(T_list *tokens);
+char *expand_variables(char *input);
+
 
 #endif
