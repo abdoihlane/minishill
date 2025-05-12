@@ -160,101 +160,53 @@ char *expand_variables(char *input)
     return result;
 }
 
-// void expand_variables(T_list *tokens)
-// {
-//     while (tokens)
-//     {
-//         if (tokens->type == TOKEN_WORD && ft_strchr(tokens->value, '$'))
-//         {
-//             char *pos = ft_strchr(tokens->value, '$');
-//             char *key = pos + 1;
 
-//             if (*key == '\0')
-//             {
-//                 tokens = tokens->next;
-//                 continue;
-//             }
-
-//             int i = 0;
-//             while (key[i] && (ft_isalnum(key[i]) || key[i] == '_'))
-//                 i++;
-
-//             char *varname = ft_substr(key, 0, i);
-//             char *env = getenv(varname);
-//             if (env)
-//             {
-//                 int prefix_len = pos - tokens->value;
-//                 char *prefix = ft_substr(tokens->value, 0, prefix_len);
-//                 char *suffix = ft_strdup(pos + 1 + i);
-
-//                 char *tmp1 = ft_strjoin(prefix, env);
-//                 char *newval = ft_strjoin(tmp1, suffix);
-
-// 				if (tokens->value)
-// 					free(tokens->value);
-// 				tokens->value = newval;
-
-// 				if(prefix)
-//                 	free(prefix);
-//                 if(suffix)
-// 					free(suffix);
-// 				if(tmp1)
-//                 	free(tmp1);
-//             }
-
-// 			else
-// 			{
-// 				int prefix_len = pos - tokens->value;
-//                 char *prefix = ft_substr(tokens->value, 0, prefix_len);
-//                 char *suffix = ft_strdup(pos + 1 + i);
-
-//                 char *tmp1 = ft_strjoin(prefix, ft_strdup(""));
-//                 char *newval = ft_strjoin(tmp1, suffix);
-// 				if(tokens->value)
-// 					free(tokens->value);
-// 				tokens->value = newval;
-// 			}
-
-//             free(varname);
-// 			continue;
-// 		}
-//         tokens = tokens->next;
-//     }
-// }
-
-void Handlequotes(pars_T *pars, char c)
+int contains_single_quotes(const char *s)
 {
-	pars->i++;
-	if(pars->content[pars->i]&& pars->content[pars->i] == c)
-		{
-			pars->content1[pars->k] = ft_strdup("");
-			return;
-		}
+	while (*s)
+	{
+		if (*s == '\'')
+			return 1;
+		s++;
+	}
+	return 0;
+}
+char *Handlequotes(pars_T *pars, char c)
+{
+	pars->i++; 
+
+	if (pars->content[pars->i] && pars->content[pars->i] == c)
+	{
+		pars->i++; 
+		return ft_strdup(""); 
+	}
+
 	int start = pars->i;
 	while (pars->content[pars->i] && pars->content[pars->i] != c)
 		pars->i++;
-	int len = pars->i - start;
-	pars->content1[pars->k] = malloc(len + 1);
-	if (!pars->content1[pars->k])
-		return;
 
-	int j = 0;
-	while (j < len)
+	int len = pars->i - start;
+	char *segment = malloc(len + 1);
+	if (!segment)
+		return NULL;
+
+	for (int j = 0; j < len; j++)
+		segment[j] = pars->content[start + j];
+	segment[len] = '\0';
+
+	pars->i++; 
+
+	if (c == '"') 
 	{
-		pars->content1[pars->k][j] = pars->content[start + j];
-		j++;
+		char *expanded = expand_variables(segment);
+		free(segment);
+		return expanded;
 	}
-	pars->content1[pars->k][len] = '\0';
-	if(c == '\"')
-		{
-			char *expanded = expand_variables(pars->content1[pars->k]);
-			free(pars->content1[pars->k]);
-			pars->content1[pars->k] = expanded;
-		}
-	if (pars->k < pars->lenOFarray)
-		pars->k++;
-	pars->i++;
+
+	return segment; 
 }
+
+
 
 int is_whitespace(char c)
 {
@@ -291,84 +243,83 @@ pars_T *init_pars(char *in)
 	return pars;
 }
 
-void Handlered(pars_T *pars, char c, int flag)
-{
-	if(pars->content[pars->i] && flag == 1)
-	{
-		pars->content1[pars->k] = ft_strdup("<<");
-		pars->i +=2;
-		pars->k++;
-		return;
-	}
-	else if(pars->content[pars->i] && flag == 2)
-	{
-		pars->content1[pars->k] = ft_strdup(">>");
-		pars->i +=2;
-		pars->k++;
-		return;
-	}
-	else if(pars->content[pars->i] && pars->content[pars->i] == '<')
-	{
-		pars->content1[pars->k] = ft_strdup("<");
-		pars->k++;
-		pars->i++;
-		return;
-	}
-	else if(pars->content[pars->i] && pars->content[pars->i] == '>')
-	{
-		pars->content1[pars->k] = ft_strdup(">");
-		pars->k++;
-		pars->i++;
-		return;
-	}
-}
 
+int is_redirection(char c)
+{
+	return (c == '<' || c == '>' || c == '|');
+}
 void fill_the_array(pars_T *pars)
 {
 	pars->i = 0;
 	pars->k = 0;
 
-	while (pars->content[pars->i] && pars->k < pars->lenOFarray)
+	while (pars->content[pars->i])
 	{
 		SkipWhiteSpaces(pars);
 		if (pars->content[pars->i] == '\0')
 			break;
-			
-		if (pars->content[pars->i] == '\'' || pars->content[pars->i] == '\"')
+
+		char *token = ft_strdup("");
+
+		while (pars->content[pars->i] &&
+			   !is_whitespace(pars->content[pars->i]) &&
+			   !is_redirection(pars->content[pars->i]))
 		{
-			Handlequotes(pars, pars->content[pars->i]);
-			continue;
+			char *part = NULL;
+
+			if (pars->content[pars->i] == '\'' || pars->content[pars->i] == '\"')
+			{
+				part = Handlequotes(pars, pars->content[pars->i]);
+			}
+			else
+			{
+				int start = pars->i;
+				while (pars->content[pars->i] &&
+					   !is_whitespace(pars->content[pars->i]) &&
+					   !is_redirection(pars->content[pars->i]) &&
+					   pars->content[pars->i] != '\'' &&
+					   pars->content[pars->i] != '\"')
+				{
+					pars->i++;
+				}
+				int len = pars->i - start;
+				part = ft_substr(pars->content, start, len);
+				char *expanded = expand_variables(part);
+				free(part);
+				part = expanded;
+			}
+
+			char *tmp = ft_strjoin(token, part);
+			free(token);
+			free(part);
+			token = tmp;
 		}
-		if (pars->content[pars->i] == '<' || pars->content[pars->i] == '>')
+
+		if (token[0]) 
+			pars->content1[pars->k++] = token;
+		else
+			free(token);
+
+		if (is_redirection(pars->content[pars->i]))
 		{
-			if(pars->content[pars->i+1] == '<' && pars->content[pars->i] == '<' )
-				Handlered(pars, pars->content[pars->i],1);
-			else if(pars->content[pars->i] == '>' && pars->content[pars->i+1] == '>')
-				Handlered(pars, pars->content[pars->i],2);
-			else 
-				Handlered(pars, pars->content[pars->i],0);
-			continue;
+			if (pars->content[pars->i] == pars->content[pars->i + 1] &&
+				(pars->content[pars->i] == '<' || pars->content[pars->i] == '>'))
+			{
+				pars->content1[pars->k++] = ft_substr(pars->content, pars->i, 2);
+				pars->i += 2;
+			}
+			else
+			{
+				pars->content1[pars->k++] = ft_substr(pars->content, pars->i, 1);
+				pars->i++;
+			}
 		}
-		int start = pars->i;
-		while (!is_whitespace(pars->content[pars->i]) && pars->content[pars->i])
-			pars->i++;
-		int len = pars->i - start;
-		pars->content1[pars->k] = malloc((len + 1));
-		int j = 0;
-		while(j < len)
-		{
-			pars->content1[pars->k][j] = pars->content[start + j];
-			j++;
-		}
-		pars->content1[pars->k][len] = '\0';
-		char *expanded = expand_variables(pars->content1[pars->k]);
-		free(pars->content1[pars->k]);
-		pars->content1[pars->k] = expanded;
-		pars->k++;
-			
 	}
+
 	pars->content1[pars->k] = NULL;
 }
+
+
 
 void print_list(T_list *list)
 {
@@ -449,26 +400,32 @@ void free_wlist(w_list **list)
 	}
 }
 
-int count_wanted_char(char *str, char c)
+
+int check_quotes_closed(char *str)
 {
-	int i = 0;
-	int z = 0;
-	while(str[i])
-	{
-		if(str[i] == c)
-			z++;
-		i++;
-	}
-	return z;
+    int i = 0;
+    int in_single = 0;
+    int in_double = 0;
+
+    while (str[i])
+    {
+        if (str[i] == '\'' && in_double == 0)
+            in_single = !in_single;
+        else if (str[i] == '\"' && in_single == 0)
+            in_double = !in_double;
+        i++;
+    }
+    return (in_single || in_double);
 }
+
+
 int HardcodeChecks(char *str)
 {
 	if(!str)
 		return 0;
 	int i = ft_strlen(str);
-	int dquote = count_wanted_char(str,'\"');
-	int quote = count_wanted_char(str,'\'');
-	if(dquote % 2 != 0 || quote % 2 != 0)
+	int dquote = check_quotes_closed(str);
+	if(dquote == 1)
 		return 0;
 	while(str && i && str[i] <= 32)
 		i--;
@@ -493,7 +450,6 @@ int HardcodeChecks(char *str)
 			return 0;
 		i++;
 	}
-
 	return 1;
 }
 
@@ -514,7 +470,7 @@ int main()
 
     while (1)
     {
-        in = readline("➜  mini_with_salah ");
+        in = readline("➜  minishell  ");
         if (!in)
             return 0;
 		else

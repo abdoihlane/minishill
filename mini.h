@@ -13,6 +13,7 @@ typedef struct PARSING_STRUCT
 {
     unsigned int i;
     unsigned int k;
+    unsigned int index;
     unsigned int lenOFarray;
     char c;
 	unsigned int nbOfPipes;
