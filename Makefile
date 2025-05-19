@@ -1,25 +1,3 @@
-# NAME = minishell
-
-# SRC = parsing1.c linked_list.c 
-
-# CC = cc
-
-# CFLAGS = -lreadline  
-
-# OBJS = $(SRC:.c=.o)
-
-# all : $(NAME)
-
-# $(NAME) : $(OBJS)
-# 	$(CC) $(SRC) $(CFLAGS) -o $(NAME)
-
-# clean :
-# 	rm -f $(OBJS)
-
-# fclean : 
-# 	rm -f $(NAME) $(OBJS)
-
-# re : fclean all
 NAME = minishell
 
 SRC = parsing1.c linked_list.c

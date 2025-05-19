@@ -17,60 +17,117 @@ void handle_redirection(c_cmd *list, T_list *token)
 
 void splitit(T_list *token, c_cmd **final)
 {
-	int array_size = 0;
-	T_list *tmp = token;
-
-	while (tmp)
-	{
-		if (tmp->type == TOKEN_PIPE)
-			array_size++;
-		tmp = tmp->next;
-	}
-	array_size++; 
-	
-	*final = malloc(sizeof(c_cmd));
-	if (!*final)
-	return;
-	
-	(*final)->array = malloc(sizeof(char *) * (array_size + 1));
-	if (!(*final)->array)
-	return;
-	
-	(*final)->file = NULL;
-	(*final)->index = 0;
-	
-	while (token)
-	{
-		(*final)->array[(*final)->index] = ft_strdup("");
-
-		while (token && token->type != TOKEN_PIPE)
+    T_list *tmp = token;
+	int array_size;
+    c_cmd *cmd_head = NULL;
+    c_cmd *current = NULL;
+		while (tmp)
 		{
-			if (token->type == TOKEN_REDIRECT_INPUT || token->type == TOKEN_REDIRECT_OUTPUT)
-			{
-				handle_redirection(*final, token);
-				token = token->next;
-				continue;
-			}
-			if (token->value)
-			{
-				char *tmp_str = (*final)->array[(*final)->index];
-				(*final)->array[(*final)->index] = ft_strjoin(tmp_str, token->value);
-				free(tmp_str);
-				tmp_str = (*final)->array[(*final)->index];
-				(*final)->array[(*final)->index] = ft_strjoin(tmp_str, " ");
-				free(tmp_str);
-			}
-			token = token->next;
+			if (tmp->type == TOKEN_PIPE)
+				array_size++;
+			tmp = tmp->next;
 		}
+		array_size++;
+		tmp = token;
+    while (tmp)
+    {
+        c_cmd *new_cmd = malloc(sizeof(c_cmd));
+        if (!new_cmd)
+            return;
+        new_cmd->array =malloc(sizeof(char *) * (array_size + 1));
+        if (!new_cmd->array)
+            return;
+        new_cmd->index = 0;
+        new_cmd->file = NULL;
+        new_cmd->next = NULL;
 
-		(*final)->index++;
+        if (!cmd_head)
+            cmd_head = new_cmd;
+        else
+            current->next = new_cmd;
 
-		if (token && token->type == TOKEN_PIPE)
-			token = token->next;
-	}
+        current = new_cmd;
 
-	(*final)->array[(*final)->index] = NULL;
+        while (tmp && tmp->type != TOKEN_PIPE)
+        {
+            if (tmp->type == TOKEN_REDIRECT_INPUT || tmp->type == TOKEN_REDIRECT_OUTPUT)
+            {
+                handle_redirection(current, tmp);
+                tmp = tmp->next;
+                continue;
+            }
+            if (tmp->value)
+                current->array[current->index++] = ft_strdup(tmp->value);
+            tmp = tmp->next;
+        }
+
+        current->array[current->index] = NULL;
+
+        if (tmp && tmp->type == TOKEN_PIPE)
+            tmp = tmp->next;
+    }
+
+    *final = cmd_head;
 }
+
+
+// void splitit(T_list *token, c_cmd **final)
+// {
+// 	int array_size = 0;
+// 	T_list *tmp = token;
+// 	*final = malloc(sizeof(c_cmd));
+// 	while (tmp)
+// 	{
+// 		if (tmp->type == TOKEN_PIPE)
+// 			array_size++;
+// 		tmp = tmp->next;
+// 	}
+// 	array_size++; 
+	
+// 	// *final = malloc(sizeof(c_cmd));
+// 	if (!*final)
+// 	return;
+	
+// 	(*final)->array = malloc(sizeof(char *) * (array_size + 1));
+// 	if (!(*final)->array)
+// 		return;
+	
+// 	(*final)->file = NULL;
+// 	(*final)->index = 0;
+	
+// 	while (token)
+// 	{
+// 		(*final)->array[(*final)->index] = ft_strdup("");
+
+// 		while (token && token->type != TOKEN_PIPE)
+// 		{
+// 			if (token->type == TOKEN_REDIRECT_INPUT || token->type == TOKEN_REDIRECT_OUTPUT)
+// 			{
+// 				handle_redirection(*final, token);
+// 				token = token->next;
+// 				continue;
+// 			}
+// 			if (token->value)
+// 			{
+// 				char *tmp_str = (*final)->array[(*final)->index];
+// 				(*final)->array[(*final)->index] = ft_strjoin(tmp_str, token->value);
+// 				free(tmp_str);
+// 				tmp_str = (*final)->array[(*final)->index];
+// 				(*final)->array[(*final)->index] = ft_strjoin(tmp_str, " ");
+// 				free(tmp_str);
+// 			}
+// 			(*final)->array[(*final)->index] = NULL;
+// 			token = token->next;
+// 			*final = (*final)->next;
+// 			printf("aaaaaaaaaaaaaaa\n");
+// 		}
+
+// 		(*final)->index++;
+// 		if (token && token->type == TOKEN_PIPE)
+// 			token = token->next;
+// 	}
+
+// }
 
 void CommandOrnot(pars_T *pars, w_list **wlist)
 {
@@ -198,11 +255,23 @@ char *Handlequotes(pars_T *pars, char c)
 
 	if (c == '"') 
 	{
-		char *expanded = expand_variables(segment);
-		free(segment);
-		return expanded;
+		int z = 0;
+		while(z <= pars->NumDollar)
+		{
+			char *expanded = expand_variables(segment);
+			free(segment);
+			segment = expanded;
+			z++;
+///////////////////////////////////////////////////
+////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+//////////////////LEAKS I GUESS/////////////////////
+////////////////////////////////////////////////////
+/////////////////free(expanded);////////////////////
+////////////////////////////////////////////////////
+////////////////////////////////////////////////////
+		}
 	}
-
 	return segment; 
 }
 
@@ -252,7 +321,15 @@ void fill_the_array(pars_T *pars)
 {
 	pars->i = 0;
 	pars->k = 0;
+	pars->NumDollar = 0;
 
+	while(pars->content[pars->i])
+	{
+		if(pars->content[pars->i] == '$')
+			pars->NumDollar++;
+		pars->i++;
+	}
+	pars->i = 0;
 	while (pars->content[pars->i])
 	{
 		SkipWhiteSpaces(pars);
@@ -284,9 +361,14 @@ void fill_the_array(pars_T *pars)
 				}
 				int len = pars->i - start;
 				part = ft_substr(pars->content, start, len);
-				char *expanded = expand_variables(part);
-				free(part);
-				part = expanded;
+				int z = 0;
+				while(pars->NumDollar > z)
+				{
+					char *expanded = expand_variables(part);
+					free(part);
+					part = expanded;
+					z++;
+				}
 			}
 
 			char *tmp = ft_strjoin(token, part);
@@ -342,8 +424,6 @@ void print_list(T_list *list)
 	}
 }
 
-#include <stdio.h>
-
 void print_cmd_list(c_cmd *cmd)
 {
 	if (!cmd)
@@ -352,25 +432,36 @@ void print_cmd_list(c_cmd *cmd)
 		return;
 	}
 
+	int cmd_num = 0;
 	printf("=== Command List ===\n");
-	for (int i = 0; i < cmd->index; i++)
-	{
-		if (cmd->array[i])
-			printf("Command[%d]: %s\n", i, cmd->array[i]);
-		else
-			printf("Command[%d]: (null)\n", i);
-	}
 
-	if (cmd->file)
+	while (cmd)
 	{
-		printf("Redirection file: %s\n", cmd->file->content);
-		printf("Redirection type: %s\n", cmd->file->inout ? "INPUT" : "OUTPUT");
-	}
-	else
-	{
-		printf("No redirection file.\n");
+		printf("--- Command #[ %d ]---\n", cmd_num);
+
+		for (int i = 0; i < cmd->index; i++)
+		{
+			if (cmd->array[i])
+				printf("-------Command[%d]: %s\n", i, cmd->array[i]);
+			else
+				printf("-------Command[%d]: (null)\n", i);
+		}
+
+		if (cmd->file)
+		{
+			printf("-------Redirection file: %s\n", cmd->file->content);
+			printf("-------Redirection type: %s\n\n", cmd->file->inout ? "INPUT" : "OUTPUT");
+		}
+		else
+		{
+			printf("No redirection file.\n\n");
+		}
+
+		cmd = cmd->next;
+		cmd_num++;
 	}
 }
+
 
 
 void print_list1(w_list *list)
@@ -470,7 +561,8 @@ int main()
 
     while (1)
     {
-        in = readline("➜  minishell  ");
+		in = readline("\001\033[38;2;255;105;180m\002➜  minishell \001\033[0m\002");
+        // in = readline("➜  minishell  ");
         if (!in)
             return 0;
 		else
@@ -483,11 +575,11 @@ int main()
 			}
         call_all(in,&wlist);
         token = typesee(&wlist);
-		// expand_variables(token);
+		// expand_variables(&token);
 		splitit(token,&clist);
 		add_history(in);
-        print_list(token);
-		// print_cmd_list(clist);
+        // print_list(token);
+		print_cmd_list(clist);
         free_wlist(&wlist);
 		wlist = NULL;
         free(in);
@@ -496,6 +588,5 @@ int main()
 		// rl_redisplay();
 		}
     }
-	
     return 0;
 }
