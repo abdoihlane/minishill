@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 19:21:22 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/19 19:32:16 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/19 20:51:17 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,20 +39,14 @@ int builtin_echo(c_cmd *cmd)
     
     return (0);
 }
-int ft_strcmp(char *dest, char *src)
+
+int main(int argc, char **argv, char **env)
 {
-    size_t  i;
-    // unsigned char   *ptr1;
-    // unsigned char   *ptr2;
-
-    // ptr1 = (unsigned char *)dest;
-    // ptr2 = (unsigned char *)src;
-
-    while(src[i] != '\0' && dest[i] != '\0')
+    c_cmd   **command = NULL;
+    
+    while(1)
     {
-        if(src[i] == dest[i])
-            return(src[i] - dest[i]);
-        i++;
+        write(1, "minishell_salaheddine> ", 24);
+        
     }
-    return(src[i] - dest[i]);
 }
