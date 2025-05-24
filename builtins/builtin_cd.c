@@ -3,19 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 19:45:22 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/18 19:51:13 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/24 21:45:57 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "mini.h"
 
-void    cd(c_list *commad, 
-
-- cd ..
-cd 
-
-cd -
-cd .. 
+int builtin_cd(c_cmd *cmd, t_shell *shell)
+{
+  
+}

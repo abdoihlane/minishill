@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 17:09:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/19 20:58:41 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/24 21:43:49 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,21 +28,21 @@ int is_builtin(char *cmd)
 }
 
 
-// int execute_builtin(t_command *cmd, t_shell *shell)
-// {
-//     if (ft_strcmp(cmd->cmd, "echo") == 0)
-//         return (builtin_echo(cmd));
-//     else if (ft_strcmp(cmd->cmd, "cd") == 0)
-//         return (builtin_cd(cmd, shell));
-//     else if (ft_strcmp(cmd->cmd, "pwd") == 0)
-//         return (builtin_pwd());
-//     else if (ft_strcmp(cmd->cmd, "export") == 0)
-//         return (builtin_export(cmd, shell));
-//     else if (ft_strcmp(cmd->cmd, "unset") == 0)
-//         return (builtin_unset(cmd, shell));
-//     else if (ft_strcmp(cmd->cmd, "env") == 0)
-//         return (builtin_env(shell));
-//     else if (ft_strcmp(cmd->cmd, "exit") == 0)
-//         return (builtin_exit(cmd, shell));
-//     return (1); // Error
-// }
+int execute_builtin(c_cmd *cmd, t_shell *shell)
+{
+    if (ft_strcmp(cmd->cmd, "echo") == 0)
+        return (builtin_echo(cmd));
+    else if (ft_strcmp(cmd->cmd, "cd") == 0)
+        return (builtin_cd(cmd, shell));
+    else if (ft_strcmp(cmd->cmd, "pwd") == 0)
+        return (builtin_pwd());
+    else if (ft_strcmp(cmd->cmd, "export") == 0)
+        return (builtin_export(cmd, shell));
+    else if (ft_strcmp(cmd->cmd, "unset") == 0)
+        return (builtin_unset(cmd, shell));
+    else if (ft_strcmp(cmd->cmd, "env") == 0)
+        return (builtin_env(shell));
+    else if (ft_strcmp(cmd->cmd, "exit") == 0)
+        return (builtin_exit(cmd, shell));
+    return (1); // Error
+}
