@@ -10,7 +10,7 @@
 #include "./libft/libft.h"
 
 
-typedef struct PARSING_STRUCT 
+typedef struct PARSING_STRUCT
 {
     unsigned int i;
     unsigned int k;
@@ -50,6 +50,7 @@ typedef struct t_cmd
 {
 	int index;
 	char **array; // words splited by pipes
+	char	*cmd; // salah-cmd
 	r_list *file; //any rederection
 	struct t_cmd *next;
 }	c_cmd;
@@ -63,6 +64,12 @@ typedef struct words_list
 
 }					w_list;
 
+typedef struct t_shell
+{
+    char **env;                        // environment variables
+    int last_exit_status;              // $? value
+    // Add more fields as needed
+} t_shell;
 
 void SkipWhiteSpaces(pars_T *pars);
 void Comands(pars_T *pars);
@@ -78,5 +85,9 @@ int valid(char c);
 // void expand_variables(T_list *tokens);
 char *expand_variables(char *input);
 
+//functions bultines
+
+int builtin_cd(c_cmd *cmd, t_shell *shell);
+int builtin_echo(c_cmd *cmd);
 
 #endif
