@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 17:04:06 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/25 17:44:45 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/25 19:21:45 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -593,7 +593,7 @@ void print_cmd_list(c_cmd *cmd)
 	}
 
 	int cmd_num = 0;
-	printf("=== Command List ===\n");
+	printf("==== Command List ====\n");
 	int i = 0;
 	while (cmd)
 	{
@@ -691,9 +691,9 @@ int check_quotes_closed(char *str)
     }
     return (in_single || in_double);
 }
-void call_all(char *in, w_list **wlist)
+void call_all(char *input_user, w_list **wlist)
 {
-	pars_T *pars = init_pars(in);// to free
+	pars_T *pars = init_pars(input_user);// to free
 	fill_the_array(pars);
 	CommandOrnot(pars,wlist);
 	free(pars);

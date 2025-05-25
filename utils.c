@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:03:48 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/25 17:14:33 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/25 21:33:19 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ char *get_env_value(char **env, const char *name)
 
     return (NULL);
 }
+
 
 int count_env_vars(char **env)
 {
@@ -169,15 +170,18 @@ char    *ft_strcpy(char *dest,const char *src)
 
 c_cmd   *create_test_cmd(char *cmd_name, char **args)
 {
-    c_cmd *cmd = malloc(sizeof(c_cmd));
+    c_cmd *cmd;
+    int count;
+    int i;
+    
+    cmd = malloc(sizeof(c_cmd));
     if (!cmd)
         return NULL;
     
     cmd->index = 0;
     cmd->cmd = ft_strdup(cmd_name);
     
-    // Count args
-    int count = 0;
+    count = 0;
     while (args && args[count])
         count++;
     
@@ -188,25 +192,14 @@ c_cmd   *create_test_cmd(char *cmd_name, char **args)
         free(cmd);
         return NULL;
     }
-    
-    for (int i = 0; i < count; i++)
+    i = 0;
+    while (i < count)
+    {
         cmd->array[i] = ft_strdup(args[i]);
+        i++;
+    }
     cmd->array[count] = NULL;
-
     cmd->file = NULL;
     cmd->next = NULL;
     return cmd;
 }
-
-// int ft_strcmp(char *s1, char *s2)
-// {
-//     int i = 0;
-
-//     while(s1[i] && s2[i])
-//     {
-//         if(s1[i] != s2[i])
-//             return(s1[i] - s2[i]);
-//         i++;
-//     }
-//     return(s1[i] - s2[i]);
-// }

@@ -10,16 +10,16 @@
 
 typedef struct PARSING_STRUCT 
 {
-    unsigned int i;
-    unsigned int k;
-     int NumDollar;
+    unsigned int i; // 0
+    unsigned int k; // 0
+    int NumDollar; // 0
     unsigned int index;
-    unsigned int lenOFarray;
+    unsigned int lenOFarray; // 0
     char c;
-	unsigned int nbOfPipes;
+	unsigned int nbOfPipes; // 0
     char **content1;
 	int NbOfCommands;
-    char *content;
+    char *content; // input_user 
 }pars_T;
 
 
@@ -57,8 +57,9 @@ typedef struct t_cmd
 typedef struct words_list
 {
     char *content;
-    struct words_list *next;
     int index;
+    struct words_list *next;
+
 } w_list;
 
 // Structure for shell environment
@@ -103,16 +104,10 @@ void free_wlist(w_list **list);
 void free_Plist(pars_T **list);
 int check_quotes_closed(char *str);
 int HardcodeChecks(char *str);
-void call_all(char *in, w_list **wlist);
+void call_all(char *input_user, w_list **wlist);
 
 
 // ------ EXECUTION FUNCTIONS --------  //
-
-
-
-
-
-
 
 
 // Main builtin functions
