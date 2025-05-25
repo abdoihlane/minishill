@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 19:21:22 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/19 20:51:17 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/25 16:46:29 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int builtin_echo(c_cmd *cmd)
 
     i = 1;
     n_option = 0;
-    // Check for -n option
-    if (cmd->array[i] != '\0' && ft_strcmp(cmd->array[i], "-n") == 0)
+    // printf("array fih : %s\n", cmd->array[0]);
+    if (cmd->array && cmd->array[i] && ft_strcmp(cmd->array[i], "-n") == 0)
     {
         n_option = 1;
         i++;
@@ -38,15 +38,4 @@ int builtin_echo(c_cmd *cmd)
         ft_putchar_fd('\n', 1);
     
     return (0);
-}
-
-int main(int argc, char **argv, char **env)
-{
-    c_cmd   **command = NULL;
-    
-    while(1)
-    {
-        write(1, "minishell_salaheddine> ", 24);
-        
-    }
 }
