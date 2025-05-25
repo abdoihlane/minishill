@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:18:47 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/25 12:18:49 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/25 21:32:53 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,9 @@ int builtin_exit(c_cmd *cmd)
 
     exit_code = 0;
 
-    // If argument provided, use it as exit code
     if (cmd->array && cmd->array[1])
     {
         exit_code = ft_atoi(cmd->array[1]);
-        // Check if it's a valid number (basic check)
         if (!ft_isdigit(cmd->array[1][0]) && cmd->array[1][0] != '-' && cmd->array[1][0] != '+')
         {
             ft_putstr_fd("exit: ", 2);

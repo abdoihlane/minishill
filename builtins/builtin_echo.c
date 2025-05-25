@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 19:21:22 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/25 16:46:29 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/25 18:36:07 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int builtin_echo(c_cmd *cmd)
         n_option = 1;
         i++;
     }
-    // Print all arguments
     while (cmd->array[i])
     {
         ft_putstr_fd(cmd->array[i], 1);

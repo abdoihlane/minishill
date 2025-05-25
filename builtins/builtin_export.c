@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:19:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/25 12:19:05 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/25 18:07:00 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int builtin_export(c_cmd *cmd, t_shell *shell)
     char *name;
     char *value;
 
-    // If no arguments, display all environment variables
     if (!cmd->array || !cmd->array[1])
         return (builtin_env(shell));
 
