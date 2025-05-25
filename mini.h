@@ -15,7 +15,6 @@ typedef struct PARSING_STRUCT
     unsigned int k;
     unsigned int NumDollar;
     unsigned int index;
-
     unsigned int lenOFarray;
     char c;
 	unsigned int nbOfPipes;
@@ -39,7 +38,7 @@ typedef struct token_list
 	enum token{
 		TOKEN_PIPE,
 		TOKEN_WORD,
-		TOKEN_REDIREC_OUTPUT_AM,
+		TOKEN_REDIRECT_OUTPUT_AM,
 		TOKEN_HERDOC,
 		TOKEN_REDIRECT_INPUT,
 		TOKEN_REDIRECT_OUTPUT,

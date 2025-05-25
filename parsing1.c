@@ -11,123 +11,117 @@ void handle_redirection(c_cmd *list, T_list *token)
 		list->file->content = token->next->value;
 	if (token->type == TOKEN_REDIRECT_INPUT)
 		list->file->inout = 1;
-	else
-		list->file->inout = 0;
+	else if(token->type == TOKEN_REDIRECT_OUTPUT)
+		list->file->inout = 0;	
+	else if(token->type == TOKEN_REDIRECT_OUTPUT_AM )
+		list->file->inout = 3;
+	else if(token->type == TOKEN_HERDOC )
+		list->file->inout = 4;
+}
+
+c_cmd *create_new_cmd(int array_size)
+{
+    c_cmd *cmd = malloc(sizeof(c_cmd));
+    if (!cmd)
+        return NULL;
+
+    cmd->array = malloc(sizeof(char *) * (array_size + 1));
+    if (!cmd->array)
+    {
+        free(cmd);
+        return NULL;
+    }
+
+    cmd->index = 0;
+    cmd->file = NULL;
+    cmd->next = NULL;
+    return cmd;
+}
+
+int count_cmd_args(T_list *start)
+{
+	int count = 0;
+	while (start && start->type != TOKEN_PIPE)
+	{
+		if (start->type == TOKEN_WORD)
+			count++;
+		else if (start->type == TOKEN_REDIRECT_INPUT || start->type == TOKEN_REDIRECT_OUTPUT || start->type == TOKEN_REDIRECT_OUTPUT_AM  || start->type == TOKEN_HERDOC  )	
+		{
+			count++;
+			start = start->next;
+		}
+			start = start->next;
+	}
+	return count;
 }
 
 void splitit(T_list *token, c_cmd **final)
 {
-    T_list *tmp = token;
-	int array_size;
+	
+	T_list *tmp = token;
+	int array_size = 0;
     c_cmd *cmd_head = NULL;
     c_cmd *current = NULL;
-		while (tmp)
-		{
-			if (tmp->type == TOKEN_PIPE)
-				array_size++;
-			tmp = tmp->next;
-		}
-		array_size++;
-		tmp = token;
-    while (tmp)
-    {
-        c_cmd *new_cmd = malloc(sizeof(c_cmd));
-        if (!new_cmd)
-            return;
-        new_cmd->array =malloc(sizeof(char *) * (array_size + 1));
-        if (!new_cmd->array)
-            return;
-        new_cmd->index = 0;
-        new_cmd->file = NULL;
-        new_cmd->next = NULL;
+	// c_cmd *new_cmd = create_new_cmd(array_size);
+	// if (!new_cmd)	
+	while (tmp)
+	{
+		if (tmp->type == TOKEN_PIPE)
+			array_size++;
+		tmp = tmp->next;
+	}
+	array_size++;
+
+	tmp = token;
+	while (tmp)
+	{
+		int word_count = count_cmd_args(tmp);
+		c_cmd *new_cmd = create_new_cmd(word_count);
+		if (!new_cmd)
+			return;
+		
+        // c_cmd *new_cmd = malloc(sizeof(c_cmd));
+		// new_cmd->array = malloc(sizeof(char *) * (word_count + 1));
+        // if (!new_cmd)
+        //     return;
+        // // new_cmd->array =malloc(sizeof(char *) * (array_size + 1));
+        // if (!new_cmd->array)
+        //     return;
+        // new_cmd->index = 0;
+        // new_cmd->file = NULL;
+        // new_cmd->next = NULL;
 
         if (!cmd_head)
             cmd_head = new_cmd;
         else
             current->next = new_cmd;
-
-        current = new_cmd;
-
-        while (tmp && tmp->type != TOKEN_PIPE)
-        {
-            if (tmp->type == TOKEN_REDIRECT_INPUT || tmp->type == TOKEN_REDIRECT_OUTPUT)
-            {
-                handle_redirection(current, tmp);
-                tmp = tmp->next;
-                continue;
-            }
-            if (tmp->value)
-                current->array[current->index++] = ft_strdup(tmp->value);
-            tmp = tmp->next;
-        }
-
-        current->array[current->index] = NULL;
-
-        if (tmp && tmp->type == TOKEN_PIPE)
-            tmp = tmp->next;
+			
+			current = new_cmd;
+			while (tmp && tmp->type != TOKEN_PIPE)
+			{
+				if (tmp->type == TOKEN_REDIRECT_INPUT || tmp->type == TOKEN_REDIRECT_OUTPUT || tmp->type == TOKEN_HERDOC ||tmp->type == TOKEN_REDIRECT_OUTPUT_AM  )
+				{
+					handle_redirection(current, tmp);
+					tmp = tmp->next;
+					continue;
+				}
+				if (tmp->value)
+				{
+					current->array[current->index] = strdup(tmp->value);
+					current->index++;
+				}
+				tmp = tmp->next;
+			}
+			current->array[current->index] = NULL;
+			if (tmp && tmp->type == TOKEN_PIPE)
+            	tmp = tmp->next;
     }
 
     *final = cmd_head;
+	// free(cmd_head);
+	// free(current);
+	// free(tmp);
 }
-
-
-// void splitit(T_list *token, c_cmd **final)
-// {
-// 	int array_size = 0;
-// 	T_list *tmp = token;
-// 	*final = malloc(sizeof(c_cmd));
-// 	while (tmp)
-// 	{
-// 		if (tmp->type == TOKEN_PIPE)
-// 			array_size++;
-// 		tmp = tmp->next;
-// 	}
-// 	array_size++; 
-	
-// 	// *final = malloc(sizeof(c_cmd));
-// 	if (!*final)
-// 	return;
-	
-// 	(*final)->array = malloc(sizeof(char *) * (array_size + 1));
-// 	if (!(*final)->array)
-// 		return;
-	
-// 	(*final)->file = NULL;
-// 	(*final)->index = 0;
-	
-// 	while (token)
-// 	{
-// 		(*final)->array[(*final)->index] = ft_strdup("");
-
-// 		while (token && token->type != TOKEN_PIPE)
-// 		{
-// 			if (token->type == TOKEN_REDIRECT_INPUT || token->type == TOKEN_REDIRECT_OUTPUT)
-// 			{
-// 				handle_redirection(*final, token);
-// 				token = token->next;
-// 				continue;
-// 			}
-// 			if (token->value)
-// 			{
-// 				char *tmp_str = (*final)->array[(*final)->index];
-// 				(*final)->array[(*final)->index] = ft_strjoin(tmp_str, token->value);
-// 				free(tmp_str);
-// 				tmp_str = (*final)->array[(*final)->index];
-// 				(*final)->array[(*final)->index] = ft_strjoin(tmp_str, " ");
-// 				free(tmp_str);
-// 			}
-// 			(*final)->array[(*final)->index] = NULL;
-// 			token = token->next;
-// 			*final = (*final)->next;
-// 			printf("aaaaaaaaaaaaaaa\n");
-// 		}
-
-// 		(*final)->index++;
-// 		if (token && token->type == TOKEN_PIPE)
-// 			token = token->next;
-// 	}
-
-// }
 
 void CommandOrnot(pars_T *pars, w_list **wlist)
 {
@@ -152,11 +146,9 @@ T_list *typesee(w_list **list)
         new_token = malloc(sizeof(T_list));
         if (!new_token)
             return NULL;
-		// printf("------------%s---------\n",begin->content);
-        new_token->value = begin->content;
+        new_token->value = (begin->content);
         new_token->next = NULL;
         new_token->index = index++;
-		// printf("-%d-\n",index);
 		if(!ft_strcmp(begin->content, ""))
 			new_token->type = TOKEN_WORD;
         else if (!ft_strcmp(begin->content, "|"))
@@ -168,7 +160,7 @@ T_list *typesee(w_list **list)
         else if (!ft_strcmp(begin->content, "<<"))
             new_token->type = TOKEN_HERDOC;
         else if (!ft_strcmp(begin->content, ">>"))
-            new_token->type = TOKEN_REDIREC_OUTPUT_AM;
+            new_token->type = TOKEN_REDIRECT_OUTPUT_AM;
 		else
             new_token->type = TOKEN_WORD;
 
@@ -256,9 +248,10 @@ char *Handlequotes(pars_T *pars, char c)
 	if (c == '"') 
 	{
 		int z = 0;
+		char *expanded = NULL;
 		while(z <= pars->NumDollar)
 		{
-			char *expanded = expand_variables(segment);
+			expanded = expand_variables(segment);
 			free(segment);
 			segment = expanded;
 			z++;
@@ -271,8 +264,10 @@ char *Handlequotes(pars_T *pars, char c)
 ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////
 		}
+		// free(expanded);
 	}
 	return segment; 
+
 }
 
 
@@ -288,6 +283,10 @@ void SkipWhiteSpaces(pars_T *pars)
 		pars->i++;
 	pars->c = pars->content[pars->i];
 }
+int is_redirection(char c)
+{
+	return (c == '<' || c == '>' || c == '|' );
+}
 
 pars_T *init_pars(char *in)
 {
@@ -299,24 +298,33 @@ pars_T *init_pars(char *in)
 	pars->content = in;
 
 
+	while(pars->content[pars->i])
+	{
+		if(pars->content[pars->i] == '<' || pars->content[pars->i] == '>' || pars->content[pars->i] == '|')
+			{
+				if(!is_whitespace(pars->content[pars->i -1]) && !is_whitespace(pars->content[pars->i +1]))
+					pars->nbOfPipes +=2;
+				else 
+					pars->nbOfPipes+=1;
+			}
+		pars->i++;
+	}
+	pars->i = 0;
 	while (pars->content[pars->i])
 	{
 		SkipWhiteSpaces(pars);
 		if (pars->content[pars->i] == '\0')
 			break;
 		while (!is_whitespace(pars->content[pars->i]) && pars->content[pars->i])
-			pars->i++;
+			{
+				pars->i++;
+			}
 		pars->lenOFarray++;
-	}
-	pars->content1 = malloc(sizeof(char *) * (pars->lenOFarray + 1));
+		}
+	pars->content1 = malloc(sizeof(char *) * (pars->lenOFarray + pars->nbOfPipes + 1));
 	return pars;
 }
 
-
-int is_redirection(char c)
-{
-	return (c == '<' || c == '>' || c == '|');
-}
 void fill_the_array(pars_T *pars)
 {
 	pars->i = 0;
@@ -375,13 +383,13 @@ void fill_the_array(pars_T *pars)
 			free(token);
 			free(part);
 			token = tmp;
+			// free(tmp);
 		}
-
 		if (token[0]) 
 			pars->content1[pars->k++] = token;
 		else
 			free(token);
-
+		// free(token);
 		if (is_redirection(pars->content[pars->i]))
 		{
 			if (pars->content[pars->i] == pars->content[pars->i + 1] &&
@@ -397,6 +405,8 @@ void fill_the_array(pars_T *pars)
 			}
 		}
 	}
+	
+	// free(token);
 
 	pars->content1[pars->k] = NULL;
 }
@@ -418,7 +428,7 @@ void print_list(T_list *list)
             printf("type: REDIRECT_OUTPUT\n");
         else if (list->type == TOKEN_HERDOC)
             printf("type: HERDOC\n");
-        else if (list->type == TOKEN_REDIREC_OUTPUT_AM)
+        else if (list->type == TOKEN_REDIRECT_OUTPUT_AM)
             printf("type: REDIRECT_OUTPUT_APPEND\n");
 		list = list->next;
 	}
@@ -434,23 +444,28 @@ void print_cmd_list(c_cmd *cmd)
 
 	int cmd_num = 0;
 	printf("=== Command List ===\n");
-
+	int i = 0;
 	while (cmd)
 	{
 		printf("--- Command #[ %d ]---\n", cmd_num);
-
-		for (int i = 0; i < cmd->index; i++)
+		while(cmd->array[i])
 		{
-			if (cmd->array[i])
-				printf("-------Command[%d]: %s\n", i, cmd->array[i]);
-			else
-				printf("-------Command[%d]: (null)\n", i);
+			printf("-------Command[%d]: %s\n", i, cmd->array[i]);
+			i++;
 		}
-
+		i = 0;
 		if (cmd->file)
 		{
 			printf("-------Redirection file: %s\n", cmd->file->content);
-			printf("-------Redirection type: %s\n\n", cmd->file->inout ? "INPUT" : "OUTPUT");
+			if(cmd->file->inout == 1 || cmd->file->inout == 2)
+				printf("-------Redirection type: %s\n\n", cmd->file->inout ? "INPUT" : "OUTPUT");
+			else if(cmd->file->inout == 3 || cmd->file->inout == 4)
+			{
+				if(cmd->file->inout == 4)
+					printf("-------Redirection type: %s\n\n","  HERDOC");
+				if(cmd->file->inout == 3)
+					printf("-------Redirection type: %s\n\n"," OUTPUT IN APPEND MODE");
+			}
 		}
 		else
 		{
@@ -461,7 +476,6 @@ void print_cmd_list(c_cmd *cmd)
 		cmd_num++;
 	}
 }
-
 
 
 void print_list1(w_list *list)
@@ -476,8 +490,8 @@ void print_list1(w_list *list)
 
 void free_wlist(w_list **list)
 {
-	w_list *temp;
-	w_list *temp2;
+	w_list *temp = NULL;
+	w_list *temp2 = NULL;
 	temp = *list;
 	if(temp)
 	{
@@ -491,6 +505,25 @@ void free_wlist(w_list **list)
 	}
 }
 
+void free_Plist(pars_T **list)
+{
+	pars_T *temp = NULL;
+	temp = *list;
+	int i = 0;
+	if(temp)
+	{
+		if(temp->content1[i])
+		{
+			while(temp->content1[i])
+			{
+				free(temp->content1[i]);
+				i++;
+			}
+			if(temp->content)
+				free(temp->content);
+		}
+	}
+}
 
 int check_quotes_closed(char *str)
 {
@@ -546,7 +579,7 @@ int HardcodeChecks(char *str)
 
 void call_all(char *in, w_list **wlist)
 {
-	pars_T *pars = init_pars(in);
+	pars_T *pars = init_pars(in);// to free
 	fill_the_array(pars);
 	CommandOrnot(pars,wlist);
 	free(pars);
@@ -556,13 +589,13 @@ int main()
 {
     char *in;
     c_cmd *clist = NULL;
-    w_list *wlist = NULL;
-    T_list *token = NULL;
+    w_list *wlist = NULL; // to free
+    T_list *token = NULL; // to free
+    pars_T *pars = NULL; // to free
 
     while (1)
     {
 		in = readline("\001\033[38;2;255;105;180m\002➜  minishell \001\033[0m\002");
-        // in = readline("➜  minishell  ");
         if (!in)
             return 0;
 		else
@@ -570,8 +603,7 @@ int main()
 		if(HardcodeChecks(in) == 0)
 			{
 				printf("syntax error\n");
-				continue;
-				return 0;
+					continue;
 			}
         call_all(in,&wlist);
         token = typesee(&wlist);
@@ -580,7 +612,10 @@ int main()
 		add_history(in);
         // print_list(token);
 		print_cmd_list(clist);
+		// c_cmd *cmd = clist;
+
         free_wlist(&wlist);
+        free_Plist(&pars);
 		wlist = NULL;
         free(in);
 		rl_on_new_line(); // Regenerate the prompt on a newline
