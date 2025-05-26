@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 17:09:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/26 15:52:06 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/26 16:57:47 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@ int is_builtin(c_cmd *command)
     char *cmd =  command->cmd;
     if (!cmd)
         return (0);
-    if (ft_strcmp(cmd, "echo") == 0 ||
-        ft_strcmp(cmd, "cd") == 0 || //check 
-        ft_strcmp(cmd, "pwd") == 0 ||
-        ft_strcmp(cmd, "export") == 0 || //export
+    if (ft_strcmp(cmd, "echo") == 0 || // echo ist Done
+        ft_strcmp(cmd, "cd") == 0 || // cd its Done
+        ft_strcmp(cmd, "pwd") == 0 || // pwd its Done
+        ft_strcmp(cmd, "export") == 0 || // export 
         ft_strcmp(cmd, "unset") == 0 || //
         ft_strcmp(cmd, "env") == 0 ||
         ft_strcmp(cmd, "exit") == 0)
