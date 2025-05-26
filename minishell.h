@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "./libft/libft.h"
@@ -111,7 +112,7 @@ void call_all(char *input_user, w_list **wlist);
 
 
 // Main builtin functions
-int is_builtin(char *cmd);
+int is_builtin(c_cmd *command);
 int execute_builtin(c_cmd *cmd, t_shell *shell);  // CORRECTED: c_cmd instead of t_command
 // Individual builtin implementations
 int builtin_echo(c_cmd *cmd);                     // Echo command

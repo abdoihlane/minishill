@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "limits.h": "c",
+        "readline.h": "c",
+        "syslimits.h": "c"
+    }
+}

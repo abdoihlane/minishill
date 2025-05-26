@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/25 21:39:47 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/26 15:53:20 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,42 +75,53 @@
 //  }
 
 
-int main()
+int main(int argc, char **argv, char **envp)
 {
-    char *input_user;
-    
-    c_cmd *clist = NULL;
-    w_list *wlist = NULL;
-    T_list *token = NULL;
-    pars_T *pars = NULL;
-    
-    while (1)
-    {
-		input_user = readline("\001\033[38;2;255;105;180m\002➜  minishell \001\033[0m\002");
-          if (!input_user)
-            return 0;
-		else
-		{
-		     if(HardcodeChecks(input_user) == 0)
-			{
-				printf("syntax error\n");
-					continue;
-			}
-               call_all(input_user,&wlist);
-               token = typesee(&wlist);
-               splitit(token,&clist);
-               
-               add_history(input_user);
-               print_cmd_list(clist);
+     (void)argc;
+     (void)argv;
+     char *input_user;
+     c_cmd *clist = NULL;
+     w_list *wlist = NULL;
+     T_list *token = NULL;
+     pars_T *pars = NULL;
+     t_shell    shell;
+     (void)envp;
 
-               free_wlist(&wlist);
-               free_Plist(&pars);
-               wlist = NULL;
-               free(input_user);
-               rl_on_new_line(); // Regenerate the prompt on a newline
-               rl_replace_line("", 0); // Clear the previous text
-		}
-    }
-    return 0;
+     // shell.env = envp;
+     // shell.last_exit_status = 0;
+     while (1)
+     {
+               input_user = readline("\001\033[38;2;255;105;180m\002➜  minishell \001\033[0m\002");
+               if (!input_user)
+               return 0;
+               else
+               {
+                    if(HardcodeChecks(input_user) == 0)
+                    {
+                         printf("syntax error\n");
+                              continue;
+                    }
+                    call_all(input_user,&wlist);
+                    token = typesee(&wlist);
+                    splitit(token,&clist);
+                    while(clist)
+                    {
+                         if(is_builtin(clist))
+                              execute_builtin(clist, &shell);
+                         clist = clist->next;
+                    }
+                    // printf("%s\n", clist->cmd);
+                    add_history(input_user);
+                    // print_cmd_list(clist);
+
+                    free_wlist(&wlist);
+                    free_Plist(&pars);
+                    wlist = NULL;
+                    free(input_user);
+                    rl_on_new_line(); // Regenerate the prompt on a newline
+                    rl_replace_line("", 0); // Clear the previous text
+               }
+     }
+     return 0;
 }
 
