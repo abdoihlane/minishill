@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:03:48 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/25 21:33:19 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/26 18:58:46 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char *get_env_value(char **env, const char *name)
     while (env[i])
     {
         if (ft_strncmp(env[i], name, name_len) == 0 && env[i][name_len] == '=')
-            return (env[i] + name_len + 1); // Return value after '='
+            return (env[i] + name_len + 1);
         i++;
     }
 
@@ -156,7 +156,7 @@ void delete_env_variable(t_shell *shell, const char *name)
 char    *ft_strcpy(char *dest,const char *src)
 {
     int i = 0;
-    
+
     if(!dest || !src)
         return(printf("check (create_env_string) 64\n "), NULL);
     while(src[i] != '\0')
@@ -173,18 +173,18 @@ c_cmd   *create_test_cmd(char *cmd_name, char **args)
     c_cmd *cmd;
     int count;
     int i;
-    
+
     cmd = malloc(sizeof(c_cmd));
     if (!cmd)
         return NULL;
-    
+
     cmd->index = 0;
     cmd->cmd = ft_strdup(cmd_name);
-    
+
     count = 0;
     while (args && args[count])
         count++;
-    
+
     // Copy arguments
     cmd->array = malloc(sizeof(char *) * (count + 1));
     if (!cmd->array)

@@ -9,7 +9,9 @@
 #include <readline/history.h>
 #include "./libft/libft.h"
 
-typedef struct PARSING_STRUCT 
+// #define PATH_MAX  1024;
+
+typedef struct PARSING_STRUCT
 {
     unsigned int i; // 0
     unsigned int k; // 0
@@ -20,7 +22,7 @@ typedef struct PARSING_STRUCT
 	unsigned int nbOfPipes; // 0
     char **content1;
 	int NbOfCommands;
-    char *content; // input_user 
+    char *content; // input_user
 }pars_T;
 
 
