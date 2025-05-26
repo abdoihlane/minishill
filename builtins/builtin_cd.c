@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 19:45:22 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/25 16:29:36 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/25 21:45:47 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int builtin_cd(c_cmd *cmd, t_shell *shell)
     char *path;
     char current_dir[1024];
 
-    // Save current directory for OLDPWD
+    // Get the name of the current working directory
     if (getcwd(current_dir, 1024) == NULL)
         return (1);
 
