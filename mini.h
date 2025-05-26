@@ -50,6 +50,7 @@ typedef struct t_cmd
 {
 	int index;
 	char **array; // words splited by pipes
+	char *cmd;
 	r_list *file; //any rederection
 	struct t_cmd *next;
 }	c_cmd;

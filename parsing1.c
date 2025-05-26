@@ -34,6 +34,7 @@ c_cmd *create_new_cmd(int array_size)
 
     cmd->index = 0;
     cmd->file = NULL;
+	cmd->cmd = NULL;
     cmd->next = NULL;
     return cmd;
 }
@@ -50,9 +51,13 @@ int count_cmd_args(T_list *start)
 			count++;
 			start = start->next;
 		}
+		if(start && start->next)
 			start = start->next;
+		else
+			return count;
 	}
-	return count;
+		return count;
+
 }
 
 void splitit(T_list *token, c_cmd **final)
@@ -115,6 +120,8 @@ void splitit(T_list *token, c_cmd **final)
 			current->array[current->index] = NULL;
 			if (tmp && tmp->type == TOKEN_PIPE)
             	tmp = tmp->next;
+			if(current->array[0])
+				current->cmd = ft_strdup(current->array[0]);
     }
 
     *final = cmd_head;
@@ -302,7 +309,7 @@ pars_T *init_pars(char *in)
 	{
 		if(pars->content[pars->i] == '<' || pars->content[pars->i] == '>' || pars->content[pars->i] == '|')
 			{
-				if(!is_whitespace(pars->content[pars->i -1]) && !is_whitespace(pars->content[pars->i +1]))
+				if(pars->i != 0 &&!is_whitespace(pars->content[pars->i -1]) && !is_whitespace(pars->content[pars->i +1]))
 					pars->nbOfPipes +=2;
 				else 
 					pars->nbOfPipes+=1;
@@ -444,20 +451,21 @@ void print_cmd_list(c_cmd *cmd)
 
 	int cmd_num = 0;
 	printf("=== Command List ===\n");
-	int i = 0;
+	int i = 1;
 	while (cmd)
 	{
-		printf("--- Command #[ %d ]---\n", cmd_num);
+		printf("-------comand : %s\n",cmd->cmd);
+		// printf("--- arg #[ %d ]---\n", cmd_num);
 		while(cmd->array[i])
 		{
-			printf("-------Command[%d]: %s\n", i, cmd->array[i]);
+			printf("-------arg[%d]: %s\n", i, cmd->array[i]);
 			i++;
 		}
 		i = 0;
 		if (cmd->file)
 		{
 			printf("-------Redirection file: %s\n", cmd->file->content);
-			if(cmd->file->inout == 1 || cmd->file->inout == 2)
+			if(cmd->file->inout == 1 || cmd->file->inout == 0)
 				printf("-------Redirection type: %s\n\n", cmd->file->inout ? "INPUT" : "OUTPUT");
 			else if(cmd->file->inout == 3 || cmd->file->inout == 4)
 			{
