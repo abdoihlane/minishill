@@ -5,15 +5,19 @@ LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 CC = cc
-CFLAGS = -lreadline -g3 #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror #-lreadline -g3 #-fsanitize=address
+CCFLAGS = -lreadline -g3 #-fsanitize=address
 
 OBJS = $(SRC:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(SRC) $(LIBFT) $(CFLAGS) -o $(NAME)
+	$(CC) $(SRC) $(LIBFT) $(CCFLAGS) -o $(NAME)
 
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+	
 $(LIBFT):
 	make -C $(LIBFT_DIR)
 

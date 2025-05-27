@@ -227,6 +227,7 @@ int contains_single_quotes(const char *s)
 	}
 	return 0;
 }
+
 char *Handlequotes(pars_T *pars, char c)
 {
 	pars->i++; 
@@ -245,9 +246,12 @@ char *Handlequotes(pars_T *pars, char c)
 	char *segment = malloc(len + 1);
 	if (!segment)
 		return NULL;
-
-	for (int j = 0; j < len; j++)
+	int j = 0;
+	while(j < len)
+	{
 		segment[j] = pars->content[start + j];
+		j++;
+	}
 	segment[len] = '\0';
 
 	pars->i++; 
@@ -262,16 +266,7 @@ char *Handlequotes(pars_T *pars, char c)
 			free(segment);
 			segment = expanded;
 			z++;
-///////////////////////////////////////////////////
-////////////////////////////////////////////////////
-////////////////////////////////////////////////////
-//////////////////LEAKS I GUESS/////////////////////
-////////////////////////////////////////////////////
-/////////////////free(expanded);////////////////////
-////////////////////////////////////////////////////
-////////////////////////////////////////////////////
 		}
-		// free(expanded);
 	}
 	return segment; 
 
