@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
+/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:19:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/27 17:22:28 by salah            ###   ########.fr       */
+/*   Updated: 2025/05/27 21:08:34 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,9 @@ int builtin_export(c_cmd *cmd, t_shell *shell)
     {
         //check wach kayna =
         equal_sign = ft_strchr(cmd->array[i], '=');
-        if (equal_sign)
+        // if(equal_sign == NULL)
+        //     printf("spaaam9999 equal_sign == NULL\n");
+        if (equal_sign != NULL)
         {
             //ah kayna so : andir split VAR=ARG {VAR}, {ARG}, {NULL}
             *equal_sign = '\0';
@@ -38,7 +40,7 @@ int builtin_export(c_cmd *cmd, t_shell *shell)
         }
         else
         {
-            if (!get_env_value(shell->env, cmd->array[i]))
+            if (get_env_value(shell->env, cmd->array[i]) == NULL)
                 update_env_variable(shell, cmd->array[i], "");
         }
         i++;

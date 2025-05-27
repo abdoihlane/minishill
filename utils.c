@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
+/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:03:48 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/27 16:43:54 by salah            ###   ########.fr       */
+/*   Updated: 2025/05/27 21:02:13 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char *get_env_value(char **env, const char *name)
     int i;
     int name_len;
 
-    if (!env || !name)
+    if (env == NULL || name == NULL)
         return (NULL);
 
     name_len = ft_strlen(name);
@@ -25,8 +25,8 @@ char *get_env_value(char **env, const char *name)
 
     while (env[i])
     {
-        if (ft_strncmp(env[i], name, name_len) == 0 && env[i][name_len] == '=')
-            return (env[i] + name_len + 1);
+        if (ft_strncmp(env[i], name, name_len) == 0 && env[i][name_len + 1] == '=')
+            return (env[i] + name_len + 1); 
         i++;
     }
 
@@ -65,6 +65,7 @@ char *create_env_string(const char *name, const char *value)
     return (new_var);
 }
 
+// void    loop
 void update_env_variable(t_shell *shell, const char *name, const char *value)
 {
     int i;
@@ -107,7 +108,6 @@ void update_env_variable(t_shell *shell, const char *name, const char *value)
 
     if (shell->env)
         free(shell->env);
-
     shell->env = new_env;
 }
 
@@ -240,3 +240,17 @@ char **dup_envp(char **envp)
 //     }
 //     free(env);
 // }
+
+void print_env(char **env)
+{
+    int i = 0;
+    while (env && env[i])
+    {
+        printf("%s\n", env[i]);
+        i++;
+    }
+}
+
+
+
+

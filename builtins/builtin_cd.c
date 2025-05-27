@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
+/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 19:45:22 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/27 16:16:19 by salah            ###   ########.fr       */
+/*   Updated: 2025/05/27 20:22:27 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,15 @@ int builtin_cd(c_cmd *cmd, t_shell *shell)
     if (getcwd(current_dir, 1024) == NULL)
         return (1);
 
-    if (!cmd->array || !cmd->array[1])
-        path = get_env_value(shell->env, "HOME");
+    if (!cmd || cmd->array == NULL || cmd->array[1] == NULL)
+        path = get_env_value(shell->env, "HOME"); // ou hta ila makan walo nsift lhome 
 
     else if (ft_strcmp(cmd->array[1], "~") == 0)
-        path = get_env_value(shell->env, "HOME");
+        path = get_env_value(shell->env, "HOME"); // ila kan cd  ~ nsiftk lhome nichan 
     else
-        path = cmd->array[1];
+        path = cmd->array[1]; // 3tini hadak path ndik lih 
 
-
-    if (!path)
+    if (path == NULL)
     {
         ft_putstr_fd("cd: HOME not set\n", 2);
         return (1);

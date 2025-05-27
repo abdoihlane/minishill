@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
+#include <limits.h> // PATH_MAX 4096 
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "./libft/libft.h"
@@ -139,6 +139,7 @@ char            *create_env_string(const char *name, const char *value);
 void            update_env_variable(t_shell *shell, const char *name, const char *value);
 void            delete_env_variable(t_shell *shell, const char *name);
 char            **dup_envp(char **envp);
+void            print_env(char **env);
 // void            free_env(char **env); //check env is free or not 
 
 #endif

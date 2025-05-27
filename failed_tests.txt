@@ -1,0 +1,21 @@
+
+
+unset SESSION_MANAGER QT_ACCESSIBILITY COLORTERM XDG_CONFIG_DIRS SSH_AGENT_LAUNCHER XDG_SESSION_PATH XDG_MENU_PREFIX GNOME_DESKTOP_SESSION_ID GTK_IM_MODULE LANGUAGE SSH_AUTH_SOCK XMODIFIERS DESKTOP_SESSION FT_HOOK_NAME GTK_MODULES FT_HOOK_PATHNAME KRB5CCNAME LOGNAME XDG_SESSION_DESKTOP XDG_SESSION_TYPE GPG_AGENT_INFO SYSTEMD_EXEC_PID XAUTHORITY Y XDG_GREETER_DATA_DIR GDM_LANG LS_COLORS XDG_CURRENT_DESKTOP VTE_VERSION XDG_SEAT_PATH GNOME_TERMINAL_SCREEN XDG_SESSION_CLASS LIBVIRT_DEFAULT_URI GNOME_TERMINAL_SERVICE DISPLAY SHLVL QT_IM_MODULE XDG_RUNTIME_DIR DOCKER_HOST XDG_DATA_DIRS GDMSESSION DBUS_SESSION_BUS_ADDRESS OLDPWD _
+
+
+-------------------------------------failed-----------------------------------------------
+➜  minishell export Y
+➜  minishell env
+SHELL=/bin/zsh
+PWD=/home/salhali/Desktop/minishill
+HOME=/home/salhali
+LANG=en_US.UTF-8
+TERM=xterm-256color
+USER=salhali
+PATH=/home/salhali/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+_=./minishell
+Y
+➜  minishell 
+---------------------------------------------------------------------------------------------
+
+

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
+/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/27 18:05:40 by salah            ###   ########.fr       */
+/*   Updated: 2025/05/27 19:09:10 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,98 +75,96 @@
 //  }
 
 
+int main(int argc, char **argv, char **envp)
+{
+     (void)argc;
+     (void)argv;
+     char *input_user;
+     c_cmd *clist = NULL;
+     w_list *wlist = NULL;
+     T_list *token = NULL;
+     pars_T *pars = NULL;
+     t_shell    shell;
+     // (void)envp;
+
+     shell.env = dup_envp(envp);
+     shell.last_exit_status = 0;
+     while (1)
+     {
+               input_user = readline("\001\033[38;2;255;105;180m\002➜  minishell \001\033[0m\002");
+               if (!input_user)
+               return 0;
+               else
+               {
+                    if(HardcodeChecks(input_user) == 0)
+                    {
+                         printf("syntax error\n");
+                              continue;
+                    }
+                    call_all(input_user,&wlist);
+                    token = typesee(&wlist);
+                    splitit(token,&clist);
+                    add_history(input_user);
+                    while(clist)
+                    {
+                         if(is_builtin(clist))
+                              execute_builtin(clist, &shell);
+                         clist = clist->next;
+                    }
+                    // print_cmd_list(clist);
+                    free_wlist(&wlist);
+                    free_Plist(&pars);
+                    wlist = NULL;
+                    free(input_user);
+                    rl_on_new_line(); // Regenerate the prompt on a newline
+                    rl_replace_line("", 0); // Clear the previous text
+               }
+     }
+     return 0;
+}
+
+
+
 // int main(int argc, char **argv, char **envp)
 // {
-//      (void)argc;
-//      (void)argv;
-//      char *input_user;
-//      c_cmd *clist = NULL;
-//      w_list *wlist = NULL;
-//      T_list *token = NULL;
-//      pars_T *pars = NULL;
-//      t_shell    shell;
-//      // (void)envp;
+//     t_shell shell;
+//     (void)argc;
+//     (void)argv;    
 
-//      shell.env = dup_envp(envp);
-//      shell.last_exit_status = 0;
-//      while (1)
-//      {
-//                input_user = readline("\001\033[38;2;255;105;180m\002➜  minishell \001\033[0m\002");
-//                if (!input_user)
-//                return 0;
-//                else
-//                {
-//                     if(HardcodeChecks(input_user) == 0)
-//                     {
-//                          printf("syntax error\n");
-//                               continue;
-//                     }
-//                     call_all(input_user,&wlist);
-//                     token = typesee(&wlist);
-//                     splitit(token,&clist);
-//                     add_history(input_user);
-//                     while(clist)
-//                     {
-//                          if(is_builtin(clist))
-//                               execute_builtin(clist, &shell);
-//                          clist = clist->next;
-//                     }
-//                     // print_cmd_list(clist);
-//                     free_wlist(&wlist);
-//                     free_Plist(&pars);
-//                     wlist = NULL;
-//                     free(input_user);
-//                     // rl_on_new_line(); // Regenerate the prompt on a newline
-//                     // rl_replace_line("", 0); // Clear the previous text
-//                }
-//      }
-//      return 0;
+//     shell.env = dup_envp(envp);
+//     shell.last_exit_status = 0;
+
+//     printf("------ ENV INITIAL ------\n");
+//     print_env(shell.env);
+
+//     // Test 1: update existing variable
+//     printf("\nTest: update PATH\n\n");
+//     update_env_variable(&shell, "PATH", "/usr/local/bin");
+//     print_env(shell.env);
+
+//     // Test 2: add new variable
+//     printf("\nTest: add HOME\n\n");
+//     update_env_variable(&shell, "HOME", "/home/guest");
+//     print_env(shell.env);
+
+//     // Test 3: update new variable
+//     printf("\nTest: update HOME\n\n");
+//     update_env_variable(&shell, "HOME", "/home/user");
+//     print_env(shell.env);
+
+//     // Test 4: add another new variable
+//     printf("\nTest: add EDITOR\n\n");
+//     update_env_variable(&shell, "EDITOR", "vim");
+//     print_env(shell.env);
+
+//     // Free final env
+//     // int i = 0;
+//     // while (shell.env && shell.env[i])
+//     // {
+//     //     free(shell.env[i]);
+//     //     i++;
+//     // }
+//     // free(shell.env);
+
+//     return 0;
 // }
-
-
-
-int main()
-{
-    t_shell shell;
-    char *initial_env[] = {
-        strdup("USER=guest"),
-        strdup("PATH=/usr/bin"),
-        NULL
-    };
-
-    shell.env = initial_env;
-
-    printf("------ ENV INITIAL ------\n");
-    print_env(shell.env);
-
-    // Test 1: update existing variable
-    printf("\nTest: update PATH\n");
-    update_env_variable(&shell, "PATH", "/usr/local/bin");
-    print_env(shell.env);
-
-    // Test 2: add new variable
-    printf("\nTest: add HOME\n");
-    update_env_variable(&shell, "HOME", "/home/guest");
-    print_env(shell.env);
-
-    // Test 3: update new variable
-    printf("\nTest: update HOME\n");
-    update_env_variable(&shell, "HOME", "/home/user");
-    print_env(shell.env);
-
-    // Test 4: add another new variable
-    printf("\nTest: add EDITOR\n");
-    update_env_variable(&shell, "EDITOR", "vim");
-    print_env(shell.env);
-
-    // Free final env
-    int i = 0;
-    while (shell.env && shell.env[i])
-    {
-        free(shell.env[i]);
-        i++;
-    }
-    free(shell.env);
-
-    return 0;
-}
