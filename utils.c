@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:03:48 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/27 16:24:05 by salah            ###   ########.fr       */
+/*   Updated: 2025/05/27 16:43:54 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,19 +224,19 @@ char **dup_envp(char **envp)
         i++;
     }
     new_env[i] = NULL;
-    return new_env;
+    return (new_env);
 }
 
-void free_env(char **env)
-{
-    int i = 0;
+// void free_env(char **env)
+// {
+//     int i = 0;
 
-    if (!env)
-        return;
-    while (env[i])
-    {
-        free(env[i]);
-        i++;
-    }
-    free(env);
-}
+//     if (!env)
+//         return;
+//     while (env[i])
+//     {
+//         free(env[i]);
+//         i++;
+//     }
+//     free(env);
+// }

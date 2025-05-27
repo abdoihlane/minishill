@@ -6,198 +6,90 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 19:45:22 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/26 19:48:11 by salah            ###   ########.fr       */
+/*   Updated: 2025/05/27 18:05:38 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int builtin_cd(c_cmd *cmd, t_shell *shell)
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Prototypes dyalk
+void update_env_variable(t_shell *shell, const char *name, const char *value);
+char *create_env_string(const char *name, const char *value);
+int count_env_vars(char **env);
+
+// Struct dyal shell li kat3tamd 3liha
+typedef struct s_shell
 {
-    char *path;
-    char *home_value;
-    char current_dir[1024];
+    char **env;
+} t_shell;
 
-    // Get current directory SAFELY
-    if (getcwd(current_dir, sizeof(current_dir)) == NULL)
-    {
-        perror("cd: getcwd");
-        return (1);
-    }
-
-    // Determine target path - MA KATFREE WALOU HUNA!
-    if (!cmd->array || !cmd->array[1])
-    {
-        // cd without arguments -> go to HOME
-        home_value = get_env_value(shell->env, "HOME");
-        if (!home_value)
-        {
-            ft_putstr_fd("cd: HOME not set\n", 2);
-            return (1);
-        }
-        path = home_value; // DIRECT POINTER - MA KATFREE!
-    }
-    else if (ft_strcmp(cmd->array[1], "-") == 0)
-    {
-        // cd - -> go to OLDPWD
-        path = get_env_value(shell->env, "OLDPWD");
-        if (!path)
-        {
-            ft_putstr_fd("cd: OLDPWD not set\n", 2);
-            return (1);
-        }
-        // Print directory (bash behavior)
-        ft_putstr_fd(path, 1);
-        ft_putstr_fd("\n", 1);
-        // path huna pointer direct - MA KATFREE!
-    }
-    else
-    {
-        // Regular path from command line
-        path = cmd->array[1]; // DIRECT POINTER - MA KATFREE!
-    }
-
-    // Try to change directory
-    if (chdir(path) == -1)
-    {
-        ft_putstr_fd("cd: ", 2);
-        ft_putstr_fd(path, 2);
-        ft_putstr_fd(": No such file or directory\n", 2);
-        return (1);
-    }
-
-    // Update environment variables
-    update_env_variable(shell, "OLDPWD", current_dir);
-
-    // Get new directory and update PWD
-    if (getcwd(current_dir, sizeof(current_dir)) != NULL)
-        update_env_variable(shell, "PWD", current_dir);
-
-    return (0);
+// Helpers (dirhom f file .c / .h dyalk)
+char *create_env_string(const char *name, const char *value)
+{
+    char *str;
+    int len = strlen(name) + strlen(value) + 2; // +1 for =, +1 for \0
+    str = malloc(len);
+    if (!str)
+        return NULL;
+    sprintf(str, "%s=%s", name, value);
+    return str;
 }
 
-/* Alternative version ila bghiti tkun extra safe */
-int builtin_cd_extra_safe(c_cmd *cmd, t_shell *shell)
+int count_env_vars(char **env)
 {
-    char *path = NULL;
-    char *home_value = NULL;
-    char current_dir[PATH_MAX];
-    char new_dir[PATH_MAX];
-    int result = 0;
-
-    // Get current directory
-    if (getcwd(current_dir, sizeof(current_dir)) == NULL)
-    {
-        perror("cd: getcwd");
-        return (1);
-    }
-
-    // Determine path - COPY kul shi bach ma ndir free 3la wrong pointer
-    if (!cmd->array || !cmd->array[1])
-    {
-        home_value = get_env_value(shell->env, "HOME");
-        if (!home_value)
-        {
-            ft_putstr_fd("cd: HOME not set\n", 2);
-            return (1);
-        }
-        path = ft_strdup(home_value); // COPY JADIDA
-        if (!path)
-            return (1);
-    }
-    else if (ft_strcmp(cmd->array[1], "-") == 0)
-    {
-        home_value = get_env_value(shell->env, "OLDPWD");
-        if (!home_value)
-        {
-            ft_putstr_fd("cd: OLDPWD not set\n", 2);
-            return (1);
-        }
-        ft_putstr_fd(home_value, 1);
-        ft_putstr_fd("\n", 1);
-        path = ft_strdup(home_value); // COPY JADIDA
-        if (!path)
-            return (1);
-    }
-    else
-    {
-        path = ft_strdup(cmd->array[1]); // COPY JADIDA
-        if (!path)
-            return (1);
-    }
-
-    // Change directory
-    if (chdir(path) == -1)
-    {
-        ft_putstr_fd("cd: ", 2);
-        ft_putstr_fd(path, 2);
-        ft_putstr_fd(": No such file or directory\n", 2);
-        result = 1;
-        goto cleanup;
-    }
-
-    // Update environment
-    update_env_variable(shell, "OLDPWD", current_dir);
-    if (getcwd(new_dir, sizeof(new_dir)) != NULL)
-        update_env_variable(shell, "PWD", new_dir);
-
-cleanup:
-    if (path)
-        free(path); // Dabaآمن نfree-h
-    return (result);
+    int i = 0;
+    while (env && env[i])
+        i++;
+    return i;
 }
 
-/* DEBUG version bach tshuf fin l mushkila */
-int builtin_cd_debug(c_cmd *cmd, t_shell *shell)
+void update_env_variable(t_shell *shell, const char *name, const char *value)
 {
-    char *path;
-    char current_dir[PATH_MAX];
+    int i = 0;
+    int name_len = strlen(name);
+    char **new_env;
+    int env_count;
 
-    printf("DEBUG: cd function called\n");
-
-    if (getcwd(current_dir, sizeof(current_dir)) == NULL)
+    while (shell->env && shell->env[i])
     {
-        printf("DEBUG: getcwd failed\n");
-        return (1);
-    }
-    printf("DEBUG: current_dir = %s\n", current_dir);
-
-    if (!cmd->array || !cmd->array[1])
-    {
-        printf("DEBUG: no arguments, going to HOME\n");
-        path = get_env_value(shell->env, "HOME");
-        printf("DEBUG: HOME = %s\n", path ? path : "NULL");
-    }
-    else
-    {
-        printf("DEBUG: argument = %s\n", cmd->array[1]);
-        path = cmd->array[1];
+        if (strncmp(shell->env[i], name, name_len) == 0 && shell->env[i][name_len] == '=')
+        {
+            free(shell->env[i]);
+            shell->env[i] = create_env_string(name, value);
+            return;
+        }
+        i++;
     }
 
-    if (!path)
+    env_count = count_env_vars(shell->env);
+    new_env = malloc((env_count + 2) * sizeof(char *));
+    if (!new_env)
+        return;
+
+    i = 0;
+    while (i < env_count)
     {
-        printf("DEBUG: path is NULL\n");
-        ft_putstr_fd("cd: HOME not set\n", 2);
-        return (1);
+        new_env[i] = shell->env[i];
+        i++;
     }
+    new_env[i] = create_env_string(name, value);
+    new_env[i + 1] = NULL;
 
-    printf("DEBUG: trying chdir to %s\n", path);
-    if (chdir(path) == -1)
-    {
-        printf("DEBUG: chdir failed\n");
-        perror("cd");
-        return (1);
-    }
-
-    printf("DEBUG: chdir succeeded, updating env vars\n");
-    update_env_variable(shell, "OLDPWD", current_dir);
-
-    if (getcwd(current_dir, sizeof(current_dir)) != NULL)
-    {
-        printf("DEBUG: new dir = %s\n", current_dir);
-        update_env_variable(shell, "PWD", current_dir);
-    }
-
-    printf("DEBUG: cd completed successfully\n");
-    return (0);
+    free(shell->env);
+    shell->env = new_env;
 }
+
+void print_env(char **env)
+{
+    int i = 0;
+    while (env && env[i])
+    {
+        printf("%s\n", env[i]);
+        i++;
+    }
+}
+

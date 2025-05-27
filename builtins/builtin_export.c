@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:19:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/25 18:07:00 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/27 17:22:28 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,13 @@ int builtin_export(c_cmd *cmd, t_shell *shell)
         return (builtin_env(shell));
 
     i = 1;
-    while (cmd->array[i])
+    while (cmd->array[i] != NULL)
     {
+        //check wach kayna =
         equal_sign = ft_strchr(cmd->array[i], '=');
         if (equal_sign)
         {
-            // Split name=value
+            //ah kayna so : andir split VAR=ARG {VAR}, {ARG}, {NULL}
             *equal_sign = '\0';
             name = cmd->array[i];
             value = equal_sign + 1;
@@ -37,7 +38,6 @@ int builtin_export(c_cmd *cmd, t_shell *shell)
         }
         else
         {
-            // Just export the variable (set to empty if not exists)
             if (!get_env_value(shell->env, cmd->array[i]))
                 update_env_variable(shell, cmd->array[i], "");
         }

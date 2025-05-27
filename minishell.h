@@ -139,7 +139,7 @@ char            *create_env_string(const char *name, const char *value);
 void            update_env_variable(t_shell *shell, const char *name, const char *value);
 void            delete_env_variable(t_shell *shell, const char *name);
 char            **dup_envp(char **envp);
-void            free_env(char **env);
+// void            free_env(char **env); //check env is free or not 
 
 #endif
 
