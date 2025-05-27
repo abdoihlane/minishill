@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:03:48 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/26 18:58:46 by salah            ###   ########.fr       */
+/*   Updated: 2025/05/27 16:24:05 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,4 +202,41 @@ c_cmd   *create_test_cmd(char *cmd_name, char **args)
     cmd->file = NULL;
     cmd->next = NULL;
     return cmd;
+}
+
+//  Function dyal duplication dyal envp
+char **dup_envp(char **envp)
+{
+    int i = 0;
+    int count = 0;
+    char **new_env;
+
+    while (envp[count])
+        count++;
+
+    new_env = malloc(sizeof(char *) * (count + 1));
+    if (!new_env)
+        return NULL;
+
+    while (i < count)
+    {
+        new_env[i] = strdup(envp[i]);
+        i++;
+    }
+    new_env[i] = NULL;
+    return new_env;
+}
+
+void free_env(char **env)
+{
+    int i = 0;
+
+    if (!env)
+        return;
+    while (env[i])
+    {
+        free(env[i]);
+        i++;
+    }
+    free(env);
 }

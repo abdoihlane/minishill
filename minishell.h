@@ -114,25 +114,32 @@ void call_all(char *input_user, w_list **wlist);
 
 
 // Main builtin functions
+
 int is_builtin(c_cmd *command);
 int execute_builtin(c_cmd *cmd, t_shell *shell);  // CORRECTED: c_cmd instead of t_command
+
 // Individual builtin implementations
+
 int builtin_echo(c_cmd *cmd);                     // Echo command
 int builtin_cd(c_cmd *cmd, t_shell *shell);       // Change directory
 int builtin_pwd(void);                            // Print working directory
 int builtin_export(c_cmd *cmd, t_shell *shell);   // Export env variables
 int builtin_unset(c_cmd *cmd, t_shell *shell);    // Unset env variables
 int builtin_env(t_shell *shell);                  // Print environment
-int builtin_exit(c_cmd *cmd);   								  // Exit shell
-// Functios
-void free_test_cmd(c_cmd *cmd);
-c_cmd *create_test_cmd(char *cmd_name, char **args);
-// Utility functions for execution
-char *get_env_value(char **env, const char *name);
-int count_env_vars(char **env);
-char    *ft_strcpy(char *dest,const char *src);
-char *create_env_string(const char *name, const char *value);
-void update_env_variable(t_shell *shell, const char *name, const char *value);
-void delete_env_variable(t_shell *shell, const char *name);
+int builtin_exit(c_cmd *cmd);   				  // Exit shell
+
+// function utils check mul:
+
+void            free_test_cmd(c_cmd *cmd);
+c_cmd           *create_test_cmd(char *cmd_name, char **args);
+char            *get_env_value(char **env, const char *name);
+int             count_env_vars(char **env);
+char            *ft_strcpy(char *dest,const char *src);
+char            *create_env_string(const char *name, const char *value);
+void            update_env_variable(t_shell *shell, const char *name, const char *value);
+void            delete_env_variable(t_shell *shell, const char *name);
+char            **dup_envp(char **envp);
+void            free_env(char **env);
+
 #endif
 

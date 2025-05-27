@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/26 19:30:16 by salah            ###   ########.fr       */
+/*   Updated: 2025/05/27 16:26:26 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int main(int argc, char **argv, char **envp)
      t_shell    shell;
      // (void)envp;
 
-     shell.env = envp;
+     shell.env = dup_envp(envp);
      shell.last_exit_status = 0;
      // printf("env -> %s\n", shell.env[0]);
      while (1)
