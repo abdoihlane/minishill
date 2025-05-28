@@ -39,27 +39,27 @@ c_cmd *create_new_cmd(int array_size)
     return cmd;
 }
 
+
 int count_cmd_args(T_list *start)
 {
-	int count = 0;
-	while (start && start->type != TOKEN_PIPE)
-	{
-		if (start->type == TOKEN_WORD)
-			count++;
-		else if (start->type == TOKEN_REDIRECT_INPUT || start->type == TOKEN_REDIRECT_OUTPUT || start->type == TOKEN_REDIRECT_OUTPUT_AM  || start->type == TOKEN_HERDOC  )	
-		{
-			count++;
-			start = start->next;
-		}
-		if(start && start->next)
-			start = start->next;
-		else
-			return count;
-	}
-		return count;
-
+    int count = 0;
+    while (start && start->type != TOKEN_PIPE)
+    {
+        if (start->type == TOKEN_WORD || start->type == TOKEN_quotes)  // zedtt TOKEN_quotes
+            count++;
+        else if (start->type == TOKEN_REDIRECT_INPUT || start->type == TOKEN_REDIRECT_OUTPUT || 
+                 start->type == TOKEN_REDIRECT_OUTPUT_AM || start->type == TOKEN_HERDOC)    
+        {
+            count++;
+            start = start->next;
+        }
+        if(start && start->next)
+            start = start->next;
+        else
+            return count;
+    }
+    return count;
 }
-
 void splitit(T_list *token, c_cmd **final)
 {
 	
@@ -84,17 +84,6 @@ void splitit(T_list *token, c_cmd **final)
 		c_cmd *new_cmd = create_new_cmd(word_count);
 		if (!new_cmd)
 			return;
-		
-        // c_cmd *new_cmd = malloc(sizeof(c_cmd));
-		// new_cmd->array = malloc(sizeof(char *) * (word_count + 1));
-        // if (!new_cmd)
-        //     return;
-        // // new_cmd->array =malloc(sizeof(char *) * (array_size + 1));
-        // if (!new_cmd->array)
-        //     return;
-        // new_cmd->index = 0;
-        // new_cmd->file = NULL;
-        // new_cmd->next = NULL;
 
         if (!cmd_head)
             cmd_head = new_cmd;
@@ -111,8 +100,12 @@ void splitit(T_list *token, c_cmd **final)
 					continue;
 				}
 				if(tmp->type == TOKEN_quotes)
+				{
 					current->qflag = 1;
-				if (tmp->value)
+					current->array[current->index] = strdup("");
+					current->index++;
+				}
+				else if (tmp->value)
 				{
 					current->array[current->index] = strdup(tmp->value);
 					current->index++;
@@ -131,6 +124,7 @@ void splitit(T_list *token, c_cmd **final)
 	// free(current);
 	// free(tmp);
 }
+
 
 void CommandOrnot(pars_T *pars, w_list **wlist)
 {
@@ -335,90 +329,88 @@ pars_T *init_pars(char *in)
 
 void fill_the_array(pars_T *pars)
 {
-	pars->i = 0;
-	pars->k = 0;
-	pars->NumDollar = 0;
+    pars->i = 0;
+    pars->k = 0;
+    pars->NumDollar = 0;
 
-	while(pars->content[pars->i])
-	{
-		if(pars->content[pars->i] == '$')
-			pars->NumDollar++;
-		pars->i++;
-	}
-	pars->i = 0;
-	while (pars->content[pars->i])
-	{
-		SkipWhiteSpaces(pars);
-		if (pars->content[pars->i] == '\0')
-			break;
+    while(pars->content[pars->i])
+    {
+        if(pars->content[pars->i] == '$')
+            pars->NumDollar++;
+        pars->i++;
+    }
+    pars->i = 0;
+    
+    while (pars->content[pars->i])
+    {
+        SkipWhiteSpaces(pars);
+        if (pars->content[pars->i] == '\0')
+            break;
 
-		char *token = ft_strdup("");
+        char *token = ft_strdup("");
 
-		while (pars->content[pars->i] &&
-			   !is_whitespace(pars->content[pars->i]) &&
-			   !is_redirection(pars->content[pars->i]))
-		{
-			char *part = NULL;
+        while (pars->content[pars->i] &&
+               !is_whitespace(pars->content[pars->i]) &&
+               !is_redirection(pars->content[pars->i]))
+        {
+            char *part = NULL;
 
-			if (pars->content[pars->i] == '\'' || pars->content[pars->i] == '\"')
-			{
-				part = Handlequotes(pars, pars->content[pars->i]);
-			}
-			else
-			{
-				int start = pars->i;
-				while (pars->content[pars->i] &&
-					   !is_whitespace(pars->content[pars->i]) &&
-					   !is_redirection(pars->content[pars->i]) &&
-					   pars->content[pars->i] != '\'' &&
-					   pars->content[pars->i] != '\"')
-				{
-					pars->i++;
-				}
-				int len = pars->i - start;
-				part = ft_substr(pars->content, start, len);
-				int z = 0;
-				while(pars->NumDollar > z)
-				{
-					char *expanded = expand_variables(part);
-					free(part);
-					part = expanded;
-					z++;
-				}
-			}
+            if (pars->content[pars->i] == '\'' || pars->content[pars->i] == '\"')
+            {
+                part = Handlequotes(pars, pars->content[pars->i]);
+            }
+            else
+            {
+                int start = pars->i;
+                while (pars->content[pars->i] &&
+                       !is_whitespace(pars->content[pars->i]) &&
+                       !is_redirection(pars->content[pars->i]) &&
+                       pars->content[pars->i] != '\'' &&
+                       pars->content[pars->i] != '\"')
+                {
+                    pars->i++;
+                }
+                int len = pars->i - start;
+                part = ft_substr(pars->content, start, len);
+                int z = 0;
+                while(pars->NumDollar > z)
+                {
+                    char *expanded = expand_variables(part);
+                    free(part);
+                    part = expanded;
+                    z++;
+                }
+            }
 
-			char *tmp = ft_strjoin(token, part);
-			free(token);
-			free(part);
-			token = tmp;
-			// free(tmp);
-		}
-		if (token[0]) 
-			pars->content1[pars->k++] = token;
-		else
-			pars->content1[pars->k++] = ft_strdup("");
-		// printf("[-%s-]",token);
-		// 	free(token);
-		// free(token);
-		if (is_redirection(pars->content[pars->i]))
-		{
-			if (pars->content[pars->i] == pars->content[pars->i + 1] &&
-				(pars->content[pars->i] == '<' || pars->content[pars->i] == '>'))
-			{
-				pars->content1[pars->k++] = ft_substr(pars->content, pars->i, 2);
-				pars->i += 2;
-			}
-			else
-			{
-				pars->content1[pars->k++] = ft_substr(pars->content, pars->i, 1);
-				pars->i++;
-			}
-		}
-	}
-	// free(token);
-	pars->content1[pars->k] = NULL;
+            char *tmp = ft_strjoin(token, part);
+            free(token);
+            free(part);
+            token = tmp;
+        }
+        
+        if (token[0]) 
+            pars->content1[pars->k++] = ft_strdup(token);
+        else
+            pars->content1[pars->k++] = ft_strdup("");
+        free(token);
+
+        if (is_redirection(pars->content[pars->i]))
+        {
+            if (pars->content[pars->i] == pars->content[pars->i + 1] &&
+                (pars->content[pars->i] == '<' || pars->content[pars->i] == '>'))
+            {
+                pars->content1[pars->k++] = ft_substr(pars->content, pars->i, 2);
+                pars->i += 2;
+            }
+            else
+            {
+                pars->content1[pars->k++] = ft_substr(pars->content, pars->i, 1);
+                pars->i++;
+            }
+        }
+    }
+    pars->content1[pars->k] = NULL;
 }
-
 
 
 void print_list(T_list *list)
@@ -458,7 +450,6 @@ void print_cmd_list(c_cmd *cmd)
 		if(cmd->qflag == 1)
 		 	printf("\nthere is quotes\n\n");
 		printf("-------comand : %s\n",cmd->cmd);
-		// printf("--- arg #[ %d ]---\n", cmd_num);
 		while(cmd->array[i])
 		{
 		
