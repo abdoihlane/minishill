@@ -31,7 +31,7 @@ c_cmd *create_new_cmd(int array_size)
         free(cmd);
         return NULL;
     }
-
+	cmd->qflag = 0;
     cmd->index = 0;
     cmd->file = NULL;
 	cmd->cmd = NULL;
@@ -110,6 +110,8 @@ void splitit(T_list *token, c_cmd **final)
 					tmp = tmp->next;
 					continue;
 				}
+				if(tmp->type == TOKEN_quotes)
+					current->qflag = 1;
 				if (tmp->value)
 				{
 					current->array[current->index] = strdup(tmp->value);
@@ -157,7 +159,11 @@ T_list *typesee(w_list **list)
         new_token->next = NULL;
         new_token->index = index++;
 		if(!ft_strcmp(begin->content, ""))
-			new_token->type = TOKEN_WORD;
+		{
+			new_token->type = TOKEN_quotes;
+
+			// printf("\n%s\n",begin->content);
+		}
         else if (!ft_strcmp(begin->content, "|"))
             new_token->type = TOKEN_PIPE;
         else if (!ft_strcmp(begin->content, "<"))
@@ -235,7 +241,7 @@ char *Handlequotes(pars_T *pars, char c)
 	if (pars->content[pars->i] && pars->content[pars->i] == c)
 	{
 		pars->i++; 
-		return ft_strdup(""); 
+		return ft_strdup("");
 	}
 
 	int start = pars->i;
@@ -390,7 +396,9 @@ void fill_the_array(pars_T *pars)
 		if (token[0]) 
 			pars->content1[pars->k++] = token;
 		else
-			free(token);
+			pars->content1[pars->k++] = ft_strdup("");
+		// printf("[-%s-]",token);
+		// 	free(token);
 		// free(token);
 		if (is_redirection(pars->content[pars->i]))
 		{
@@ -407,9 +415,7 @@ void fill_the_array(pars_T *pars)
 			}
 		}
 	}
-	
 	// free(token);
-
 	pars->content1[pars->k] = NULL;
 }
 
@@ -449,10 +455,13 @@ void print_cmd_list(c_cmd *cmd)
 	int i = 1;
 	while (cmd)
 	{
+		if(cmd->qflag == 1)
+		 	printf("\nthere is quotes\n\n");
 		printf("-------comand : %s\n",cmd->cmd);
 		// printf("--- arg #[ %d ]---\n", cmd_num);
 		while(cmd->array[i])
 		{
+		
 			printf("-------arg[%d]: %s\n", i, cmd->array[i]);
 			i++;
 		}

@@ -36,6 +36,7 @@ typedef struct token_list
 	struct token_list	*next;
 	int index;
 	enum token{
+		TOKEN_quotes,
 		TOKEN_PIPE,
 		TOKEN_WORD,
 		TOKEN_REDIRECT_OUTPUT_AM,
@@ -51,6 +52,8 @@ typedef struct t_cmd
 	int index;
 	char **array; // words splited by pipes
 	char *cmd;
+	int qflag; // single quote
+	// int dflag; // double quote
 	r_list *file; //any rederection
 	struct t_cmd *next;
 }	c_cmd;
