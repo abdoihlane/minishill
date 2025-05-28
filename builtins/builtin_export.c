@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:19:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/27 21:08:34 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/28 16:13:43 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,16 @@ int builtin_export(c_cmd *cmd, t_shell *shell)
         equal_sign = ft_strchr(cmd->array[i], '=');
         // if(equal_sign == NULL)
         //     printf("spaaam9999 equal_sign == NULL\n");
-        if (equal_sign != NULL)
+        if(equal_sign == NULL)
+            return(0);
+         if (equal_sign != NULL)
         {
             //ah kayna so : andir split VAR=ARG {VAR}, {ARG}, {NULL}
             *equal_sign = '\0';
             name = cmd->array[i];
             value = equal_sign + 1;
-            update_env_variable(shell, name, value);
             *equal_sign = '='; // Restore original string
+            update_env_variable(shell, name, value);
         }
         else
         {

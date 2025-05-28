@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:03:48 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/27 21:02:13 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/28 17:55:05 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ char *get_env_value(char **env, const char *name)
     name_len = ft_strlen(name);
     i = 0;
 
-    while (env[i])
+    while (env[i] != NULL)
     {
-        if (ft_strncmp(env[i], name, name_len) == 0 && env[i][name_len + 1] == '=')
-            return (env[i] + name_len + 1); 
+        if (ft_strncmp(env[i], name, name_len) == 0 && ft_strchr(env[i], '=') != NULL)
+            return (env[i] + name_len + 1);
         i++;
     }
-
+    printf("%d\n", i);
     return (NULL);
 }
 
@@ -81,8 +81,7 @@ void update_env_variable(t_shell *shell, const char *name, const char *value)
 
     while (shell->env && shell->env[i])
     {
-        if (ft_strncmp(shell->env[i], name, name_len) == 0 &&
-            shell->env[i][name_len] == '=')
+        if (ft_strncmp(shell->env[i], name, name_len) == 0 && shell->env[i][name_len] == '=')
         {
             free(shell->env[i]);
             shell->env[i] = create_env_string(name, value);
@@ -90,7 +89,6 @@ void update_env_variable(t_shell *shell, const char *name, const char *value)
         }
         i++;
     }
-
     env_count = count_env_vars(shell->env);
     new_env = malloc((env_count + 2) * sizeof(char *)); // +2 for new var and NULL
     if (!new_env)

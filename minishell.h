@@ -81,7 +81,7 @@ void print_list1(w_list *list);
 pars_T *init_pars(char *in);
 r_list *ccreate_node(char *value);
 w_list *wcreate_node(char *value);
-int     ft_strcmp(char *s1, char *s2);
+int     ft_strcmp(char *s1, const char *s2);
 void clst_addback(r_list **lst, r_list *node);
 void wlst_addback(w_list **lst, w_list *node);
 int valid(char c);
@@ -129,7 +129,6 @@ int builtin_env(t_shell *shell);                  // Print environment
 int builtin_exit(c_cmd *cmd);   				  // Exit shell
 
 // function utils check mul:
-
 void            free_test_cmd(c_cmd *cmd);
 c_cmd           *create_test_cmd(char *cmd_name, char **args);
 char            *get_env_value(char **env, const char *name);
@@ -141,6 +140,5 @@ void            delete_env_variable(t_shell *shell, const char *name);
 char            **dup_envp(char **envp);
 void            print_env(char **env);
 // void            free_env(char **env); //check env is free or not 
-
 #endif
 

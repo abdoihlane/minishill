@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/27 19:09:10 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/28 14:13:10 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,6 @@
 
 //      shell.env = envp;            // dir envp f shell
 //      shell.last_exit_status = 0;  // bda bi 0 exit status
-
-//      // i = 0;
-//      // while (shell.env && ft_strnstr(shell.env[i], "PATH", 4) == 0)
-// 	// 	i++;
-//      // printf("env -->  : %s\n", shell.env[i]);
 
 //      // TEST CMD: echo
 //      char *args_echo[] = {"echo", "Hello,", "World!", NULL};
@@ -125,46 +120,3 @@ int main(int argc, char **argv, char **envp)
 
 
 
-// int main(int argc, char **argv, char **envp)
-// {
-//     t_shell shell;
-//     (void)argc;
-//     (void)argv;    
-
-//     shell.env = dup_envp(envp);
-//     shell.last_exit_status = 0;
-
-//     printf("------ ENV INITIAL ------\n");
-//     print_env(shell.env);
-
-//     // Test 1: update existing variable
-//     printf("\nTest: update PATH\n\n");
-//     update_env_variable(&shell, "PATH", "/usr/local/bin");
-//     print_env(shell.env);
-
-//     // Test 2: add new variable
-//     printf("\nTest: add HOME\n\n");
-//     update_env_variable(&shell, "HOME", "/home/guest");
-//     print_env(shell.env);
-
-//     // Test 3: update new variable
-//     printf("\nTest: update HOME\n\n");
-//     update_env_variable(&shell, "HOME", "/home/user");
-//     print_env(shell.env);
-
-//     // Test 4: add another new variable
-//     printf("\nTest: add EDITOR\n\n");
-//     update_env_variable(&shell, "EDITOR", "vim");
-//     print_env(shell.env);
-
-//     // Free final env
-//     // int i = 0;
-//     // while (shell.env && shell.env[i])
-//     // {
-//     //     free(shell.env[i]);
-//     //     i++;
-//     // }
-//     // free(shell.env);
-
-//     return 0;
-// }

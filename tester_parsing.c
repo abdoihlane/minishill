@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 17:04:06 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/26 15:27:17 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/28 16:57:24 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ w_list	*wcreate_node(char *value)
 	return (new_node);
 }
 
-int ft_strcmp(char *s1, char *s2)
+int ft_strcmp(char *s1, const char *s2)
 {
 	int i = 0;
 	while(s1[i])
