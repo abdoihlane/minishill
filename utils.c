@@ -79,6 +79,9 @@ void update_env_variable(t_shell *shell, const char *name, const char *value)
     name_len = ft_strlen(name);
     i = 0;
 
+    int k = 0;
+    while (shell->env[k])
+        printf("-|-%s\n",shell->env[k++]);
     while (shell->env && shell->env[i])
     {
         if (ft_strncmp(shell->env[i], name, name_len) == 0 && shell->env[i][name_len] == '=')
@@ -225,6 +228,36 @@ char **dup_envp(char **envp)
     return (new_env);
 }
 
+char    **function_split_env(t_shell *shell)
+{
+    char **storage = NULL;
+    // t_env *envvvvvvvv = NULL;
+    int i;
+
+    i = 0;
+
+    while(shell->env[i] != NULL)
+    {
+        storage = ft_split(shell->env[i], '=');
+        i++;
+    }
+    // int k = 0;
+    // // int j = 0;
+    // while(storage[k])
+    // {
+    //     envvvvvvvv->key = storage[k];
+    //     k++;
+    // }
+    printf("line copy is {%d}\n",i);
+    // if(storage != NULL)
+    // {
+        
+    // }
+    return(NULL);
+    
+    // storage[i] = NULL;
+    // return (storage);
+}
 // void free_env(char **env)
 // {
 //     int i = 0;

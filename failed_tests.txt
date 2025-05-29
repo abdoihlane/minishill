@@ -16,6 +16,42 @@ PATH=/home/salhali/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/
 _=./minishell
 Y
 ➜  minishell 
----------------------------------------------------------------------------------------------
+------------------------------------------fixed-------------------------------------------------
 
 
+----------------------------------------------failed-------------------------------
+
+➜  minishell export Y=SALAHEDDINE
+➜  minishell env
+PATH=/home/salhali/bin:/home/salhali/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+HOME=/home/salhali
+ZDOTDIR=/home/salhali
+INVOCATION_ID=8012a8cafe6646b4afbe6369276bc2e3
+TERM_PROGRAM_VERSION=1.95.3
+GIT_ASKPASS=/usr/share/code/resources/app/extensions/git/dist/askpass.sh
+VSCODE_GIT_ASKPASS_NODE=/usr/share/code/code
+TERM_PROGRAM=vscode
+VSCODE_INJECTION=1
+GIO_LAUNCHED_DESKTOP_FILE_PID=138440
+MANAGERPID=137113
+GJS_DEBUG_TOPICS=JS ERROR;JS LOG
+USER=salhali
+JOURNAL_STREAM=8:615669
+CHROME_DESKTOP=code.desktop
+VSCODE_GIT_ASKPASS_MAIN=/usr/share/code/resources/app/extensions/git/dist/askpass-main.js
+GDK_BACKEND=x11
+TERM=xterm-256color
+LANG=en_US.UTF-8
+ORIGINAL_XDG_CURRENT_DESKTOP=ubuntu:GNOME
+VSCODE_GIT_IPC_HANDLE=/run/user/102577/vscode-git-94e2546f36.sock
+USER_ZDOTDIR=/home/salhali
+SHELL=/bin/zsh
+GJS_DEBUG_OUTPUT=stderr
+GIO_LAUNCHED_DESKTOP_FILE=/usr/share/applications/code.desktop
+PWD=/home/salhali/Desktop/minishill
+VSCODE_GIT_ASKPASS_EXTRA_ARGS=
+Y=
+Y=SALAHEDDINE
+Y=SALAHEDDINE
+
+---------------------------------------------------------------------------------------

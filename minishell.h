@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h> // PATH_MAX 4096 
+#include <linux/limits.h> // PATH_MAX 4096 
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "./libft/libft.h"
@@ -38,6 +38,7 @@ typedef struct token_list
     struct token_list *next;
     int index;
     enum token{
+        TOKEN_quotes,
         TOKEN_PIPE,
         TOKEN_WORD,
         TOKEN_REDIRECT_OUTPUT_AM,
@@ -54,8 +55,16 @@ typedef struct t_cmd
     char **array;                      // words splited by pipes (arguments)
     char *cmd;                         // command name
     r_list *file;                      // redirections
+    int qflag; // single quote
     struct t_cmd *next;                // next command (for pipes)
 } c_cmd;
+
+typedef struct s_env
+{
+    char *key;
+    char *value;
+    struct s_env *next;
+}       t_env;
 
 typedef struct words_list
 {
@@ -68,8 +77,11 @@ typedef struct words_list
 // Structure for shell environment
 typedef struct t_shell
 {
-    char **env;                        // environment variables
+    t_env *envv;
+    char **env;                       // environment variables
+    char    **env_copy;
     int last_exit_status;              // $? value
+    struct t_shell *next;
     // Add more fields as needed
 } t_shell;
 
@@ -139,6 +151,11 @@ void            update_env_variable(t_shell *shell, const char *name, const char
 void            delete_env_variable(t_shell *shell, const char *name);
 char            **dup_envp(char **envp);
 void            print_env(char **env);
+char            **function_split_env(t_shell *shell);
+
+// char	*find_path(char *cmd, char **envp);
+// void	ft_free(char **str);
+// void	execute(char *cmd, char **env);
 // void            free_env(char **env); //check env is free or not 
 #endif
 

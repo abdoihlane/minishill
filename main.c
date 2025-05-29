@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/28 14:13:10 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/28 22:50:18 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,9 @@ int main(int argc, char **argv, char **envp)
      }
      return 0;
 }
+
+// db andir struct dyal env ou ndir function katakhod liyaa hadak env ou kadirlih split key and valsodb hadik struct khas ikon fiha key ou valokaay 
+
 
 
 
