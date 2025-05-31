@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 19:45:22 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/28 22:54:55 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/31 18:16:08 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@
 //     // Get the name of the current working directory
 //     if (getcwd(current_dir, 1024) == NULL)
 //         return (1);
-//     //check 
+//     //check
 
 //     if(find_path(cmd->array[1]));
-    
+
 //     int len = 0;
 //     while(cmd->array[len])
 //         len++;
@@ -31,9 +31,9 @@
 //     {
 //          // printf("cmd->flags = %d\n", cmd->qflag);
 //         if (cmd->array[1] == NULL)
-//             path = get_env_value(shell->env, "HOME"); // ou hta ila makan walo nsift lhome 
+//             path = get_env_value(shell->env, "HOME"); // ou hta ila makan walo nsift lhome
 //         else if (ft_strcmp(cmd->array[1], "~") == 0)
-//             path = get_env_value(shell->env, "HOME"); // ila kan cd  ~ nsiftk lhome nichan 
+//             path = get_env_value(shell->env, "HOME"); // ila kan cd  ~ nsiftk lhome nichan
 //         else
 //             path = cmd->array[1]; // 3tini hadak path ndik lih
 //         if (path == NULL)
@@ -129,7 +129,7 @@ int builtin_cd(c_cmd *cmd, t_shell *shell)
         return(ft_putstr_fd("bash: cd: too many arguments\n", 2), 1);
     if (cmd->array[1] == NULL || ft_strcmp(cmd->array[1], "~") == 0)
     {
-        path = get_env_value(shell->env, "HOME");
+        path = get_env_value_ll(shell->envv , "HOME");
         if (!path)
         {
             ft_putstr_fd("cd: HOME not set\n", 2);

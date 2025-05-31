@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <linux/limits.h> // PATH_MAX 4096 
+#include <linux/limits.h> // PATH_MAX 4096
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "./libft/libft.h"
@@ -61,10 +61,11 @@ typedef struct t_cmd
 
 typedef struct s_env
 {
-    char *key;
-    char *value;
+    char *key;      // . "PATH"
+    char *value;    // . "/usr/bin:/bin"
     struct s_env *next;
-}       t_env;
+} t_env;
+
 
 typedef struct words_list
 {
@@ -151,15 +152,20 @@ void            update_env_variable(t_shell *shell, const char *name, const char
 void            delete_env_variable(t_shell *shell, const char *name);
 char            **dup_envp(char **envp);
 void            print_env(char **env);
+void            print_env_sorted(t_env *env);
+char            *get_env_value_ll(t_env *env, const char *key);
+t_env           *create_env_node(char *key, char *value);
+void            build_env_list(t_shell *shell);
+void            update_env_list(t_shell *shell, const char *key, const char *value);
+
 // char            **function_split_env(t_shell *shell);
-t_env *create_env_node(char *key, char *value);
-void build_env_list(t_shell *shell);
-void add_env_node(t_env **head, t_env *new);
+// t_env *create_env_node(char *key, char *value);
+// void add_env_node(t_env **head, t_env *new);
 
 
 // char	*find_path(char *cmd, char **envp);
 // void	ft_free(char **str);
 // void	execute(char *cmd, char **env);
-// void            free_env(char **env); //check env is free or not 
+// void            free_env(char **env); //check env is free or not
 #endif
 

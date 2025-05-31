@@ -3,35 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:03:48 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/31 15:20:07 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/31 18:16:28 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *get_env_value(char **env, const char *name)
-{
-    int i;
-    int name_len;
+// char *get_env_value(char **env, const char *name)
+// {
+//     int i;
+//     int name_len;
 
-    if (env == NULL || name == NULL)
-        return (NULL);
+//     if (env == NULL || name == NULL)
+//         return (NULL);
 
-    name_len = ft_strlen(name);
-    i = 0;
+//     name_len = ft_strlen(name);
+//     i = 0;
 
-    while (env[i] != NULL)
-    {
-        if (ft_strncmp(env[i], name, name_len) == 0 && ft_strchr(env[i], '=') != NULL)
-            return (env[i] + name_len + 1);
-        i++;
-    }
-    printf("%d\n", i);
-    return (NULL);
-}
+//     while (env[i] != NULL)
+//     {
+//         if (ft_strncmp(env[i], name, name_len) == 0 && ft_strchr(env[i], '=') != NULL)
+//             return (env[i] + name_len + 1);
+//         i++;
+//     }
+//     printf("%d\n", i);
+//     return (NULL);
+// }
 
 
 int count_env_vars(char **env)
@@ -79,9 +79,6 @@ void update_env_variable(t_shell *shell, const char *name, const char *value)
     name_len = ft_strlen(name);
     i = 0;
 
-    int k = 0;
-    while (shell->env[k])
-        printf("-|-%s\n",shell->env[k++]);
     while (shell->env && shell->env[i])
     {
         if (ft_strncmp(shell->env[i], name, name_len) == 0 && shell->env[i][name_len] == '=')
@@ -250,7 +247,7 @@ char **dup_envp(char **envp)
 //     }
 //     printf("%d\n", k);
 //     return(NULL);
-    
+
 //     // storage[i] = NULL;
 //     // return (storage);
 // }
@@ -280,51 +277,74 @@ void print_env(char **env)
     }
 }
 
-void add_env_node(t_env **head, t_env *new)
+t_env *create_env_node(char *key, char *value)
 {
-    if (!*head)
-    {
-        *head = new;
-        return;
-    }
-    t_env *tmp = *head;
-    while (tmp->next)
-        tmp = tmp->next;
-    tmp->next = new;
+    t_env *new = malloc(sizeof(t_env));
+    new->key = strdup(key);
+    new->value = strdup(value);
+    new->next = NULL;
+    return new;
 }
-
-// This function builds the linked list from envp
 void build_env_list(t_shell *shell)
 {
     int i = 0;
-    char *equal_sign;
-    t_env *new_node;
-    
+    char    *equal;
     while (shell->env[i])
     {
-        equal_sign = ft_strchr(shell->env[i], '=');
-        if (equal_sign)
+        equal = ft_strchr(shell->env[i], '=');
+        if (equal)
         {
-            // Split key and value
-            *equal_sign = '\0';
-            shell->envv->key = shell->env[i];
-            shell->envv->value = equal_sign + 1;
-
-            // Create and add new env node
-            new_node = create_env_node(shell->envv->key, shell->envv->value);
-            add_env_node(&(shell->env), new_node);
-            *equal_sign = '=';
+            *equal = '\0';
+            char *key = shell->env[i];
+            char *value = equal + 1;
+            update_env_list(shell, key, value);
+            *equal = '=';
         }
         i++;
     }
 }
-t_env *create_env_node(char *key, char *value)
+
+char *get_env_value_ll(t_env *env, const char *key)
 {
-    t_env *new = malloc(sizeof(t_env));
-    if (!new)
-        return (NULL);
-    new->key = strdup(key);
-    new->value = strdup(value);
-    new->next = NULL;
-    return (new);
+    while (env)
+    {
+        if (ft_strcmp(env->key, key) == 0)
+            return env->value;
+        env = env->next;
+    }
+    return NULL;
+}
+
+void print_env_sorted(t_env *env)
+{
+    int len = 0;
+    t_env *tmp = env;
+    while (tmp) { len++; tmp = tmp->next; }
+
+    char **arr = malloc(sizeof(char *) * (len + 1));
+    tmp = env;
+    for (int i = 0; i < len; i++)
+    {
+        arr[i] = ft_strjoin(tmp->key, "=");
+        arr[i] = ft_strjoin(arr[i], tmp->value);
+        tmp = tmp->next;
+    }
+    arr[len] = NULL;
+
+    // sort
+    for (int i = 0; i < len - 1; i++)
+        for (int j = 0; j < len - i - 1; j++)
+            if (ft_strcmp(arr[j], arr[j + 1]) > 0)
+            {
+                char *t = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = t;
+            }
+
+    for (int i = 0; i < len; i++)
+    {
+        printf("declare -x %s\n", arr[i]);
+        free(arr[i]);
+    }
+    free(arr);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/28 22:50:18 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/31 17:51:48 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,11 @@ int main(int argc, char **argv, char **envp)
      T_list *token = NULL;
      pars_T *pars = NULL;
      t_shell    shell;
-     // (void)envp;
 
      shell.env = dup_envp(envp);
      shell.last_exit_status = 0;
+     shell.envv = NULL;
+     build_env_list(&shell); // ydir conversion mn env[] ➜ linked list
      while (1)
      {
                input_user = readline("\001\033[38;2;255;105;180m\002➜  minishell \001\033[0m\002");
@@ -118,7 +119,7 @@ int main(int argc, char **argv, char **envp)
      return 0;
 }
 
-// db andir struct dyal env ou ndir function katakhod liyaa hadak env ou kadirlih split key and valsodb hadik struct khas ikon fiha key ou valokaay 
+// db andir struct dyal env ou ndir function katakhod liyaa hadak env ou kadirlih split key and valsodb hadik struct khas ikon fiha key ou valokaay
 
 
 
