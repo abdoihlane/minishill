@@ -151,7 +151,11 @@ void            update_env_variable(t_shell *shell, const char *name, const char
 void            delete_env_variable(t_shell *shell, const char *name);
 char            **dup_envp(char **envp);
 void            print_env(char **env);
-char            **function_split_env(t_shell *shell);
+// char            **function_split_env(t_shell *shell);
+t_env *create_env_node(char *key, char *value);
+void build_env_list(t_shell *shell);
+void add_env_node(t_env **head, t_env *new);
+
 
 // char	*find_path(char *cmd, char **envp);
 // void	ft_free(char **str);

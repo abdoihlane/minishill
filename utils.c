@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:03:48 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/30 16:48:18 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/31 15:20:07 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -228,32 +228,32 @@ char **dup_envp(char **envp)
     return (new_env);
 }
 
-char    **function_split_env(t_shell *shell)
-{
-    char **storage = NULL;
-    // t_env *envvvvvvvv = NULL;
-    int i;
-    t_env *key = NULL;
+// char    **function_split_env(t_shell *shell)
+// {
+//     char **storage = NULL;
+//     // t_env *envvvvvvvv = NULL;
+//     int i;
+//     t_env *key = NULL;
 
-    i = 0;
+//     i = 0;
 
-    while(shell->env[i] != NULL)
-    {
-        storage = ft_split(shell->env[i], '=');
-        i++;
-    }
-    int k = 0;
-    while(storage[k] != NULL)
-    {
-        key->key = storage[k];
-        k++;
-    }
-    printf("%d\n", k);
-    return(NULL);
+//     while(shell->env[i] != NULL)
+//     {
+//         storage = ft_split(shell->env[i], '=');
+//         i++;
+//     }
+//     int k = 0;
+//     while(storage[k] != NULL)
+//     {
+//         key->key = storage[k];
+//         k++;
+//     }
+//     printf("%d\n", k);
+//     return(NULL);
     
-    // storage[i] = NULL;
-    // return (storage);
-}
+//     // storage[i] = NULL;
+//     // return (storage);
+// }
 // void free_env(char **env)
 // {
 //     int i = 0;
@@ -298,8 +298,6 @@ void build_env_list(t_shell *shell)
 {
     int i = 0;
     char *equal_sign;
-    char *key;
-    char *value;
     t_env *new_node;
     
     while (shell->env[i])
@@ -309,14 +307,12 @@ void build_env_list(t_shell *shell)
         {
             // Split key and value
             *equal_sign = '\0';
-            key = shell->env[i];
-            value = equal_sign + 1;
+            shell->envv->key = shell->env[i];
+            shell->envv->value = equal_sign + 1;
 
             // Create and add new env node
-            new_node = create_env_node(key, value);
-            add_env_node(&(shell->env_list), new_node);
-            
-            // Restore '=' for safety
+            new_node = create_env_node(shell->envv->key, shell->envv->value);
+            add_env_node(&(shell->env), new_node);
             *equal_sign = '=';
         }
         i++;
