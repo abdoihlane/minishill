@@ -158,6 +158,7 @@ t_env           *create_env_node(char *key, char *value);
 void            build_env_list(t_shell *shell);
 void            update_env_list(t_shell *shell, const char *key, const char *value);
 
+int    ft_strcmp_echo(char *s1, const char *s2);
 // char            **function_split_env(t_shell *shell);
 // t_env *create_env_node(char *key, char *value);
 // void add_env_node(t_env **head, t_env *new);

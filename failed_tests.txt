@@ -55,3 +55,26 @@ Y=SALAHEDDINE
 Y=SALAHEDDINE
 
 ---------------------------------------------------------------------------------------
+
+------------------------------------test echo -----------------------------------
+echo -n -n test ---------- failed ------- its_work
+echo -x test ------------ failed   -------- its_work
+echo "" ------------its_work
+echo '' -----------its_work
+echo -n "" ------------its_work
+echo Hello\tWorld --------- failed ------------ X
+echo Hello*World --------its_work
+echo $HOME ----------its_work
+echo $? -------------- failed ---------- X
+echo one two three four ------- failed ----------- its_work
+echo "quoted string" and unquoted ---------its_work
+echo 'single quotes' "double quotes" mixed ---------- its_work
+echo -n Hello World ---------its_work
+echo -n ----------its_work
+echo -n "No newline" ------------its_work
+echo Hello World ----------its_work 
+echo ------- its_work
+echo "Hello World" ----------its_work
+echo 'Hello World' ------------ its_work 
+
+--------------------------------------------------------------------------------------
