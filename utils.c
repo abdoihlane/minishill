@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:03:48 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/28 17:55:05 by salhali          ###   ########.fr       */
+/*   Updated: 2025/05/30 16:48:18 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,6 +233,7 @@ char    **function_split_env(t_shell *shell)
     char **storage = NULL;
     // t_env *envvvvvvvv = NULL;
     int i;
+    t_env *key = NULL;
 
     i = 0;
 
@@ -241,18 +242,13 @@ char    **function_split_env(t_shell *shell)
         storage = ft_split(shell->env[i], '=');
         i++;
     }
-    // int k = 0;
-    // // int j = 0;
-    // while(storage[k])
-    // {
-    //     envvvvvvvv->key = storage[k];
-    //     k++;
-    // }
-    printf("line copy is {%d}\n",i);
-    // if(storage != NULL)
-    // {
-        
-    // }
+    int k = 0;
+    while(storage[k] != NULL)
+    {
+        key->key = storage[k];
+        k++;
+    }
+    printf("%d\n", k);
     return(NULL);
     
     // storage[i] = NULL;
@@ -272,6 +268,8 @@ char    **function_split_env(t_shell *shell)
 //     free(env);
 // }
 
+
+
 void print_env(char **env)
 {
     int i = 0;
@@ -282,6 +280,55 @@ void print_env(char **env)
     }
 }
 
+void add_env_node(t_env **head, t_env *new)
+{
+    if (!*head)
+    {
+        *head = new;
+        return;
+    }
+    t_env *tmp = *head;
+    while (tmp->next)
+        tmp = tmp->next;
+    tmp->next = new;
+}
 
+// This function builds the linked list from envp
+void build_env_list(t_shell *shell)
+{
+    int i = 0;
+    char *equal_sign;
+    char *key;
+    char *value;
+    t_env *new_node;
+    
+    while (shell->env[i])
+    {
+        equal_sign = ft_strchr(shell->env[i], '=');
+        if (equal_sign)
+        {
+            // Split key and value
+            *equal_sign = '\0';
+            key = shell->env[i];
+            value = equal_sign + 1;
 
-
+            // Create and add new env node
+            new_node = create_env_node(key, value);
+            add_env_node(&(shell->env_list), new_node);
+            
+            // Restore '=' for safety
+            *equal_sign = '=';
+        }
+        i++;
+    }
+}
+t_env *create_env_node(char *key, char *value)
+{
+    t_env *new = malloc(sizeof(t_env));
+    if (!new)
+        return (NULL);
+    new->key = strdup(key);
+    new->value = strdup(value);
+    new->next = NULL;
+    return (new);
+}
