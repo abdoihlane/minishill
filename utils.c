@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:03:48 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/31 18:16:28 by salah            ###   ########.fr       */
+/*   Updated: 2025/05/31 20:59:14 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -315,36 +315,86 @@ char *get_env_value_ll(t_env *env, const char *key)
     return NULL;
 }
 
+// void print_env_sorted(t_env *env)
+// {
+//     int len = 0;
+//     t_env *tmp = env;
+//     while (tmp) { len++; tmp = tmp->next; }
+
+//     char **arr = malloc(sizeof(char *) * (len + 1));
+//     tmp = env;
+//     for (int i = 0; i < len; i++)
+//     {
+//         arr[i] = ft_strjoin(tmp->key, "=");
+//         arr[i] = ft_strjoin(arr[i], tmp->value);
+//         tmp = tmp->next;
+//     }
+//     arr[len] = NULL;
+
+//     // sort
+//     for (int i = 0; i < len - 1; i++)
+//         for (int j = 0; j < len - i - 1; j++)
+//             if (ft_strcmp(arr[j], arr[j + 1]) > 0)
+//             {
+//                 char *t = arr[j];
+//                 arr[j] = arr[j + 1];
+//                 arr[j + 1] = t;
+//             }
+
+//     for (int i = 0; i < len; i++)
+//     {
+//         printf("declare -x %s\n", arr[i]);
+//         free(arr[i]);
+//     }
+//     free(arr);
+// }
+
 void print_env_sorted(t_env *env)
 {
+    // Count env
     int len = 0;
-    t_env *tmp = env;
-    while (tmp) { len++; tmp = tmp->next; }
+    t_env *tmp;
 
-    char **arr = malloc(sizeof(char *) * (len + 1));
+    tmp = env;
+    while (tmp)
+    {
+        len++;
+        tmp = tmp->next;
+    }
+
+    // Build array of keys
+    char **keys = malloc(sizeof(char *) * (len + 1));
     tmp = env;
     for (int i = 0; i < len; i++)
     {
-        arr[i] = ft_strjoin(tmp->key, "=");
-        arr[i] = ft_strjoin(arr[i], tmp->value);
+        keys[i] = strdup(tmp->key);
         tmp = tmp->next;
     }
-    arr[len] = NULL;
+    keys[len] = NULL;
 
-    // sort
+    // Sort keys (bubble sort)
     for (int i = 0; i < len - 1; i++)
+    {
         for (int j = 0; j < len - i - 1; j++)
-            if (ft_strcmp(arr[j], arr[j + 1]) > 0)
+        {
+            if (ft_strcmp(keys[j], keys[j + 1]) > 0)
             {
-                char *t = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = t;
+                char *t = keys[j];
+                keys[j] = keys[j + 1];
+                keys[j + 1] = t;
             }
+        }
+    }
 
+    // Print sorted output
     for (int i = 0; i < len; i++)
     {
-        printf("declare -x %s\n", arr[i]);
-        free(arr[i]);
+        char *val = get_env_value_ll(env, keys[i]);
+        if (val && val[0] != '\0')
+            printf("declare -x %s=\"%s\"\n", keys[i], val);
+        else
+            printf("declare -x %s\n", keys[i]);
+        free(keys[i]);
     }
-    free(arr);
+    free(keys);
 }
