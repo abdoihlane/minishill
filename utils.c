@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:03:48 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/31 20:59:14 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/01 18:34:53 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,6 @@ c_cmd   *create_test_cmd(char *cmd_name, char **args)
     return cmd;
 }
 
-//  Function dyal duplication dyal envp
 char **dup_envp(char **envp)
 {
     int i = 0;
@@ -285,24 +284,6 @@ t_env *create_env_node(char *key, char *value)
     new->next = NULL;
     return new;
 }
-void build_env_list(t_shell *shell)
-{
-    int i = 0;
-    char    *equal;
-    while (shell->env[i])
-    {
-        equal = ft_strchr(shell->env[i], '=');
-        if (equal)
-        {
-            *equal = '\0';
-            char *key = shell->env[i];
-            char *value = equal + 1;
-            update_env_list(shell, key, value);
-            *equal = '=';
-        }
-        i++;
-    }
-}
 
 char *get_env_value_ll(t_env *env, const char *key)
 {
@@ -365,15 +346,18 @@ void print_env_sorted(t_env *env)
     // Build array of keys
     char **keys = malloc(sizeof(char *) * (len + 1));
     tmp = env;
-    for (int i = 0; i < len; i++)
+
+    int i = 0;
+    while (i < len)
     {
         keys[i] = strdup(tmp->key);
         tmp = tmp->next;
+        i++;
     }
     keys[len] = NULL;
 
-    // Sort keys (bubble sort)
-    for (int i = 0; i < len - 1; i++)
+    i = 0;
+    while (i < len - 1)
     {
         for (int j = 0; j < len - i - 1; j++)
         {
@@ -384,10 +368,11 @@ void print_env_sorted(t_env *env)
                 keys[j + 1] = t;
             }
         }
+        i++;
     }
 
-    // Print sorted output
-    for (int i = 0; i < len; i++)
+    i = 0;
+    while (i < len)
     {
         char *val = get_env_value_ll(env, keys[i]);
         if (val && val[0] != '\0')
@@ -395,6 +380,7 @@ void print_env_sorted(t_env *env)
         else
             printf("declare -x %s\n", keys[i]);
         free(keys[i]);
+        i++;
     }
     free(keys);
 }

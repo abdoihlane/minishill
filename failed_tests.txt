@@ -15,8 +15,8 @@ USER=salhali
 PATH=/home/salhali/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 _=./minishell
 Y
-➜  minishell 
-------------------------------------------fixed-------------------------------------------------
+➜  minishell
+------------------------------------------fixed------------------------------------
 
 
 ----------------------------------------------failed-------------------------------
@@ -53,9 +53,7 @@ VSCODE_GIT_ASKPASS_EXTRA_ARGS=
 Y=
 Y=SALAHEDDINE
 Y=SALAHEDDINE
-
----------------------------------------------------------------------------------------
-
+---------------------------------------------------------------------------------
 ------------------------------------test echo -----------------------------------
 echo -n -n test ---------- failed ------- its_work
 echo -x test ------------ failed   -------- its_work
@@ -72,9 +70,9 @@ echo 'single quotes' "double quotes" mixed ---------- its_work
 echo -n Hello World ---------its_work
 echo -n ----------its_work
 echo -n "No newline" ------------its_work
-echo Hello World ----------its_work 
+echo Hello World ----------its_work
 echo ------- its_work
 echo "Hello World" ----------its_work
-echo 'Hello World' ------------ its_work 
+echo 'Hello World' ------------ its_work
 
---------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------

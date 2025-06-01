@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: salhali <salhali@student.42.fr>            +#+  +:+       +#+         #
+#    By: salah <salah@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/19 17:02:36 by salhali           #+#    #+#              #
-#    Updated: 2025/05/25 17:07:29 by salhali          ###   ########.fr        #
+#    Updated: 2025/06/01 18:40:07 by salah            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ SRC = builtins/builtin_echo.c \
 			builtins/builtin_exit.c \
 			tester_parsing.c \
 			utils.c \
+			helper.c \
       main.c
 
 OBJ = $(SRC:.c=.o)

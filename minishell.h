@@ -133,15 +133,16 @@ int execute_builtin(c_cmd *cmd, t_shell *shell);  // CORRECTED: c_cmd instead of
 
 // Individual builtin implementations
 
-int builtin_echo(c_cmd *cmd);                     // Echo command
-int builtin_cd(c_cmd *cmd, t_shell *shell);       // Change directory
-int builtin_pwd(void);                            // Print working directory
-int builtin_export(c_cmd *cmd, t_shell *shell);   // Export env variables
-int builtin_unset(c_cmd *cmd, t_shell *shell);    // Unset env variables
-int builtin_env(t_shell *shell);                  // Print environment
-int builtin_exit(c_cmd *cmd);   				  // Exit shell
+int     builtin_echo(c_cmd *cmd);                     // Echo command
+int     builtin_cd(c_cmd *cmd, t_shell *shell);       // Change directory
+int     builtin_pwd(void);                            // Print working directory
+int     builtin_export(c_cmd *cmd, t_shell *shell);   // Export env variables
+int     builtin_unset(c_cmd *cmd, t_shell *shell);    // Unset env variables
+int     builtin_env(t_shell *shell);                  // Print environment
+void    builtin_exit(c_cmd *cmd, t_shell *shell);   				  // Exit shell
 
 // function utils check mul:
+int             is_numeric(const char *str);
 void            free_test_cmd(c_cmd *cmd);
 c_cmd           *create_test_cmd(char *cmd_name, char **args);
 char            *get_env_value(char **env, const char *name);
@@ -157,8 +158,7 @@ char            *get_env_value_ll(t_env *env, const char *key);
 t_env           *create_env_node(char *key, char *value);
 void            build_env_list(t_shell *shell);
 void            update_env_list(t_shell *shell, const char *key, const char *value);
-
-int    ft_strcmp_echo(char *s1, const char *s2);
+int             ft_strcmp_echo(const char *s);
 // char            **function_split_env(t_shell *shell);
 // t_env *create_env_node(char *key, char *value);
 // void add_env_node(t_env **head, t_env *new);
