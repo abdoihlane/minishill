@@ -144,7 +144,6 @@ void    builtin_exit(c_cmd *cmd, t_shell *shell);   				  // Exit shell
 // function utils check mul:
 int             is_numeric(const char *str);
 void            free_test_cmd(c_cmd *cmd);
-c_cmd           *create_test_cmd(char *cmd_name, char **args);
 char            *get_env_value(char **env, const char *name);
 int             count_env_vars(char **env);
 char            *ft_strcpy(char *dest,const char *src);

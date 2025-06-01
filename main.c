@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/01 18:38:20 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/01 18:50:14 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,10 @@
 
 void build_env_list(t_shell *shell)
 {
-    int i = 0;
+    int i;
     char    *equal;
+
+    i = 0;
     while (shell->env[i])
     {
         equal = ft_strchr(shell->env[i], '=');

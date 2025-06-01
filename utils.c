@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:03:48 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/01 18:34:53 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/01 18:54:24 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,64 +166,6 @@ char    *ft_strcpy(char *dest,const char *src)
     return(dest);
 }
 
-c_cmd   *create_test_cmd(char *cmd_name, char **args)
-{
-    c_cmd *cmd;
-    int count;
-    int i;
-
-    cmd = malloc(sizeof(c_cmd));
-    if (!cmd)
-        return NULL;
-
-    cmd->index = 0;
-    cmd->cmd = ft_strdup(cmd_name);
-
-    count = 0;
-    while (args && args[count])
-        count++;
-
-    // Copy arguments
-    cmd->array = malloc(sizeof(char *) * (count + 1));
-    if (!cmd->array)
-    {
-        free(cmd);
-        return NULL;
-    }
-    i = 0;
-    while (i < count)
-    {
-        cmd->array[i] = ft_strdup(args[i]);
-        i++;
-    }
-    cmd->array[count] = NULL;
-    cmd->file = NULL;
-    cmd->next = NULL;
-    return cmd;
-}
-
-char **dup_envp(char **envp)
-{
-    int i = 0;
-    int count = 0;
-    char **new_env;
-
-    while (envp[count])
-        count++;
-
-    new_env = malloc(sizeof(char *) * (count + 1));
-    if (!new_env)
-        return NULL;
-
-    while (i < count)
-    {
-        new_env[i] = strdup(envp[i]);
-        i++;
-    }
-    new_env[i] = NULL;
-    return (new_env);
-}
-
 // char    **function_split_env(t_shell *shell)
 // {
 //     char **storage = NULL;
@@ -264,71 +206,6 @@ char **dup_envp(char **envp)
 //     free(env);
 // }
 
-
-
-void print_env(char **env)
-{
-    int i = 0;
-    while (env && env[i])
-    {
-        printf("%s\n", env[i]);
-        i++;
-    }
-}
-
-t_env *create_env_node(char *key, char *value)
-{
-    t_env *new = malloc(sizeof(t_env));
-    new->key = strdup(key);
-    new->value = strdup(value);
-    new->next = NULL;
-    return new;
-}
-
-char *get_env_value_ll(t_env *env, const char *key)
-{
-    while (env)
-    {
-        if (ft_strcmp(env->key, key) == 0)
-            return env->value;
-        env = env->next;
-    }
-    return NULL;
-}
-
-// void print_env_sorted(t_env *env)
-// {
-//     int len = 0;
-//     t_env *tmp = env;
-//     while (tmp) { len++; tmp = tmp->next; }
-
-//     char **arr = malloc(sizeof(char *) * (len + 1));
-//     tmp = env;
-//     for (int i = 0; i < len; i++)
-//     {
-//         arr[i] = ft_strjoin(tmp->key, "=");
-//         arr[i] = ft_strjoin(arr[i], tmp->value);
-//         tmp = tmp->next;
-//     }
-//     arr[len] = NULL;
-
-//     // sort
-//     for (int i = 0; i < len - 1; i++)
-//         for (int j = 0; j < len - i - 1; j++)
-//             if (ft_strcmp(arr[j], arr[j + 1]) > 0)
-//             {
-//                 char *t = arr[j];
-//                 arr[j] = arr[j + 1];
-//                 arr[j + 1] = t;
-//             }
-
-//     for (int i = 0; i < len; i++)
-//     {
-//         printf("declare -x %s\n", arr[i]);
-//         free(arr[i]);
-//     }
-//     free(arr);
-// }
 
 void print_env_sorted(t_env *env)
 {

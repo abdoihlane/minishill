@@ -14,9 +14,8 @@ void update_env_list(t_shell *shell, const char *key, const char *value)
         }
         tmp = tmp->next;
     }
-    // not exist ➜ create
     t_env *new = create_env_node((char *)key, (char *)value);
-    if (!shell->envv)
+    if (shell->envv == NULL)
         shell->envv = new;
     else
     {
@@ -25,4 +24,53 @@ void update_env_list(t_shell *shell, const char *key, const char *value)
             tmp = tmp->next;
         tmp->next = new;
     }
+}
+t_env *create_env_node(char *key, char *value)
+{
+    t_env *new = malloc(sizeof(t_env));
+    new->key = ft_strdup(key);
+    new->value = ft_strdup(value);
+    new->next = NULL;
+    return new;
+}
+char *get_env_value_ll(t_env *env, const char *key)
+{
+    while (env)
+    {
+        if (ft_strcmp(env->key, key) == 0)
+            return env->value;
+        env = env->next;
+    }
+    return NULL;
+}
+void print_env(char **env)
+{
+    int i = 0;
+    while (env && env[i])
+    {
+        printf("%s\n", env[i]);
+        i++;
+    }
+}
+
+char **dup_envp(char **envp)
+{
+    int i = 0;
+    int count = 0;
+    char **new_env;
+
+    while (envp[count])
+        count++;
+
+    new_env = malloc(sizeof(char *) * (count + 1));
+    if (!new_env)
+        return NULL;
+
+    while (i < count)
+    {
+        new_env[i] = strdup(envp[i]);
+        i++;
+    }
+    new_env[i] = NULL;
+    return (new_env);
 }
