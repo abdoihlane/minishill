@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:19:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/31 18:13:40 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/01 18:37:39 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,30 +39,4 @@ int builtin_export(c_cmd *cmd, t_shell *shell)
         i++;
     }
     return 0;
-}
-
-void update_env_list(t_shell *shell, const char *key, const char *value)
-{
-    t_env *tmp = shell->envv;
-    while (tmp)
-    {
-        if (ft_strcmp(tmp->key, key) == 0)
-        {
-            free(tmp->value);
-            tmp->value = strdup(value);
-            return;
-        }
-        tmp = tmp->next;
-    }
-    // not exist ➜ create
-    t_env *new = create_env_node((char *)key, (char *)value);
-    if (!shell->envv)
-        shell->envv = new;
-    else
-    {
-        tmp = shell->envv;
-        while (tmp->next)
-            tmp = tmp->next;
-        tmp->next = new;
-    }
 }
