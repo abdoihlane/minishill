@@ -76,3 +76,352 @@ echo "Hello World" ----------its_work
 echo 'Hello World' ------------ its_work
 
 -----------------------------------------------------------------------------------
+
+echo -n -n "Hello"  # Multiple -n flags
+echo -nn "Hello"    # Invalid flag format
+echo --n "Hello"    # Invalid flag format
+echo - "Hello"      # Just dash
+
+-------------------------------------------------------------------------------------
+
+# Minishell Builtin Functions Test Cases
+
+## 1. echo builtin
+
+### Basic functionality
+```bash
+echo "Hello World"
+echo Hello World
+echo "Hello    World"  # Multiple spaces
+echo ''  # Empty single quotes
+echo ""  # Empty double quotes
+echo
+```
+
+### With -n option
+```bash
+echo -n "Hello"
+echo -n "Hello" "World"
+echo -n
+echo -n ""
+```
+
+### Variable expansion
+```bash
+echo $HOME
+echo $PATH
+echo $USER
+echo $?
+echo "$HOME"
+echo '$HOME'  # Should not expand
+```
+
+### Edge cases
+```bash
+echo -n -n "Hello"  # Multiple -n flags
+echo -nn "Hello"    # Invalid flag format
+echo --n "Hello"    # Invalid flag format
+echo - "Hello"      # Just dash
+```
+
+## 2. cd builtin
+
+### Basic functionality
+```bash
+cd /
+cd ~
+cd
+cd .
+cd ..
+cd /tmp
+cd /home
+```
+
+### Relative paths
+```bash
+cd ../
+cd ./folder
+cd folder/subfolder
+cd ../../
+```
+
+### Absolute paths
+```bash
+cd /usr/bin
+cd /home/user
+cd /tmp
+cd /
+```
+
+### Error cases
+```bash
+cd nonexistent_directory
+cd /root  # Permission denied
+cd ""
+cd file.txt  # Not a directory
+cd too many arguments
+```
+
+### Environment variables
+```bash
+cd $HOME
+cd "$HOME"
+cd '$HOME'  # Should not expand
+```
+
+## 3. pwd builtin
+
+### Basic functionality
+```bash
+pwd
+```
+
+### After directory changes
+```bash
+cd /tmp && pwd
+cd ~ && pwd
+cd / && pwd
+cd .. && pwd
+```
+
+### With redirections
+```bash
+pwd > file.txt
+pwd | cat
+```
+
+### Error cases
+```bash
+pwd extra_argument  # Should work but ignore extra args in bash
+```
+
+## 4. export builtin
+
+### Basic functionality
+```bash
+export
+export VAR=value
+export VAR="value with spaces"
+export VAR='single quotes'
+export VAR=
+```
+
+### Multiple variables
+```bash
+export VAR1=value1 VAR2=value2
+export VAR1=value1 VAR2=value2 VAR3=value3
+```
+
+### Special characters
+```bash
+export VAR="value with $pecial characters"
+export VAR='value with $pecial characters'
+export PATH=$PATH:/new/path
+```
+
+### Invalid cases
+```bash
+export 123VAR=value  # Invalid variable name
+export VAR-NAME=value  # Invalid variable name
+export =value  # No variable name
+export VAR =value  # Space before =
+```
+
+### Overwriting existing variables
+```bash
+export HOME=/new/home
+export PATH=/new/path
+export USER=newuser
+```
+
+## 5. unset builtin
+
+### Basic functionality
+```bash
+unset VAR
+unset HOME
+unset PATH
+unset USER
+```
+
+### Multiple variables
+```bash
+unset VAR1 VAR2 VAR3
+export TEST=value && unset TEST
+```
+
+### Non-existent variables
+```bash
+unset NONEXISTENT_VAR
+```
+
+### Invalid cases
+```bash
+unset 123VAR  # Invalid variable name
+unset VAR-NAME  # Invalid variable name
+unset  # No arguments
+```
+
+### Special variables
+```bash
+unset ?  # Should not work
+unset 0  # Should not work
+```
+
+## 6. env builtin
+
+### Basic functionality
+```bash
+env
+```
+
+### After modifications
+```bash
+export NEWVAR=value && env
+unset PATH && env
+export PATH=/new/path && env
+```
+
+### With redirections
+```bash
+env > env_output.txt
+env | grep HOME
+env | wc -l
+```
+
+### Error cases
+```bash
+env with arguments  # Should ignore arguments in this implementation
+```
+
+## 7. exit builtin
+
+### Basic functionality
+```bash
+exit
+exit 0
+exit 1
+exit 42
+exit 255
+```
+
+### With expressions
+```bash
+exit $?
+exit $(echo 5)
+```
+
+### Invalid cases
+```bash
+exit abc  # Invalid number
+exit 256  # Number too large
+exit -1   # Negative number
+exit 1 2  # Too many arguments
+```
+
+### In different contexts
+```bash
+echo "test" && exit 0
+exit 1 || echo "This shouldn't print"
+```
+
+## Integration Tests
+
+### Combining builtins
+```bash
+cd /tmp && pwd
+export TEST=hello && echo $TEST
+export PATH=/bin:/usr/bin && which ls
+cd ~ && pwd && echo $HOME
+```
+
+### With pipes and redirections
+```bash
+echo "test" | cat
+pwd > current_dir.txt
+env | grep HOME
+export TEST=value && env | grep TEST
+```
+
+### With quotes and special characters
+```bash
+echo "Current directory: $(pwd)"
+export MESSAGE="Hello World" && echo "$MESSAGE"
+cd "$HOME" && pwd
+```
+
+### Error handling
+```bash
+cd /nonexistent 2>/dev/null || echo "Directory not found"
+unset NONEXISTENT 2>/dev/null; echo "Done"
+```
+
+## Signal Handling Tests (Interactive Mode)
+
+### Ctrl-C behavior
+- Test Ctrl-C during builtin execution
+- Test Ctrl-C at prompt
+- Verify new prompt appears on new line
+
+### Ctrl-D behavior
+- Test Ctrl-D at empty prompt (should exit)
+- Test Ctrl-D with text on line
+
+### Ctrl-\ behavior
+- Test Ctrl-\ does nothing in interactive mode
+
+## Environment Variable Tests
+
+### $? expansion
+```bash
+echo "Hello" && echo $?  # Should be 0
+cd /nonexistent && echo $?  # Should be 1
+false && echo $?  # Should be 1
+true && echo $?   # Should be 0
+```
+
+### Variable expansion in builtins
+```bash
+export HOME=/tmp && cd $HOME && pwd
+export TEST="Hello World" && echo $TEST
+```
+
+## Memory Leak Tests
+
+- Run all builtins with valgrind
+- Test repeated execution of builtins
+- Test builtins with large inputs
+- Test error conditions for memory leaks
+
+## Edge Cases
+
+### Empty inputs
+```bash
+""
+''
+$EMPTY_VAR
+```
+
+### Special characters
+```bash
+echo "Special chars: !@#$%^&*()"
+export VAR="Value with spaces and $pecial chars"
+cd "directory with spaces"
+```
+
+### Long inputs
+```bash
+export LONG_VAR="very long value..."
+echo "very long string..."
+cd very/long/path/that/might/not/exist
+```
+
+## Performance Tests
+
+- Test builtin execution speed
+- Test with large environment variables
+- Test with many environment variables
+- Test repeated builtin calls
+
+
+------------------------------------------------------------------------------------

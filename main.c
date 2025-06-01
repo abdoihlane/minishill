@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
+/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/01 18:50:14 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/01 20:21:59 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,27 +69,6 @@
 //     return 0;
 //  }
 
-
-void build_env_list(t_shell *shell)
-{
-    int i;
-    char    *equal;
-
-    i = 0;
-    while (shell->env[i])
-    {
-        equal = ft_strchr(shell->env[i], '=');
-        if (equal)
-        {
-            *equal = '\0';
-            char *key = shell->env[i];
-            char *value = equal + 1;
-            update_env_list(shell, key, value);
-            *equal = '=';
-        }
-        i++;
-    }
-}
 int main(int argc, char **argv, char **envp)
 {
      (void)argc;
@@ -138,8 +117,6 @@ int main(int argc, char **argv, char **envp)
      }
      return 0;
 }
-
-// db andir struct dyal env ou ndir function katakhod liyaa hadak env ou kadirlih split key and valsodb hadik struct khas ikon fiha key ou valokaay
 
 
 
