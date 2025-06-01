@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 19:45:22 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/31 18:16:08 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/01 19:00:13 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ int builtin_cd(c_cmd *cmd, t_shell *shell)
         i++;
     if (i > 2)
         return(ft_putstr_fd("bash: cd: too many arguments\n", 2), 1);
-    if (cmd->array[1] == NULL || ft_strcmp(cmd->array[1], "~") == 0)
+    else if (cmd->array[1] == NULL || ft_strcmp(cmd->array[1], "~") == 0)
     {
         path = get_env_value_ll(shell->envv , "HOME");
         if (!path)
@@ -143,7 +143,7 @@ int builtin_cd(c_cmd *cmd, t_shell *shell)
     if (chdir(path) == -1)
     {
         ft_putstr_fd("cd: ", 2);
-        perror(path); // better error message
+        perror(path);
         return (1);
     }
 
