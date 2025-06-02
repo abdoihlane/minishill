@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 20:20:16 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/01 20:21:21 by salhali          ###   ########.fr       */
+/*   Updated: 2025/06/02 20:26:43 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,15 +132,16 @@ void delete_env_variable(t_shell *shell, const char *name)
                 return;
 
             j = 0;
-            for (int k = 0; k < env_count; k++)
+            int k = 0;
+            while (k < env_count)
             {
                 if (k != i)
                     new_env[j++] = shell->env[k];
                 else
                     free(shell->env[k]);
+                k++;
             }
             new_env[j] = NULL;
-
             free(shell->env);
             shell->env = new_env;
             return;
