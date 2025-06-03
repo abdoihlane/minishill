@@ -53,8 +53,9 @@ VSCODE_GIT_ASKPASS_EXTRA_ARGS=
 Y=
 Y=SALAHEDDINE
 Y=SALAHEDDINE
----------------------------------------------------------------------------------
+
 ------------------------------------test echo -----------------------------------
+
 echo -n -n test ---------- failed ------- its_work
 echo -x test ------------ failed   -------- its_work
 echo "" ------------its_work

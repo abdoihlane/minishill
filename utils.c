@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:03:48 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/01 20:24:22 by salhali          ###   ########.fr       */
+/*   Updated: 2025/06/03 13:29:20 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void print_env_sorted(t_env *env)
         tmp = tmp->next;
     }
 
-    // Build array of keys
     char **keys = malloc(sizeof(char *) * (len + 1));
     tmp = env;
 
