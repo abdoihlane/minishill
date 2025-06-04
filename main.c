@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/03 13:49:41 by salhali          ###   ########.fr       */
+/*   Updated: 2025/06/04 17:22:31 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,6 @@ int main(int argc, char **argv, char **envp)
      t_shell    shell;
 
      shell.env = dup_envp(envp);
-     //////////////////////////////
-     shell.env_copy = dup_envp(envp);
      shell.last_exit_status = 0;
      shell.envv = NULL;
      build_env_list(&shell); // ydir conversion mn env[] ➜ linked list

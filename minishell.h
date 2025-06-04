@@ -80,7 +80,6 @@ typedef struct t_shell
 {
     t_env *envv;
     char **env;                       // environment variables
-    char    **env_copy;
     int last_exit_status;              // $? value
     struct t_shell *next;
     // Add more fields as needed

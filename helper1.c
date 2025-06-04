@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper1.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 20:20:16 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/03 13:51:37 by salhali          ###   ########.fr       */
+/*   Updated: 2025/06/04 17:21:39 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ void build_env_list(t_shell *shell)
     char    *equal;
 
     i = 0;
-    while (shell->env_copy[i])
+    while (shell->env[i])
     {
-        equal = ft_strchr(shell->env_copy[i], '=');
+        equal = ft_strchr(shell->env[i], '=');
         if (equal)
         {
             *equal = '\0';
-            char *key = shell->env_copy[i];
+            char *key = shell->env[i];
             char *value = equal + 1;
             update_env_list(shell, key, value);
             *equal = '=';
@@ -77,17 +77,17 @@ void update_env_variable(t_shell *shell, const char *name, const char *value)
     name_len = ft_strlen(name);
     i = 0;
 
-    while (shell->env_copy && shell->env_copy[i])
+    while (shell->env && shell->env[i])
     {
-        if (ft_strncmp(shell->env_copy[i], name, name_len) == 0 && shell->env[i][name_len] == '=')
+        if (ft_strncmp(shell->env[i], name, name_len) == 0 && shell->env[i][name_len] == '=')
         {
-            free(shell->env_copy[i]);
-            shell->env_copy[i] = create_env_string(name, value);
+            free(shell->env[i]);
+            shell->env[i] = create_env_string(name, value);
             return;
         }
         i++;
     }
-    env_count = count_env_vars(shell->env_copy);
+    env_count = count_env_vars(shell->env);
     new_env = malloc((env_count + 2) * sizeof(char *)); // +2 for new var and NULL
     if (!new_env)
         return;
@@ -95,16 +95,16 @@ void update_env_variable(t_shell *shell, const char *name, const char *value)
     i = 0;
     while (i < env_count)
     {
-        new_env[i] = shell->env_copy[i];
+        new_env[i] = shell->env[i];
         i++;
     }
 
     new_env[i] = create_env_string(name, value);
     new_env[i + 1] = NULL;
 
-    if (shell->env_copy)
-        free(shell->env_copy);
-    shell->env_copy = new_env;
+    if (shell->env)
+        free(shell->env);
+    shell->env = new_env;
 }
 
 void delete_env_variable(t_shell *shell, const char *name)
