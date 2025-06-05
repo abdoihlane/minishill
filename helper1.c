@@ -6,18 +6,40 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 20:20:16 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/04 17:21:39 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/05 15:17:41 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// void build_env_list(t_shell *shell)
+// {
+//     int i;
+//     char    *equal;
+
+//     i = 0;
+//     while (shell->env[i])
+//     {
+//         equal = ft_strchr(shell->env[i], '=');
+//         if (equal)
+//         {
+//             *equal = '\0';
+//             char *key = shell->env[i];
+//             char *value = equal + 1;
+//             update_env_list(shell, key, value);
+//             *equal = '=';
+//         }
+//         i++;
+//     }
+// }
+
 void build_env_list(t_shell *shell)
 {
-    int i;
-    char    *equal;
+    int i = 0;
+    char *equal;
+    t_env *new;
+    t_env *last = NULL;
 
-    i = 0;
     while (shell->env[i])
     {
         equal = ft_strchr(shell->env[i], '=');
@@ -26,12 +48,28 @@ void build_env_list(t_shell *shell)
             *equal = '\0';
             char *key = shell->env[i];
             char *value = equal + 1;
-            update_env_list(shell, key, value);
+
+            new = malloc(sizeof(t_env));
+            if (!new)
+                return;
+
+            new->key = ft_strdup(key);
+            new->value = ft_strdup(value);
+            new->next = NULL;
+
+            if (!shell->envv)
+                shell->envv = new;
+            else
+                last->next = new;
+
+            last = new;
+
             *equal = '=';
         }
         i++;
     }
 }
+
 int count_env_vars(char **env)
 {
     int count;

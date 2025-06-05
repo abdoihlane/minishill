@@ -79,10 +79,8 @@ typedef struct words_list
 typedef struct t_shell
 {
     t_env *envv;
-    char **env;                       // environment variables
+    char   **env;
     int last_exit_status;              // $? value
-    struct t_shell *next;
-    // Add more fields as needed
 } t_shell;
 
 // Parsing functions
@@ -132,14 +130,13 @@ int                 execute_builtin(c_cmd *cmd, t_shell *shell);  // CORRECTED: 
 
 // Individual builtin implementations
 
-void                builtin_exit(c_cmd *cmd, t_shell *shell);   				  // Exit shell
+void                builtin_exit(c_cmd *cmd, t_shell *shell);     // Exit shell
 int                 builtin_echo(c_cmd *cmd);                     // Echo command
 int                 builtin_cd(c_cmd *cmd, t_shell *shell);       // Change directory
 int                 builtin_pwd(void);                            // Print working directory
 int                 builtin_export(c_cmd *cmd, t_shell *shell);   // Export env variables
 int                 builtin_unset(c_cmd *cmd, t_shell *shell);    // Unset env variables
-int                 builtin_env(t_shell *shell);                  // Print environment
-
+int                 builtin_env(c_cmd *cmd, t_shell *shell);                  // Print environment
 // function utils check mul:
 int                 is_numeric(const char *str);
 void                free_test_cmd(c_cmd *cmd);
@@ -157,14 +154,13 @@ t_env               *create_env_node(char *key, char *value);
 void                build_env_list(t_shell *shell);
 void                update_env_list(t_shell *shell, const char *key, const char *value);
 int                 ft_strcmp_echo(const char *s);
-// char            **function_split_env(t_shell *shell);
-// t_env *create_env_node(char *key, char *value);
-// void add_env_node(t_env **head, t_env *new);
+char                **function_split_env(t_shell *shell);
+t_env               *create_env_node(char *key, char *value);
+void                add_env_node(t_env **head, t_env *new);
+char	            *find_path(char *cmd, char **envp);
+void	            ft_free(char **str);
+void	            execute(char *cmd, char **env);
+void                free_env(char **env); //check env is free or not
 
-
-// char	*find_path(char *cmd, char **envp);
-// void	ft_free(char **str);
-// void	execute(char *cmd, char **env);
-// void            free_env(char **env); //check env is free or not
 #endif
 

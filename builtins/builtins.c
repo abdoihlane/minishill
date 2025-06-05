@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 17:09:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/01 18:06:50 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/05 18:33:41 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ int execute_builtin(c_cmd *cmd, t_shell *shell)
     else if (ft_strcmp(cmd->cmd, "unset") == 0)
         return (builtin_unset(cmd, shell));
     else if (ft_strcmp(cmd->cmd, "env") == 0)
-        return (builtin_env(shell));
+        return (builtin_env(cmd, shell));
     else if (ft_strcmp(cmd->cmd, "exit") == 0)
-        builtin_exit(cmd, shell);
+        builtin_exit(cmd, shell); // if your exit returns int
     return (1); // Error
 }

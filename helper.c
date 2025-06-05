@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   helper.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 20:17:29 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/01 20:19:16 by salhali          ###   ########.fr       */
+/*   Updated: 2025/06/05 18:51:20 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,9 @@ void update_env_list(t_shell *shell, const char *key, const char *value)
 }
 t_env *create_env_node(char *key, char *value)
 {
-    t_env *new = malloc(sizeof(t_env));
+    t_env *new;
+    
+    new = malloc(sizeof(t_env));
     new->key = ft_strdup(key);
     new->value = ft_strdup(value);
     new->next = NULL;

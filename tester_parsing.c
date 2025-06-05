@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tester_parsing.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 17:04:06 by salhali           #+#    #+#             */
-/*   Updated: 2025/05/31 18:35:49 by salhali          ###   ########.fr       */
+/*   Updated: 2025/06/05 18:59:23 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ char	*ft_strdup(const char *s)
 	dest[i] = '\0';
 	return (dest);
 }
- 
+
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	size_t	i;
@@ -44,18 +44,6 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	}
 	return (dest);
 }
-
-
-size_t	ft_strlen(const char *str)
-{
-	size_t	len;
-
-	len = 0;
-	while (str[len])
-		len++;
-	return (len);
-}
-
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -163,7 +151,7 @@ void handle_redirection(c_cmd *list, T_list *token)
 	if (token->type == TOKEN_REDIRECT_INPUT)
 		list->file->inout = 1;
 	else if(token->type == TOKEN_REDIRECT_OUTPUT)
-		list->file->inout = 0;	
+		list->file->inout = 0;
 	else if(token->type == TOKEN_REDIRECT_OUTPUT_AM )
 		list->file->inout = 3;
 	else if(token->type == TOKEN_HERDOC )
@@ -198,8 +186,8 @@ int count_cmd_args(T_list *start)
     {
         if (start->type == TOKEN_WORD || start->type == TOKEN_quotes)  // zedtt TOKEN_quotes
             count++;
-        else if (start->type == TOKEN_REDIRECT_INPUT || start->type == TOKEN_REDIRECT_OUTPUT || 
-                 start->type == TOKEN_REDIRECT_OUTPUT_AM || start->type == TOKEN_HERDOC)    
+        else if (start->type == TOKEN_REDIRECT_INPUT || start->type == TOKEN_REDIRECT_OUTPUT ||
+                 start->type == TOKEN_REDIRECT_OUTPUT_AM || start->type == TOKEN_HERDOC)
         {
             count++;
             start = start->next;
@@ -213,13 +201,13 @@ int count_cmd_args(T_list *start)
 }
 void splitit(T_list *token, c_cmd **final)
 {
-	
+
 	T_list *tmp = token;
 	int array_size = 0;
     c_cmd *cmd_head = NULL;
     c_cmd *current = NULL;
 	// c_cmd *new_cmd = create_new_cmd(array_size);
-	// if (!new_cmd)	
+	// if (!new_cmd)
 	while (tmp)
 	{
 		if (tmp->type == TOKEN_PIPE)
@@ -240,7 +228,7 @@ void splitit(T_list *token, c_cmd **final)
             cmd_head = new_cmd;
         else
             current->next = new_cmd;
-			
+
 			current = new_cmd;
 			while (tmp && tmp->type != TOKEN_PIPE)
 			{
@@ -381,11 +369,11 @@ int contains_single_quotes(const char *s)
 
 char *Handlequotes(pars_T *pars, char c)
 {
-	pars->i++; 
+	pars->i++;
 
 	if (pars->content[pars->i] && pars->content[pars->i] == c)
 	{
-		pars->i++; 
+		pars->i++;
 		return ft_strdup("");
 	}
 
@@ -405,9 +393,9 @@ char *Handlequotes(pars_T *pars, char c)
 	}
 	segment[len] = '\0';
 
-	pars->i++; 
+	pars->i++;
 
-	if (c == '"') 
+	if (c == '"')
 	{
 		int z = 0;
 		char *expanded = NULL;
@@ -419,7 +407,7 @@ char *Handlequotes(pars_T *pars, char c)
 			z++;
 		}
 	}
-	return segment; 
+	return segment;
 
 }
 
@@ -457,7 +445,7 @@ pars_T *init_pars(char *in)
 			{
 				if(pars->i != 0 &&!is_whitespace(pars->content[pars->i -1]) && !is_whitespace(pars->content[pars->i +1]))
 					pars->nbOfPipes +=2;
-				else 
+				else
 					pars->nbOfPipes+=1;
 			}
 		pars->i++;
@@ -491,7 +479,7 @@ void fill_the_array(pars_T *pars)
         pars->i++;
     }
     pars->i = 0;
-    
+
     while (pars->content[pars->i])
     {
         SkipWhiteSpaces(pars);
@@ -538,8 +526,8 @@ void fill_the_array(pars_T *pars)
             free(part);
             token = tmp;
         }
-        
-        if (token[0]) 
+
+        if (token[0])
             pars->content1[pars->k++] = ft_strdup(token);
         else
             pars->content1[pars->k++] = ft_strdup("");
@@ -603,7 +591,7 @@ void print_cmd_list(c_cmd *cmd)
 		printf("-------comand : %s\n",cmd->cmd);
 		while(cmd->array[i])
 		{
-		
+
 			printf("-------arg[%d]: %s\n", i, cmd->array[i]);
 			i++;
 		}

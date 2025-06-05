@@ -3,39 +3,77 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:19:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/03 13:28:35 by salhali          ###   ########.fr       */
+/*   Updated: 2025/06/05 19:02:37 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+// int builtin_export(c_cmd *cmd, t_shell *shell)
+// {
+//     int i = 1;
+
+//     if (!cmd->array[1])
+//     {
+//         print_env_sorted(shell->envv); // print sorted
+//         return 0;
+//     }
+//     while (cmd->array[i])
+//     {
+//         char *equal = ft_strchr(cmd->array[i], '=');
+//         if (equal)
+//         {
+//             *equal = '\0';
+//             char *key = cmd->array[i];
+//             char *value = equal + 1;
+//             update_env_list(shell, key, value);
+//             *equal = '=';
+//         }
+//         else
+//         {
+//             if (!get_env_value_ll(shell->envv, cmd->array[i]))
+//                 update_env_list(shell, cmd->array[i], "");
+//         }
+//         i++;
+//     }
+//     return 0;
+// }
 int builtin_export(c_cmd *cmd, t_shell *shell)
 {
     int i = 1;
+
     if (!cmd->array[1])
     {
         print_env_sorted(shell->envv); // print sorted
         return 0;
     }
+    int k = 1;
+    while(cmd->array[k])
+    {
+        if(cmd->array[k] != NULL && cmd->qflag == 1)
+        {
+            ft_putstr_fd("bash: ", 2);
+            ft_putstr_fd("export: ", 2);
+            ft_putstr_fd("No such file or directory\n", 2);
+            return(1);
+        }
+        k++;
+    }
     while (cmd->array[i])
     {
-        char *equal = ft_strchr(cmd->array[i], '=');
-        if (equal)
+        char *arg = cmd->array[i];
+        char *eq = ft_strchr(arg, '=');
+        if (eq)
         {
-            *equal = '\0';
-            char *key = cmd->array[i];
-            char *value = equal + 1;
-            update_env_list(shell, key, value);
-            *equal = '=';
+            *eq = '\0';
+            update_env_list(shell, arg, eq + 1); // khdmt key + value
+            *eq = '=';
         }
         else
-        {
-            if (!get_env_value_ll(shell->envv, cmd->array[i]))
-                update_env_list(shell, cmd->array[i], "");
-        }
+            update_env_list(shell, arg, NULL);
         i++;
     }
     return 0;

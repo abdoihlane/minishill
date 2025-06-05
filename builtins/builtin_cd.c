@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 19:45:22 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/03 13:12:38 by salhali          ###   ########.fr       */
+/*   Updated: 2025/06/05 18:29:34 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int builtin_cd(c_cmd *cmd, t_shell *shell)
             path = get_env_value_ll(shell->envv, "HOME"); // ila kan cd  ~ nsiftk lhome nichan
         else
             path = cmd->array[1]; // 3tini hadak path ndik lih
-        // ila kan cd "" maybadl walo nkhalik f nafs path 
+        // ila kan cd "" maybadl walo nkhalik f nafs path
         if(cmd->array[1] && cmd->qflag == 1)
             path = getcwd(current_dir, 1024);
         // printf("path = %s\n", path);
@@ -62,7 +62,7 @@ int builtin_cd(c_cmd *cmd, t_shell *shell)
     else
     {
             ft_putstr_fd("cd: ", 2);
-            ft_putstr_fd(": too many arguments\n", 2);
+            ft_putstr_fd(" too many arguments\n", 2);
             return (1);
     }
     return (0);
