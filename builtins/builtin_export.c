@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:19:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/05 19:02:37 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/08 13:30:11 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,17 +50,12 @@ int builtin_export(c_cmd *cmd, t_shell *shell)
         print_env_sorted(shell->envv); // print sorted
         return 0;
     }
-    int k = 1;
-    while(cmd->array[k])
+    if(cmd->array[1] != NULL && cmd->qflag == 1)
     {
-        if(cmd->array[k] != NULL && cmd->qflag == 1)
-        {
-            ft_putstr_fd("bash: ", 2);
-            ft_putstr_fd("export: ", 2);
-            ft_putstr_fd("No such file or directory\n", 2);
-            return(1);
-        }
-        k++;
+        ft_putstr_fd("bash: ", 2);
+        ft_putstr_fd("export: ", 2);
+        ft_putstr_fd("No such file or directory\n", 2);
+        return(1);
     }
     while (cmd->array[i])
     {

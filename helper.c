@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 20:17:29 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/05 18:51:20 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/08 13:35:51 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,17 @@ void update_env_list(t_shell *shell, const char *key, const char *value)
 t_env *create_env_node(char *key, char *value)
 {
     t_env *new;
-    
+
     new = malloc(sizeof(t_env));
+    if (!new)
+        return NULL;
+
     new->key = ft_strdup(key);
-    new->value = ft_strdup(value);
+    if (value != NULL)
+        new->value = ft_strdup(value);
+    else
+        new->value = NULL;
+
     new->next = NULL;
     return new;
 }
