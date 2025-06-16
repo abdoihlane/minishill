@@ -55,14 +55,16 @@ typedef struct t_cmd
     char **array;                      // words splited by pipes (arguments)
     char *cmd;                         // command name
     r_list *file;                      // redirections
-    int qflag; // single quote
+    int qflag;                         // single quote
+    int infile;                        // fd dyal input (default 0, wla chi file)
+    int outfile;                       // fd dyal output (default 1, wla chi file)
     struct t_cmd *next;                // next command (for pipes)
 } c_cmd;
 
 typedef struct s_env
 {
-    char *key;      // . "PATH"
-    char *value;    // . "/usr/bin:/bin"
+    char *key;              // . "PATH"
+    char *value;            // . "/usr/bin:/bin" 
     struct s_env *next;
 } t_env;
 
@@ -97,7 +99,6 @@ void wlst_addback(w_list **lst, w_list *node);
 int valid(char c);
 char *expand_variables(char *input);
 
-//---
 
 void handle_redirection(c_cmd *list, T_list *token);
 c_cmd *create_new_cmd(int array_size);
@@ -123,13 +124,10 @@ void call_all(char *input_user, w_list **wlist);
 // ------ EXECUTION FUNCTIONS --------  //
 
 
-// Main builtin functions
-
+//                  Main builtin functions
 int                 is_builtin(c_cmd *command);
 int                 execute_builtin(c_cmd *cmd, t_shell *shell);  // CORRECTED: c_cmd instead of t_command
-
-// Individual builtin implementations
-
+//                  Individual builtin implementations
 void                builtin_exit(c_cmd *cmd, t_shell *shell);     // Exit shell
 int                 builtin_echo(c_cmd *cmd);                     // Echo command
 int                 builtin_cd(c_cmd *cmd, t_shell *shell);       // Change directory
@@ -137,7 +135,7 @@ int                 builtin_pwd(void);                            // Print worki
 int                 builtin_export(c_cmd *cmd, t_shell *shell);   // Export env variables
 int                 builtin_unset(c_cmd *cmd, t_shell *shell);    // Unset env variables
 int                 builtin_env(c_cmd *cmd, t_shell *shell);                  // Print environment
-// function utils check mul:
+//                  function utils check mul
 int                 is_numeric(const char *str);
 void                free_test_cmd(c_cmd *cmd);
 char                *get_env_value(char **env, const char *name);
@@ -161,6 +159,7 @@ char	            *find_path(char *cmd, char **envp);
 void	            ft_free(char **str);
 void	            execute(char *cmd, char **env);
 void                free_env(char **env); //check env is free or not
+void                setup_redirections(c_cmd *cmd);
 
 #endif
 

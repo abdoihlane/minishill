@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:19:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/08 13:30:11 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/16 09:51:11 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,20 @@ int builtin_export(c_cmd *cmd, t_shell *shell)
         print_env_sorted(shell->envv); // print sorted
         return 0;
     }
-    if(cmd->array[1] != NULL && cmd->qflag == 1)
+    // printf("before run spam\n");
+    while (cmd->array[1] != NULL)
+    {
+        char    *str = cmd->array[1];
+        char    *result = ft_strchr(str, '=');
+        if(result)
+        {
+            *result = '\0';
+            update_env_list(shell, str, result);
+            *result = '=';
+
+        }
+    }
+    if (cmd->array[1] && cmd->qflag == 1 && cmd->array[1][0] == '\0')
     {
         ft_putstr_fd("bash: ", 2);
         ft_putstr_fd("export: ", 2);

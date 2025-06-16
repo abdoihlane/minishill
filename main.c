@@ -6,68 +6,11 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/05 15:16:05 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/16 09:36:10 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// int main(int argc, char **argv, char **envp)
-//  {
-//      // INIT ENV
-//      t_shell shell;
-//      (void)argc;
-//      (void)argv;
-//      // int  i;
-
-//      shell.env = envp;            // dir envp f shell
-//      shell.last_exit_status = 0;  // bda bi 0 exit status
-
-//      // TEST CMD: echo
-//      char *args_echo[] = {"echo", "Hello,", "World!", NULL};
-//      c_cmd *cmd_echo = create_test_cmd("echo", args_echo);
-
-//      // TEST CMD: pwd
-//      char *args_pwd[] = {"pwd", NULL};
-//      c_cmd *cmd_pwd = create_test_cmd("pwd", args_pwd);
-
-//      // TEST CMD: env
-//      char *args_env[] = {"env", NULL};
-//      c_cmd *cmd_env = create_test_cmd("env", args_env);
-
-//      // TEST CMD: cd
-//      char *args_cd[] = {"cd", "..", NULL};
-//      c_cmd *cmd_cd = create_test_cmd("cd", args_cd);
-
-//      // TEST CMD: exit
-//      char *args_exit[] = {"exit", NULL};
-//      c_cmd *cmd_exit = create_test_cmd("exit", args_exit);
-
-//      // TEST list
-//      c_cmd *test_cmds[] = {cmd_echo, cmd_pwd, cmd_env, cmd_cd, cmd_exit};
-//      int num_cmds = 5;
-
-//      // Loop for testing each builtin
-//      int  i = 0;
-//      while (i < num_cmds)
-//      {
-//         if (is_builtin(test_cmds[i]->cmd))
-//         {
-//              printf("Executing builtin: %s\n", test_cmds[i]->cmd);
-//              execute_builtin(test_cmds[i], &shell);
-//              printf("Exit status: %d\n\n", shell.last_exit_status);
-//         }
-//         else
-//         {
-//              printf("Not a builtin: %s\n\n", test_cmds[i]->cmd);
-//         }
-//         i++;
-//      }
-//     i = 0;
-//     while (i < num_cmds)
-//          free(test_cmds[i++]);
-//     return 0;
-//  }
 
 int main(int argc, char **argv, char **envp)
 {
@@ -79,6 +22,7 @@ int main(int argc, char **argv, char **envp)
      T_list *token = NULL;
      pars_T *pars = NULL;
      t_shell    shell;
+     // pid_t     pid;
 
      shell.env = dup_envp(envp);
      shell.last_exit_status = 0;
@@ -100,11 +44,40 @@ int main(int argc, char **argv, char **envp)
                     token = typesee(&wlist);
                     splitit(token,&clist);
                     add_history(input_user);
-                    while(clist)
+                    c_cmd     *tmp = clist;
+                    while(tmp)
                     {
-                         if(is_builtin(clist))
-                              execute_builtin(clist, &shell);
-                         clist = clist->next;
+	                    if (is_builtin(tmp) && !tmp->next) // wa7da o builtin?
+                              execute_builtin(tmp, &shell);
+                         // else
+                         // {
+                         //      pid = fork();
+                         //      if (pid == 0) // ➤ CHILD PROCESS
+                         //      {
+                         //           // 1. ➤ handle infile & outfile redirections
+                         //           if (tmp->infile != -1)
+                         //                dup2(tmp->infile, STDIN_FILENO);
+                         //           if (tmp->outfile != -1)
+                         //                dup2(tmp->outfile, STDOUT_FILENO);
+
+                         //           // 2. ➤ pipes (ila kayn pipe bin had cmd w li b3d)
+                         //           if (has_pipe_to_next(tmp))
+                         //                dup2(pipe_fd[1], STDOUT_FILENO); // output ymsi l next cmd
+
+                         //           // 3. ➤ check if builtin
+                         //           if (is_builtin(tmp))
+                         //                execute_builtin(tmp, &shell);
+                         //           else
+                         //                execve(tmp->path, tmp->args, shell->envp);
+
+                         //           exit(1); // important, child ykhrj
+                         //      }
+                         //      else if (pid < 0)
+                         //           perror("fork");
+                         //      // else ➤ parent may close pipe_fd[1] o ykhdem wait later
+                         // }
+
+                         tmp = tmp->next;
                     }
                     // print_cmd_list(clist);
                     free_wlist(&wlist);
@@ -121,3 +94,40 @@ int main(int argc, char **argv, char **envp)
 
 
 
+void setup_redirections(c_cmd *cmd)
+{
+    r_list *tmp = cmd->file;
+
+    while (tmp)
+    {
+        if (tmp->inout == 1) // <
+        {
+            int fd = open(tmp->content, O_RDONLY);
+            if (fd < 0)
+                perror("open");
+            dup2(fd, STDIN_FILENO);
+            close(fd);
+        }
+        else if (tmp->inout == 0) // >
+        {
+            int fd = open(tmp->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            if (fd < 0)
+                perror("open");
+            dup2(fd, STDOUT_FILENO);
+            close(fd);
+        }
+        else if (tmp->inout == 2) // >>
+        {
+            int fd = open(tmp->content, O_WRONLY | O_CREAT | O_APPEND, 0644);
+            if (fd < 0)
+                perror("open");
+            dup2(fd, STDOUT_FILENO);
+            close(fd);
+        }
+        else if (tmp->inout == 3) // <<
+        {
+            // handle heredoc (b chi function heredoc_input())
+        }
+        tmp = tmp->next;
+    }
+}

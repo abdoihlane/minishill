@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 20:17:29 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/08 13:35:51 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/08 14:47:21 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,28 @@
 void update_env_list(t_shell *shell, const char *key, const char *value)
 {
     t_env *tmp = shell->envv;
+
+    // Check if key already exists in env list
     while (tmp)
     {
         if (ft_strcmp(tmp->key, key) == 0)
         {
             free(tmp->value);
-            tmp->value = ft_strdup(value);
+            if (value == NULL)
+                tmp->value = NULL;
+            else
+                tmp->value = ft_strdup(value);
             return;
         }
         tmp = tmp->next;
     }
+
+    // Create new node if key doesn't exist
     t_env *new = create_env_node((char *)key, (char *)value);
+    if (!new)
+        return ; // optionally handle malloc failure
+
+    // Add new node to env list
     if (shell->envv == NULL)
         shell->envv = new;
     else
@@ -36,6 +47,7 @@ void update_env_list(t_shell *shell, const char *key, const char *value)
         tmp->next = new;
     }
 }
+
 t_env *create_env_node(char *key, char *value)
 {
     t_env *new;
