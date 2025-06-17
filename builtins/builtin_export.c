@@ -51,18 +51,18 @@ int builtin_export(c_cmd *cmd, t_shell *shell)
         return 0;
     }
     // printf("before run spam\n");
-    while (cmd->array[1] != NULL)
-    {
-        char    *str = cmd->array[1];
-        char    *result = ft_strchr(str, '=');
-        if(result)
-        {
-            *result = '\0';
-            update_env_list(shell, str, result);
-            *result = '=';
+    // while (cmd->array[1] != NULL)
+    // {
+    //     char    *str = cmd->array[1];
+    //     char    *result = ft_strchr(str, '=');
+    //     if(result)
+    //     {
+    //         *result = '\0';
+    //         update_env_list(shell, str, result);
+    //         *result = '=';
 
-        }
-    }
+    //     }
+    // }
     if (cmd->array[1] && cmd->qflag == 1 && cmd->array[1][0] == '\0')
     {
         ft_putstr_fd("bash: ", 2);

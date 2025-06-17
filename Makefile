@@ -34,7 +34,7 @@ SRC = builtins/builtin_echo.c \
 			utils.c \
 			helper.c \
 			helper1.c \
-      main.c
+			main.c \
 
 OBJ = $(SRC:.c=.o)
 
