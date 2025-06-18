@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/16 09:36:10 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/18 18:22:49 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,70 @@ void setup_redirections(c_cmd *cmd)
             dup2(fd, STDOUT_FILENO);
             close(fd);
         }
-        else if (tmp->inout == 3) // <<
+        else if (tmp->inout == 3)
         {
-            // handle heredoc (b chi function heredoc_input())
+            heredoc_input(tmp->content); // write input f ".heredoc_tmp"
+            int fd = open(".heredoc_tmp", O_RDONLY);
+            dup2(fd, STDIN_FILENO);
+            close(fd);
         }
         tmp = tmp->next;
+    }
+}
+
+void    execute_cmds(c_cmd *clist, t_shell *shell)
+{
+    int in_fd = 0;
+    int pipe_fd[2];
+    pid_t pid;
+
+    while (clist)
+    {
+        if (clist->next)
+            pipe(pipe_fd);
+
+        pid = fork();
+        if (pid == 0) // CHILD
+        {
+            if (in_fd != 0)
+            {
+                dup2(in_fd, 0);
+                close(in_fd);
+            }
+
+            if (clist->next)
+            {
+                close(pipe_fd[0]);
+                dup2(pipe_fd[1], 1);
+                close(pipe_fd[1]);
+            }
+
+            setup_redirections(clist); // for < > >> <<
+
+            if (is_builtin(clist))
+                exit(execute_builtin(clist, shell));
+            else
+                execve(clist->cmd, clist->array, shell->env); // or shell->envv
+
+            perror("execve");
+            exit(1);
+        }
+        else if (pid < 0)
+        {
+            perror("fork");
+        }
+        else // PARENT
+        {
+            if (in_fd != 0)
+                close(in_fd);
+            if (clist->next)
+                close(pipe_fd[1]);
+
+            in_fd = pipe_fd[0];
+
+            waitpid(pid, NULL, 0); // tsanna child
+        }
+        clist = clist->next;
     }
 }
 
@@ -81,42 +140,8 @@ int main(int argc, char **argv, char **envp)
             token = typesee(&wlist);
             splitit(token,&clist);
             add_history(input_user);
-            c_cmd     *tmp = clist;
-            // pid_t   pid;
-            while(tmp)
-            {
-                if (is_builtin(tmp) && !tmp->next) // wa7da o builtin?
-                        execute_builtin(tmp, &shell);
-                //  else
-                //  {
-                //       pid = fork();
-                //       if (pid == 0) // CHILD PROCESS
-                //       {
-                //            // handle infile & outfile redirections
-                //            if (tmp->infile != -1)
-                //                 dup2(tmp->infile, STDIN_FILENO);
-                //            if (tmp->outfile != -1)
-                //                 dup2(tmp->outfile, STDOUT_FILENO);
-
-                //         //    // pipes (ila kayn pipe bin had cmd w li b3d)
-                //         //    if (has_pipe_to_next(tmp))
-                //         //         dup2(pipe_fd[1], STDOUT_FILENO); // output ymsi l next cmd
-
-                //         //    // check if builtin
-                //         //    if (is_builtin(tmp))
-                //         //         execute_builtin(tmp, &shell);
-                //         //    else
-                //         //         execve(tmp->path, tmp->args, shell->envp);
-
-                //            exit(1); // important, child ykhrj
-                //       }
-                //       else if (pid < 0)
-                //            perror("fork");
-                //       // else parent may close pipe_fd[1] o ykhdem wait later
-                //  }
-                    tmp = tmp->next;
-            }
-                    // print_cmd_list(clist);
+            execute_cmds(clist, &shell);
+            // print_cmd_list(clist);
             free_wlist(&wlist);
             free_Plist(&pars);
             wlist = NULL;
@@ -127,4 +152,3 @@ int main(int argc, char **argv, char **envp)
      }
      return 0;
 }
-

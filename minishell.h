@@ -8,6 +8,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "./libft/libft.h"
+#include    <sys/wait.h>
 
 // #define PATH_MAX  1024;
 
@@ -64,7 +65,7 @@ typedef struct t_cmd
 typedef struct s_env
 {
     char *key;              // . "PATH"
-    char *value;            // . "/usr/bin:/bin" 
+    char *value;            // . "/usr/bin:/bin"
     struct s_env *next;
 } t_env;
 
@@ -160,6 +161,7 @@ void	            ft_free(char **str);
 void	            execute(char *cmd, char **env);
 void                free_env(char **env); //check env is free or not
 void                setup_redirections(c_cmd *cmd);
+void                execute_cmds(c_cmd *clist, t_shell *shell);
 
 #endif
 
