@@ -50,17 +50,28 @@ typedef struct token_list
     char *value;
 } T_list;
 
+// typedef struct t_cmd
+// {
+//     int index;                         // index dyal command f pipeline
+//     char **array;                      // words splited by pipes (arguments)
+//     char *cmd;                         // command name
+//     r_list *file;                      // redirections
+//     int qflag;                         // single quote
+//     int infile;                        // fd dyal input (default 0, wla chi file)
+//     int outfile;                       // fd dyal output (default 1, wla chi file)
+//     struct t_cmd *next;                // next command (for pipes)
+// } c_cmd;
+
 typedef struct t_cmd
 {
-    int index;                         // index dyal command f pipeline
-    char **array;                      // words splited by pipes (arguments)
-    char *cmd;                         // command name
-    r_list *file;                      // redirections
-    int qflag;                         // single quote
-    int infile;                        // fd dyal input (default 0, wla chi file)
-    int outfile;                       // fd dyal output (default 1, wla chi file)
-    struct t_cmd *next;                // next command (for pipes)
-} c_cmd;
+	int index;
+	char **array; // words splited by pipes
+	char *cmd;
+	int qflag; // single quote
+	// int dflag; // double quote
+	r_list *file; //any rederection
+	struct t_cmd *next;
+}	c_cmd;
 
 typedef struct s_env
 {

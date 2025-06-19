@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
+/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/18 22:19:53 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/19 18:55:50 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ void    execute_cmds(c_cmd *clist, t_shell *shell)
 
     while (clist)
     {
-        if (clist->next)
+        if (clist->next != NULL)
             pipe(pipe_fd);
 
         pid = fork();

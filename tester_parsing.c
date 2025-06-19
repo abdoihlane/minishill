@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tester_parsing.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
+/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 17:04:06 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/05 18:59:23 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/19 18:53:22 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -721,9 +721,10 @@ int HardcodeChecks(char *str)
 
 void call_all(char *in, w_list **wlist)
 {
-	pars_T *pars = init_pars(in);// to free
+	pars_T *pars;
+	
+	pars = init_pars(in); // to free
 	fill_the_array(pars);
 	CommandOrnot(pars,wlist);
 	free(pars);
 }
-
