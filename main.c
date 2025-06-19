@@ -6,11 +6,43 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/18 18:22:49 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/18 22:19:53 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	heredoc_input(char *delimiter)
+{
+	char	*line = NULL;
+	size_t	len = 0;
+	int		fd = open(".heredoc_tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (fd < 0)
+	{
+		perror("heredoc open");
+		return;
+	}
+
+	while (1)
+	{
+		write(1, "> ", 2);
+		ssize_t nread = getline(&line, &len, stdin);
+		if (nread == -1)
+			break;
+
+		// delete newline for comparison
+		if (line[nread - 1] == '\n')
+			line[nread - 1] = '\0';
+
+		if (strcmp(line, delimiter) == 0)
+			break;
+
+		write(fd, line, strlen(line));
+		write(fd, "\n", 1);
+	}
+	free(line);
+	close(fd);
+}
 
 void setup_redirections(c_cmd *cmd)
 {
@@ -42,7 +74,7 @@ void setup_redirections(c_cmd *cmd)
             dup2(fd, STDOUT_FILENO);
             close(fd);
         }
-        else if (tmp->inout == 3)
+        else if (tmp->inout == 4)
         {
             heredoc_input(tmp->content); // write input f ".heredoc_tmp"
             int fd = open(".heredoc_tmp", O_RDONLY);

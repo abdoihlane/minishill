@@ -162,6 +162,7 @@ void	            execute(char *cmd, char **env);
 void                free_env(char **env); //check env is free or not
 void                setup_redirections(c_cmd *cmd);
 void                execute_cmds(c_cmd *clist, t_shell *shell);
+void                heredoc_input(char *delimiter);
 
 #endif
 
