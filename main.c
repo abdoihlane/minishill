@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/21 19:39:53 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/22 00:20:45 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,71 +44,91 @@
 // 	close(fd);
 // }
 
-// void setup_redirections(c_cmd *cmd)
-// {
-//     r_list *tmp = cmd->file;
+char *find_path(char *cmd, char **envp)
+{
+    if (access(cmd, X_OK) == 0)
+        return strdup(cmd); // full path already
 
-//     while (tmp)
-//     {
-//         if (tmp->inout == 1) // <
-//         {
-//             int fd = open(tmp->content, O_RDONLY);
-//             if (fd < 0)
-//                 perror("open");
-//             dup2(fd, STDIN_FILENO);
-//             close(fd);
-//         }
-//         else if (tmp->inout == 0) // >
-//         {
-//             int fd = open(tmp->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-//             if (fd < 0)
-//                 perror("open");
-//             dup2(fd, STDOUT_FILENO);
-//             close(fd);
-//         }
-//         else if (tmp->inout == 2) // >>
-//         {
-//             int fd = open(tmp->content, O_WRONLY | O_CREAT | O_APPEND, 0644);
-//             if (fd < 0)
-//                 perror("open");
-//             dup2(fd, STDOUT_FILENO);
-//             close(fd);
-//         }
-//         else if (tmp->inout == 4)
-//         {
-//             heredoc_input(tmp->content); // write input f ".heredoc_tmp"
-//             int fd = open(".heredoc_tmp", O_RDONLY);
-//             dup2(fd, STDIN_FILENO);
-//             close(fd);
-//         }
-//         tmp = tmp->next;
-//     }
-// }
+    char *path = get_env_value(envp, "PATH"); // khas tdirha nta
+    char **dirs = ft_split(path, ':');
+    char *full_path;
+
+    for (int i = 0; dirs[i]; i++)
+    {
+        char *tmp = ft_strjoin(dirs[i], "/");
+        full_path = ft_strjoin(tmp, cmd);
+        free(tmp);
+
+        if (access(full_path, X_OK) == 0)
+        {
+            ft_free_2d_array(dirs);
+            return full_path;
+        }
+        free(full_path);
+    }
+    ft_free_2d_array(dirs);
+    return NULL;
+}
+
+
+void setup_redirections(c_cmd *cmd)
+{
+    r_list *tmp = cmd->file;
+
+    while (tmp)
+    {
+        if (tmp->inout == 1) // <
+        {
+            int fd = open(tmp->content, O_RDONLY);
+            if (fd < 0)
+                perror("open");
+            dup2(fd, STDIN_FILENO);
+            close(fd);
+        }
+        else if (tmp->inout == 0) // >
+        {
+            int fd = open(tmp->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            if (fd < 0)
+                perror("open");
+            dup2(fd, STDOUT_FILENO);
+            close(fd);
+        }
+        else if (tmp->inout == 2) // >>
+        {
+            int fd = open(tmp->content, O_WRONLY | O_CREAT | O_APPEND, 0644);
+            if (fd < 0)
+                perror("open");
+            dup2(fd, STDOUT_FILENO);
+            close(fd);
+        }
+        else if (tmp->inout == 4) // <<
+        {
+            // hna ghadi ndir `heredoc_input(tmp->content);`
+            // o nfta7 `.heredoc_tmp`
+        }
+        tmp = tmp->next;
+    }
+}
 
 void execute_cmds(c_cmd *clist, t_shell *shell)
 {
     int in_fd = 0;
     int pipe_fd[2];
     pid_t pid;
-    // (void)shell;
 
     while (clist)
     {
-        if (clist->next != NULL)
-        {
-            printf("creat a pip \n");
+        if (clist->next)
             pipe(pipe_fd);
-        }
 
         pid = fork();
-        if (pid == 0) // child
+        if (pid == 0)
         {
             if (in_fd != 0)
             {
                 dup2(in_fd, STDIN_FILENO);
                 close(in_fd);
             }
-
             if (clist->next)
             {
                 close(pipe_fd[0]);
@@ -116,15 +136,18 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
                 close(pipe_fd[1]);
             }
 
-            // setup_redirections(clist); // uncomment if needed
+            setup_redirections(clist);
 
             if (is_builtin(clist))
                 exit(execute_builtin(clist, shell));
-            else
-                execve(clist->cmd, clist->array, shell->env);
 
-            perror("execve failed");
-            exit(1);
+            char *cmd_path = find_path(clist->array[0], shell->env);
+            if (!cmd_path)
+            {
+                perror("execve");
+                exit(1);
+            }
+            execve(cmd_path, clist->array, shell->env);
         }
         else if (pid < 0)
             perror("fork");
@@ -138,87 +161,78 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
             in_fd = pipe_fd[0];
             waitpid(pid, NULL, 0);
         }
-
         clist = clist->next;
     }
+}
+void	ft_free_2d_array(char **arr)
+{
+	int	i = 0;
+
+	if (!arr)
+		return;
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
+}
+char *get_env_value(char **env, const char *key)
+{
+    size_t len = strlen(key);
+    for (int i = 0; env[i]; i++)
+    {
+        if (strncmp(env[i], key, len) == 0 && env[i][len] == '=')
+            return env[i] + len + 1;
+    }
+    return NULL;
 }
 
 
 int main(int argc, char **argv, char **envp)
 {
-     (void)argc;
-     (void)argv;
-     char *input_user;
-     c_cmd *clist = NULL;
-     w_list *wlist = NULL;
-     T_list *token = NULL;
-     pars_T *pars = NULL;
-     t_shell    shell;
+    (void)argc;
+    (void)argv;
+    char *input_user;
+    c_cmd *clist = NULL;
+    w_list *wlist = NULL;
+    T_list *token = NULL;
+    pars_T *pars = NULL;
+    t_shell shell;
 
-     shell.env = dup_envp(envp);
-     shell.last_exit_status = 0;
-     shell.envv = NULL;
-     build_env_list(&shell); // ydir conversion mn env[] ➜ linked list
-     while (1)
-     {
+    shell.env = dup_envp(envp);
+    shell.last_exit_status = 0;
+    shell.envv = NULL;
+    build_env_list(&shell);
+
+    while (1)
+    {
         input_user = readline("\001\033[38;2;255;105;180m\002➜  minishell \001\033[0m\002");
         if (!input_user)
             return 0;
-        else
+
+        if (HardcodeChecks(input_user) == 0)
         {
-            if(HardcodeChecks(input_user) == 0)
-            {
-                    printf("syntax error\n");
-                        continue;
-            }
-            call_all(input_user,&wlist);
-            token = typesee(&wlist);
-            splitit(token,&clist);
-            add_history(input_user);
-            // execute_cmds(clist, &shell);
-            c_cmd     *tmp = clist;
-            while(tmp)
-            {
-                if (is_builtin(tmp) && !tmp->next) // wa7da o builtin?
-                        execute_builtin(tmp, &shell);
-                // else
-                // {
-                //      pid = fork();
-                //      if (pid == 0) // ➤ CHILD PROCESS
-                //      {
-                //           // 1. ➤ handle infile & outfile redirections
-                //           if (tmp->infile != -1)
-                //                dup2(tmp->infile, STDIN_FILENO);
-                //           if (tmp->outfile != -1)
-                //                dup2(tmp->outfile, STDOUT_FILENO);
-
-                //           // 2. ➤ pipes (ila kayn pipe bin had cmd w li b3d)
-                //           if (has_pipe_to_next(tmp))
-                //                dup2(pipe_fd[1], STDOUT_FILENO); // output ymsi l next cmd
-
-                //           // 3. ➤ check if builtin
-                //           if (is_builtin(tmp))
-                //                execute_builtin(tmp, &shell);Add commentMore actions
-                //           else
-                //                execve(tmp->path, tmp->args, shell->envp);
-
-                //           exit(1); // important, child ykhrj
-                //      }
-                //      else if (pid < 0)
-                //           perror("fork");
-                //      // else ➤ parent may close pipe_fd[1] o ykhdem wait later
-                // }
-                    tmp = tmp->next;
-            }
-            // print_cmd_list(clist);
-            free_wlist(&wlist);
-            free_Plist(&pars);
-            wlist = NULL;
-            free(input_user);
-            rl_on_new_line(); // Regenerate the prompt on a newline
-            rl_replace_line("", 0); // Clear the previous text
+            printf("syntax error\n");
+            continue;
         }
-     }
-     return 0;
-}
 
+        call_all(input_user, &wlist);
+        token = typesee(&wlist);
+        splitit(token, &clist);
+        add_history(input_user);
+
+        if (clist && is_builtin(clist) && clist->next == NULL)
+            execute_builtin(clist, &shell);
+        else
+            execute_cmds(clist, &shell);
+
+        free_wlist(&wlist);
+        free_Plist(&pars);
+        wlist = NULL;
+        free(input_user);
+        rl_on_new_line();
+        rl_replace_line("", 0);
+    }
+    return 0;
+}
