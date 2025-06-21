@@ -68,7 +68,6 @@ typedef struct t_cmd
 	char **array; // words splited by pipes
 	char *cmd;
 	int qflag; // single quote
-	// int dflag; // double quote
 	r_list *file; //any rederection
 	struct t_cmd *next;
 }	c_cmd;

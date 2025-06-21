@@ -16,7 +16,6 @@ int builtin_cd(c_cmd *cmd, t_shell *shell)
 {
     char *path;
     char current_dir[1024];
-
     // Get the name of the current working directory
     if (getcwd(current_dir, 1024) == NULL)
         return (1);
