@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 19:45:22 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/06 18:19:10 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/21 19:43:20 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int builtin_cd(c_cmd *cmd, t_shell *shell)
     // Get the name of the current working directory
     if (getcwd(current_dir, 1024) == NULL)
         return (1);
-    
+
     int len = 0;
     while(cmd->array[len])
         len++;

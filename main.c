@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/19 19:28:31 by salhali          ###   ########.fr       */
+/*   Updated: 2025/06/21 19:39:53 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,61 +85,64 @@
 //     }
 // }
 
-// void    execute_cmds(c_cmd *clist, t_shell *shell)
-// {
-//     int in_fd = 0;
-//     int pipe_fd[2];
-//     pid_t pid;
+void execute_cmds(c_cmd *clist, t_shell *shell)
+{
+    int in_fd = 0;
+    int pipe_fd[2];
+    pid_t pid;
+    // (void)shell;
 
-//     while (clist)
-//     {
-//         if (clist->next != NULL)
-//             pipe(pipe_fd);
+    while (clist)
+    {
+        if (clist->next != NULL)
+        {
+            printf("creat a pip \n");
+            pipe(pipe_fd);
+        }
 
-//         pid = fork();
-//         if (pid == 0) // CHILD
-//         {
-//             if (in_fd != 0)
-//             {
-//                 dup2(in_fd, 0);
-//                 close(in_fd);
-//             }
+        pid = fork();
+        if (pid == 0) // child
+        {
+            if (in_fd != 0)
+            {
+                dup2(in_fd, STDIN_FILENO);
+                close(in_fd);
+            }
 
-//             if (clist->next)
-//             {
-//                 close(pipe_fd[0]);
-//                 dup2(pipe_fd[1], 1);
-//                 close(pipe_fd[1]);
-//             }
+            if (clist->next)
+            {
+                close(pipe_fd[0]);
+                dup2(pipe_fd[1], STDOUT_FILENO);
+                close(pipe_fd[1]);
+            }
 
-//             setup_redirections(clist); // for < > >> <<
+            // setup_redirections(clist); // uncomment if needed
 
-//             if (is_builtin(clist))
-//                 exit(execute_builtin(clist, shell));
-//             else
-//                 execve(clist->cmd, clist->array, shell->env); // or shell->envv
+            if (is_builtin(clist))
+                exit(execute_builtin(clist, shell));
+            else
+                execve(clist->cmd, clist->array, shell->env);
 
-//             perror("execve");
-//             exit(1);
-//         }
-//         else if (pid < 0)
-//         {
-//             perror("fork");
-//         }
-//         else // PARENT
-//         {
-//             if (in_fd != 0)
-//                 close(in_fd);
-//             if (clist->next)
-//                 close(pipe_fd[1]);
+            perror("execve failed");
+            exit(1);
+        }
+        else if (pid < 0)
+            perror("fork");
+        else
+        {
+            if (in_fd != 0)
+                close(in_fd);
+            if (clist->next)
+                close(pipe_fd[1]);
 
-//             in_fd = pipe_fd[0];
+            in_fd = pipe_fd[0];
+            waitpid(pid, NULL, 0);
+        }
 
-//             waitpid(pid, NULL, 0); // tsanna child
-//         }
-//         clist = clist->next;
-//     }
-// }
+        clist = clist->next;
+    }
+}
+
 
 int main(int argc, char **argv, char **envp)
 {
@@ -172,42 +175,7 @@ int main(int argc, char **argv, char **envp)
             token = typesee(&wlist);
             splitit(token,&clist);
             add_history(input_user);
-            // execute_cmds(clist, &shell);
-            c_cmd     *tmp = clist;
-            while(tmp)
-            {
-                if (is_builtin(tmp) && !tmp->next) // wa7da o builtin?
-                    execute_builtin(tmp, &shell);
-                // else
-                // {
-                //      pid = fork();
-                //      if (pid == 0) // ➤ CHILD PROCESS
-                //      {
-                //           // 1. ➤ handle infile & outfile redirections
-                //           if (tmp->infile != -1)
-                //                dup2(tmp->infile, STDIN_FILENO);
-                //           if (tmp->outfile != -1)
-                //                dup2(tmp->outfile, STDOUT_FILENO);
-
-                //           // 2. ➤ pipes (ila kayn pipe bin had cmd w li b3d)
-                //           if (has_pipe_to_next(tmp))
-                //                dup2(pipe_fd[1], STDOUT_FILENO); // output ymsi l next cmd
-
-                //           // 3. ➤ check if builtin
-                //           if (is_builtin(tmp))
-                //                execute_builtin(tmp, &shell);
-                //           else
-                //                execve(tmp->path, tmp->args, shell->envp);
-
-                //           exit(1); // important, child ykhrj
-                //      }
-                //      else if (pid < 0)
-                //           perror("fork");
-                //      // else ➤ parent may close pipe_fd[1] o ykhdem wait later
-                // }
-
-                tmp = tmp->next;
-            }
+            execute_cmds(clist, &shell);
             // print_cmd_list(clist);
             free_wlist(&wlist);
             free_Plist(&pars);

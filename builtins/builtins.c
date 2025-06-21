@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 17:09:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/18 18:57:28 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/21 19:42:15 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,41 +28,41 @@ int is_builtin(c_cmd *command)
     return (0);
 }
 
-// int execute_builtin(c_cmd *cmd, t_shell *shell)
-// {
-//     if (ft_strcmp("echo", cmd->cmd) == 0)
-//         return (builtin_echo(cmd));
-//     else if (ft_strcmp("cd", cmd->cmd) == 0)
-//         return (builtin_cd(cmd, shell));
-//     else if (ft_strcmp("pwd", cmd->cmd) == 0)
-//         return (builtin_pwd());
-//     else if (ft_strcmp("export", cmd->cmd) == 0)
-//         return (builtin_export(cmd, shell));
-//     else if (ft_strcmp("unset", cmd->cmd) == 0)
-//         return (builtin_unset(cmd, shell));
-//     else if (ft_strcmp("env", cmd->cmd) == 0)
-//         return (builtin_env(cmd, shell));
-//     else if (ft_strcmp("exit", cmd->cmd) == 0)
-//         builtin_exit(cmd, shell); // if your exit returns int
-//     return (1); // Error
-// }
-
-
 int execute_builtin(c_cmd *cmd, t_shell *shell)
 {
-    if (ft_strcmp(cmd->cmd, "echo") == 0)
+    if (ft_strcmp("echo", cmd->cmd) == 0)
         return (builtin_echo(cmd));
-    else if (ft_strcmp(cmd->cmd, "cd") == 0)
+    else if (ft_strcmp("cd", cmd->cmd) == 0)
         return (builtin_cd(cmd, shell));
-    else if (ft_strcmp(cmd->cmd, "pwd") == 0)
+    else if (ft_strcmp("pwd", cmd->cmd) == 0)
         return (builtin_pwd());
-    else if (ft_strcmp(cmd->cmd, "export") == 0)
+    else if (ft_strcmp("export", cmd->cmd) == 0)
         return (builtin_export(cmd, shell));
-    else if (ft_strcmp(cmd->cmd, "unset") == 0)
+    else if (ft_strcmp("unset", cmd->cmd) == 0)
         return (builtin_unset(cmd, shell));
-    else if (ft_strcmp(cmd->cmd, "env") == 0)
+    else if (ft_strcmp("env", cmd->cmd) == 0)
         return (builtin_env(cmd, shell));
-    else if (ft_strcmp(cmd->cmd, "exit") == 0)
+    else if (ft_strcmp("exit", cmd->cmd) == 0)
         builtin_exit(cmd, shell); // if your exit returns int
     return (1); // Error
 }
+
+
+// int execute_builtin(c_cmd *cmd, t_shell *shell)
+// {
+//     if (ft_strcmp(cmd->cmd, "echo") == 0)
+//         return (builtin_echo(cmd));
+//     else if (ft_strcmp(cmd->cmd, "cd") == 0)
+//         return (builtin_cd(cmd, shell));
+//     else if (ft_strcmp(cmd->cmd, "pwd") == 0)
+//         return (builtin_pwd());
+//     else if (ft_strcmp(cmd->cmd, "export") == 0)
+//         return (builtin_export(cmd, shell));
+//     else if (ft_strcmp(cmd->cmd, "unset") == 0)
+//         return (builtin_unset(cmd, shell));
+//     else if (ft_strcmp(cmd->cmd, "env") == 0)
+//         return (builtin_env(cmd, shell));
+//     else if (ft_strcmp(cmd->cmd, "exit") == 0)
+//         builtin_exit(cmd, shell); // if your exit returns int
+//     return (1); // Error
+// }
