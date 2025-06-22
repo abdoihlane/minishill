@@ -47,13 +47,14 @@
 char *find_path(char *cmd, char **envp)
 {
     if (access(cmd, X_OK) == 0)
-        return strdup(cmd); // full path already
+        return ft_strdup(cmd); // full path already
 
-    char *path = get_env_value(envp, "PATH"); // khas tdirha nta
+    char *path = get_env_value(envp, "PATH");
     char **dirs = ft_split(path, ':');
     char *full_path;
 
-    for (int i = 0; dirs[i]; i++)
+    int i = 0;
+    while (dirs[i])
     {
         char *tmp = ft_strjoin(dirs[i], "/");
         full_path = ft_strjoin(tmp, cmd);
@@ -65,6 +66,7 @@ char *find_path(char *cmd, char **envp)
             return full_path;
         }
         free(full_path);
+        i++;
     }
     ft_free_2d_array(dirs);
     return NULL;
@@ -179,11 +181,13 @@ void	ft_free_2d_array(char **arr)
 }
 char *get_env_value(char **env, const char *key)
 {
-    size_t len = strlen(key);
-    for (int i = 0; env[i]; i++)
+    size_t len = ft_strlen(key);
+    int i = 0;
+    while (env[i])
     {
         if (strncmp(env[i], key, len) == 0 && env[i][len] == '=')
             return env[i] + len + 1;
+        i++;
     }
     return NULL;
 }
@@ -222,7 +226,7 @@ int main(int argc, char **argv, char **envp)
         splitit(token, &clist);
         add_history(input_user);
 
-        if (clist && is_builtin(clist) && clist->next == NULL)
+        if (clist != NULL && is_builtin(clist) != '\0' && clist->next == NULL)
             execute_builtin(clist, &shell);
         else
             execute_cmds(clist, &shell);
