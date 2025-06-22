@@ -148,7 +148,6 @@ int                 builtin_env(c_cmd *cmd, t_shell *shell);                  //
 //                  function utils check mul
 int                 is_numeric(const char *str);
 void                free_test_cmd(c_cmd *cmd);
-char                *get_env_value(char **env, const char *name);
 int                 count_env_vars(char **env);
 char                *ft_strcpy(char *dest,const char *src);
 char                *create_env_string(const char *name, const char *value);
@@ -163,7 +162,6 @@ void                build_env_list(t_shell *shell);
 void                update_env_list(t_shell *shell, const char *key, const char *value);
 int                 ft_strcmp_echo(const char *s);
 char                **function_split_env(t_shell *shell);
-t_env               *create_env_node(char *key, char *value);
 void                add_env_node(t_env **head, t_env *new);
 char	            *find_path(char *cmd, char **envp);
 void	            ft_free(char **str);

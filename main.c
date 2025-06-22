@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
+/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/22 00:20:45 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/22 17:15:51 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,128 +44,7 @@
 // 	close(fd);
 // }
 
-char *find_path(char *cmd, char **envp)
-{
-    if (access(cmd, X_OK) == 0)
-        return ft_strdup(cmd); // full path already
 
-    char *path = get_env_value(envp, "PATH");
-    char **dirs = ft_split(path, ':');
-    char *full_path;
-
-    int i = 0;
-    while (dirs[i])
-    {
-        char *tmp = ft_strjoin(dirs[i], "/");
-        full_path = ft_strjoin(tmp, cmd);
-        free(tmp);
-
-        if (access(full_path, X_OK) == 0)
-        {
-            ft_free_2d_array(dirs);
-            return full_path;
-        }
-        free(full_path);
-        i++;
-    }
-    ft_free_2d_array(dirs);
-    return NULL;
-}
-
-
-void setup_redirections(c_cmd *cmd)
-{
-    r_list *tmp = cmd->file;
-
-    while (tmp)
-    {
-        if (tmp->inout == 1) // <
-        {
-            int fd = open(tmp->content, O_RDONLY);
-            if (fd < 0)
-                perror("open");
-            dup2(fd, STDIN_FILENO);
-            close(fd);
-        }
-        else if (tmp->inout == 0) // >
-        {
-            int fd = open(tmp->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-            if (fd < 0)
-                perror("open");
-            dup2(fd, STDOUT_FILENO);
-            close(fd);
-        }
-        else if (tmp->inout == 2) // >>
-        {
-            int fd = open(tmp->content, O_WRONLY | O_CREAT | O_APPEND, 0644);
-            if (fd < 0)
-                perror("open");
-            dup2(fd, STDOUT_FILENO);
-            close(fd);
-        }
-        else if (tmp->inout == 4) // <<
-        {
-            // hna ghadi ndir `heredoc_input(tmp->content);`
-            // o nfta7 `.heredoc_tmp`
-        }
-        tmp = tmp->next;
-    }
-}
-
-void execute_cmds(c_cmd *clist, t_shell *shell)
-{
-    int in_fd = 0;
-    int pipe_fd[2];
-    pid_t pid;
-
-    while (clist)
-    {
-        if (clist->next)
-            pipe(pipe_fd);
-
-        pid = fork();
-        if (pid == 0)
-        {
-            if (in_fd != 0)
-            {
-                dup2(in_fd, STDIN_FILENO);
-                close(in_fd);
-            }
-            if (clist->next)
-            {
-                close(pipe_fd[0]);
-                dup2(pipe_fd[1], STDOUT_FILENO);
-                close(pipe_fd[1]);
-            }
-
-            setup_redirections(clist);
-
-            if (is_builtin(clist))
-                exit(execute_builtin(clist, shell));
-
-            char *cmd_path = find_path(clist->array[0], shell->env);
-            if (!cmd_path)
-            {
-                perror("execve");
-                exit(1);
-            }
-            execve(cmd_path, clist->array, shell->env);
-        }
-        else if (pid < 0)
-            perror("fork");
-        else
-        {
-            if (in_fd != 0)
-                close(in_fd);
-            if (clist->next)
-                close(pipe_fd[1]);
-
-            in_fd = pipe_fd[0];
-            waitpid(pid, NULL, 0);
-        }
-        clist = clist->next;
-    }
-}
 void	ft_free_2d_array(char **arr)
 {
 	int	i = 0;
@@ -179,6 +58,7 @@ void	ft_free_2d_array(char **arr)
 	}
 	free(arr);
 }
+
 char *get_env_value(char **env, const char *key)
 {
     size_t len = ft_strlen(key);
@@ -240,3 +120,30 @@ int main(int argc, char **argv, char **envp)
     }
     return 0;
 }
+
+
+// minishell/
+// ├── main.c              (your current main)
+// ├── minishell.h         (your current header)
+// ├── execution/
+// │   ├── execute.c       (execute_cmds function)
+// │   ├── redirections.c  (setup_redirections)
+// │   └── path.c          (find_path)
+// ├── builtins/
+// │   ├── builtin_echo.c
+// │   ├── builtin_cd.c
+// │   ├── builtin_pwd.c
+// │   ├── builtin_export.c
+// │   ├── builtin_unset.c
+// │   ├── builtin_env.c
+// │   └── builtin_exit.c
+// ├── parsing/
+// │   ├── parser.c        (call_all, typesee, splitit)
+// │   ├── tokenizer.c
+// │   └── syntax.c        (HardcodeChecks)
+// ├── utils/
+// │   ├── env_utils.c     (environment functions)
+// │   ├── memory.c        (free functions)
+// │   └── signals.c       (signal handling)
+// └── libft/              (your existing libft)
+            

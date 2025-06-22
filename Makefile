@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: salah <salah@student.42.fr>                +#+  +:+       +#+         #
+#    By: salhali <salhali@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/19 17:02:36 by salhali           #+#    #+#              #
-#    Updated: 2025/06/21 19:41:08 by salah            ###   ########.fr        #
+#    Updated: 2025/06/22 17:18:17 by salhali          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,9 @@ SRC = builtins/builtin_echo.c \
 			utils.c \
 			helper.c \
 			helper1.c \
+			execution/execute.c \
+			execution/redirections.c \
+			execution/path.c \
 			main.c \
 
 OBJ = $(SRC:.c=.o)
