@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 17:13:24 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/22 17:14:39 by salhali          ###   ########.fr       */
+/*   Updated: 2025/06/23 19:07:02 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void  setup_redirections(c_cmd *cmd)
 
     while (tmp)
     {
+        printf("contant %s\n", tmp->content);
         if (tmp->inout == 1) // <   in = 1;
         {
             int fd = open(tmp->content, O_RDONLY);

@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:03:48 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/03 13:29:20 by salhali          ###   ########.fr       */
+/*   Updated: 2025/06/22 17:19:31 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,4 +95,31 @@ void print_env_sorted(t_env *env)
         i++;
     }
     free(keys);
+}
+
+void	ft_free_2d_array(char **arr)
+{
+	int	i = 0;
+
+	if (!arr)
+		return;
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
+}
+
+char *get_env_value(char **env, const char *key)
+{
+    size_t len = ft_strlen(key);
+    int i = 0;
+    while (env[i])
+    {
+        if (strncmp(env[i], key, len) == 0 && env[i][len] == '=')
+            return env[i] + len + 1;
+        i++;
+    }
+    return NULL;
 }
