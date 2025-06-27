@@ -1,0 +1,492 @@
+# Minishell Comprehensive Test Suite
+
+## 1. Basic Command Execution Tests
+
+### Simple Commands
+
+```
+bash
+# Test basic command execution
+
+ls                    ////////// Done
+pwd                   ////////////// Done
+whoami                //////////// Done
+date                  ///////////// Done
+echo hello            ////////// Done
+cat /etc/passwd       ////////// Done
+head -n 5 /etc/passwd ////////// Done
+```
+
+### Commands with Arguments
+
+```
+bash
+ls -la                        ////////////Done
+ls -l /home                   ////////////Done
+echo "hello world"            ////////////Done
+echo hello world multiple args////////////Done
+cat /etc/passwd | head -5     ////////////Done
+```
+
+### Non-existent Commands
+
+```bash
+nonexistentcommand      //////////Done
+./nonexistentfile       //////////Done
+/bin/nonexistentcommand //////////Done
+```
+
+## 2. Built-in Commands Tests
+
+
+### Echo Command
+
+```bash
+echo                                 ////////Done
+echo hello                           ////////Done
+echo "hello world"                   ////////Done
+echo 'single quotes'                 ////////Done
+echo hello world multiple args       ////////Done
+echo -n hello                        ////////Done
+echo -n "no newline"                 ////////Done
+echo -n -n -n hello                  ////////Done
+echo -nnnnn hello                    ////////Done
+echo -n -e hello                     ////////Done
+echo "$USER"                         ////////Done
+echo '$USER'                         ////////Done
+echo "Hello $USER"                   ////////Done
+```
+
+### CD Command
+```bash
+cd
+cd /
+cd /home
+cd ..                      ////////Done 
+cd ../..                   ////////Done
+cd ./                      ////////Done
+cd ~                       ////////Done
+cd -                       ////////Done
+cd nonexistentdir          ////////Done
+cd /root                   //////// bash: cd: /root: Permission denied
+pwd
+```
+### PWD Command
+```bash
+pwd
+cd /tmp && pwd
+cd / && pwd
+```
+
+### Export Command
+```bash
+export
+export TEST=hello
+export TEST="hello world"
+export TEST=hello TEST2=world
+export TEST
+export 123INVALID=test
+export =test
+export TEST=
+export TEST=""
+env | grep TEST
+```
+
+### Unset Command
+```bash
+export TEST=hello
+unset TEST
+env | grep TEST
+unset nonexistentvar
+unset PATH
+unset
+```
+
+### Env Command
+```bash
+env
+env | grep PATH
+env | grep HOME
+env | head -5
+```
+
+### Exit Command
+```bash
+exit
+exit 0
+exit 42
+exit 300
+exit -1
+exit hello
+exit 1 2 3
+```
+
+## 3. Pipes Tests
+
+### Simple Pipes
+```bash
+ls | cat
+echo hello | cat
+ls -l | head -3
+cat /etc/passwd | head -5
+echo "hello world" | wc -w
+```
+
+### Multiple Pipes
+```bash
+ls | head -5 | cat
+echo "hello world test" | wc -w | cat
+cat /etc/passwd | head -10 | tail -5
+ls -la | grep "^d" | wc -l
+```
+
+### Pipes with Built-ins
+```bash
+echo hello | cat
+env | grep PATH
+export TEST=hello | cat
+```
+
+## 4. Redirections Tests
+
+### Output Redirection (>)
+```bash
+echo hello > test.txt
+cat test.txt
+ls > files.txt
+cat files.txt
+echo "overwrite" > test.txt
+cat test.txt
+```
+
+### Append Redirection (>>)
+```bash
+echo hello > test.txt
+echo world >> test.txt
+cat test.txt
+ls >> files.txt
+cat files.txt
+```
+
+### Input Redirection (<)
+```bash
+echo "hello world" > input.txt
+cat < input.txt
+wc -w < input.txt
+head -1 < /etc/passwd
+```
+
+### Here Document (<<)
+```bash
+cat << EOF
+hello
+world
+EOF
+
+cat << DELIM
+line 1
+line 2
+DELIM
+
+wc -l << END
+line 1
+line 2
+line 3
+END
+```
+
+### Multiple Redirections
+```bash
+echo hello > out.txt 2> err.txt
+cat < input.txt > output.txt
+echo test > file1.txt > file2.txt
+```
+
+### Redirection with Pipes
+```bash
+echo hello | cat > output.txt
+ls | head -3 > files.txt
+cat < input.txt | wc -l > count.txt
+```
+
+## 5. Environment Variables Tests
+
+### Variable Expansion
+```bash
+echo $HOME
+echo $PATH
+echo $USER
+echo $PWD
+echo "$HOME"
+echo '$HOME'
+echo "Hello $USER"
+echo Hello$USER
+```
+
+### Exit Status Variable
+```bash
+echo $?
+ls
+echo $?
+nonexistentcommand
+echo $?
+false
+echo $?
+true
+echo $?
+```
+
+### Undefined Variables
+```bash
+echo $UNDEFINED
+echo "$UNDEFINED"
+echo $UNDEFINED_VAR
+```
+
+## 6. Quotes Tests
+
+### Single Quotes
+```bash
+echo 'hello world'
+echo 'hello $USER'
+echo 'hello "world"'
+echo 'hello \n world'
+```
+
+### Double Quotes
+```bash
+echo "hello world"
+echo "hello $USER"
+echo "hello 'world'"
+echo "hello \"world\""
+```
+
+### Mixed Quotes
+```bash
+echo "hello 'world'"
+echo 'hello "world"'
+echo "hello"world
+echo hello"world"
+echo 'hello'world
+```
+
+### Unclosed Quotes
+```bash
+echo "hello
+echo 'hello
+echo "hello'
+echo 'hello"
+```
+
+## 7. Syntax Error Tests
+
+### Pipe Errors
+```bash
+|
+| ls
+ls |
+ls | | cat
+ls || cat
+```
+
+### Redirection Errors
+```bash
+>
+<
+>>
+<<
+ls >
+ls <
+ls > > file
+ls < < file
+```
+
+### Quote Errors
+```bash
+echo "hello
+echo 'hello
+echo "hello'
+echo 'hello"
+```
+
+## 8. Signal Handling Tests
+
+### Ctrl+C (SIGINT)
+```bash
+# Run these and test Ctrl+C:
+sleep 10    # Press Ctrl+C
+cat         # Press Ctrl+C
+# Test prompt returns after Ctrl+C
+```
+
+### Ctrl+D (EOF)
+```bash
+# Test Ctrl+D at empty prompt (should exit)
+# Test Ctrl+D with text (should not exit)
+```
+
+### Ctrl+\ (SIGQUIT)
+```bash
+# Test Ctrl+\ (should do nothing in interactive mode)
+sleep 10    # Press Ctrl+\
+```
+
+## 9. Edge Cases Tests
+
+### Empty Commands
+```bash
+# Empty line (just press Enter)
+
+# Multiple spaces
+
+# Tabs
+
+```
+
+### Special Characters
+```bash
+echo ";"
+echo "&"
+echo "*"
+echo "?"
+echo "[]"
+echo "{}"
+```
+
+### Long Commands
+```bash
+echo this is a very long command with many arguments to test the parsing limit
+echo "very long string with spaces and special characters !@#$%^&*()"
+```
+
+### Path Tests
+```bash
+/bin/ls
+/bin/echo hello
+./nonexistent
+../nonexistent
+```
+
+## 10. Memory and Resource Tests
+
+### Large Output
+```bash
+ls -laR /usr
+find /usr -name "*.c" 2>/dev/null
+```
+
+### Multiple Commands
+```bash
+# Run many commands in sequence to test memory leaks
+echo 1; echo 2; echo 3
+```
+
+### Stress Test
+```bash
+# Create many pipes
+echo hello | cat | cat | cat | cat | cat
+```
+
+## 11. File Permission Tests
+
+### Create Test Files
+```bash
+# Create these files first:
+touch readable.txt
+chmod 644 readable.txt
+touch unreadable.txt
+chmod 000 unreadable.txt
+```
+
+### Test Permissions
+```bash
+cat readable.txt
+cat unreadable.txt
+ls > unreadable.txt
+echo hello > /etc/passwd
+```
+
+## 12. Directory Tests
+
+### Directory Operations
+```bash
+mkdir testdir
+cd testdir
+pwd
+cd ..
+rmdir testdir
+```
+
+### Directory as Command
+```bash
+/home
+/etc
+./
+../
+```
+
+## 13. Integration Tests
+
+### Complex Command Combinations
+```bash
+export TEST=hello && echo $TEST
+ls -la | grep "^d" | wc -l > dircount.txt && cat dircount.txt
+echo "line1" > test.txt && echo "line2" >> test.txt && cat test.txt
+```
+
+### Real-world Scenarios
+```bash
+# Typical development workflow
+ls -la
+cd src
+pwd
+ls *.c | head -5
+cat main.c | head -20
+cd ..
+```
+
+## 14. Performance Tests
+
+### Response Time
+```bash
+# Test if commands execute quickly
+echo hello
+ls
+pwd
+```
+
+### Memory Usage
+```bash
+# Monitor memory usage while running:
+# - Large pipes
+# - Many redirections
+# - Long command sequences
+```
+
+## Expected Results Verification
+
+### Success Cases Should:
+- Execute without errors
+- Return correct exit status (0)
+- Display expected output
+- Handle redirections properly
+- Expand variables correctly
+
+### Error Cases Should:
+- Display appropriate error messages
+- Return non-zero exit status
+- Not crash the shell
+- Return to prompt after error
+
+### Interactive Features Should:
+- Display custom prompt
+- Handle Ctrl+C properly
+- Support command history
+- Handle Ctrl+D correctly
+
+## Testing Methodology
+
+1. **Run each test case individually**
+2. **Compare output with bash**
+3. **Check exit status with `echo $?`**
+4. **Verify error messages are appr

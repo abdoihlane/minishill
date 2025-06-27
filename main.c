@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/27 17:15:48 by salhali          ###   ########.fr       */
+/*   Updated: 2025/06/27 19:03:13 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int main(int argc, char **argv, char **envp)
 
 
 // minishell/
-// ├── main.c              (your current main)
+// ├── main.c               (your current main)
 // ├── minishell.h         (your current header)
 // ├── execution/
 // │   ├── execute.c       (execute_cmds function)
@@ -117,4 +117,3 @@ int main(int argc, char **argv, char **envp)
 // │   ├── memory.c        (free functions)
 // │   └── signals.c       (signal handling)
 // └── libft/              (your existing libft)
-            
