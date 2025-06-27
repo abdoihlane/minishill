@@ -62,7 +62,7 @@ echo "Hello $USER"                   ////////Done
 cd
 cd /
 cd /home
-cd ..                      ////////Done 
+cd ..                      ////////Done
 cd ../..                   ////////Done
 cd ./                      ////////Done
 cd ~                       ////////Done
