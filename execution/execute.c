@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 17:16:53 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/28 15:00:55 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/28 15:33:36 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
     int pipe_fd[2];
     pid_t pid;
     char *cmd_path;
+    char **filtered_args;
 
     while (clist)
     {
@@ -27,9 +28,6 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
         pid = fork();
         if (pid == 0)
         {
-            setup_redirections(clist);
-            if (is_builtin(clist))
-                exit(execute_builtin(clist, shell));
             if (in_fd != 0)
             {
                 dup2(in_fd, STDIN_FILENO);
@@ -41,16 +39,18 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
                 dup2(pipe_fd[1], STDOUT_FILENO);
                 close(pipe_fd[1]);
             }
-
-            cmd_path = find_path(clist->array[0], shell->env);
+            setup_redirections(clist);
+            if (is_builtin(clist))
+                exit(execute_builtin(clist, shell));
+            cmd_path = find_path(clist->array[0], shell->copy_envp);
             if (!cmd_path)
                 printf("find_path failed !!!!\n");
-            char **filtered_args = filter_empty_args(clist);
-            execve(cmd_path, filtered_args, shell->env);
+            filtered_args = filter_empty_args(clist);
+            execve(cmd_path, filtered_args, shell->copy_envp);
 
             if (filtered_args != clist->array)
                 free(filtered_args);
-            execve(cmd_path, clist->array, shell->env);
+            execve(cmd_path, clist->array, shell->copy_envp);
         }
         else if (pid < 0)
             perror("fork");
@@ -185,22 +185,20 @@ char **filter_empty_args(c_cmd *cmd)
     if (cmd->qflag == 0 || cmd->array == NULL)
         return cmd->array; // No quotes, return as is
 
-    // Count non-empty arguments
     int count = 0;
     int i = 0;
+    int j;
     while (cmd->array[i])
     {
         if (strlen(cmd->array[i]) > 0)
             count++;
         i++;
     }
-
-    // Create new array without empty strings
     char **filtered = malloc(sizeof(char *) * (count + 1));
     if (!filtered)
         return cmd->array;
 
-    int j = 0;
+    j = 0;
     i = 0;
     while (cmd->array[i])
     {
@@ -215,3 +213,18 @@ char **filter_empty_args(c_cmd *cmd)
     return filtered;
 }
 
+char **generate_envp_from_envlist(t_shell *shell)
+{
+    int size = ft_lstsize(shell->env);
+    char **envp = malloc(sizeof(char *) * (size + 1));
+    int i = 0;
+    t_list *node = shell->env;
+
+    while (node)
+    {
+        envp[i++] = ft_strdup((char *)node->content);
+        node = node->next;
+    }
+    envp[i] = NULL;
+    return envp;
+}

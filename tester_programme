@@ -9,9 +9,9 @@ bash
 # Test basic command execution
 
 ls                    ////////// Done
-pwd                   ////////////// Done
-whoami                //////////// Done
-date                  ///////////// Done
+pwd                   ////////// Done
+whoami                ////////// Done
+date                  ////////// Done
 echo hello            ////////// Done
 cat /etc/passwd       ////////// Done
 head -n 5 /etc/passwd ////////// Done

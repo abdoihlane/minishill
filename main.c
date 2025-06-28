@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/27 19:03:13 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/28 15:28:52 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int main(int argc, char **argv, char **envp)
     t_shell shell;
 
     shell.env = dup_envp(envp);
+    shell.copy_envp = dup_envp(envp);
     shell.last_exit_status = 0;
     shell.envv = NULL;
     build_env_list(&shell);

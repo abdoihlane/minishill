@@ -93,6 +93,7 @@ typedef struct t_shell
 {
     t_env *envv;
     char   **env;
+    char    **copy_envp;
     int last_exit_status;              // $? value
 } t_shell;
 
@@ -173,5 +174,6 @@ void                heredoc_input(char *delimiter);
 void                ft_free_2d_array(char **arr);
 char                *get_env_value(char **env, const char *key);
 char **filter_empty_args(c_cmd *cmd);
+char **generate_envp_from_envlist(t_shell *shell);
 #endif
 
