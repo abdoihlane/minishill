@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 17:16:53 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/27 22:27:28 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/28 15:00:55 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,7 +204,7 @@ char **filter_empty_args(c_cmd *cmd)
     i = 0;
     while (cmd->array[i])
     {
-        if (strlen(cmd->array[i]) > 0)
+        if (ft_strlen(cmd->array[i]) > 0)
         {
             filtered[j] = cmd->array[i];
             j++;
@@ -212,37 +212,6 @@ char **filter_empty_args(c_cmd *cmd)
         i++;
     }
     filtered[j] = NULL;
-
     return filtered;
 }
 
-// Modify your execute_cmds function - add this before execve:
-// void execute_cmds(c_cmd *clist, t_shell *shell)
-// {
-//     // ... your existing code ...
-
-//     if (pid == 0)
-//     {
-//         // ... your existing setup code ...
-
-//         if (is_builtin(clist))
-//             exit(execute_builtin(clist, shell));
-
-//         cmd_path = find_path(clist->array[0], shell->env);
-//         if (!cmd_path)
-//         {
-//             fprintf(stderr, "%s: command not found\n", clist->array[0]);
-//             exit(127);
-//         }
-
-//         // FILTER EMPTY ARGS HERE:
-//         char **filtered_args = filter_empty_args(clist);
-//         execve(cmd_path, filtered_args, shell->env);
-
-//         // Free filtered array if it's different from original
-//         if (filtered_args != clist->array)
-//             free(filtered_args);
-//     }
-
-//     // ... rest of your code ...
-// }
