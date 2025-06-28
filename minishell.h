@@ -92,8 +92,6 @@ typedef struct words_list
 typedef struct t_shell
 {
     t_env *envv;
-    char   **env;
-    char    **copy_envp;
     int last_exit_status;              // $? value
 } t_shell;
 
@@ -145,7 +143,7 @@ int                 builtin_cd(c_cmd *cmd, t_shell *shell);       // Change dire
 int                 builtin_pwd(void);                            // Print working directory
 int                 builtin_export(c_cmd *cmd, t_shell *shell);   // Export env variables
 int                 builtin_unset(c_cmd *cmd, t_shell *shell);    // Unset env variables
-int                 builtin_env(c_cmd *cmd, t_shell *shell);                  // Print environment
+int builtin_env(t_shell *shell);
 //                  function utils check mul
 int                 is_numeric(const char *str);
 void                free_test_cmd(c_cmd *cmd);
@@ -159,7 +157,7 @@ void                print_env(char **env);
 void                print_env_sorted(t_env *env);
 char                *get_env_value_ll(t_env *env, const char *key);
 t_env               *create_env_node(char *key, char *value);
-void                build_env_list(t_shell *shell);
+void                build_env_list(t_shell *shell, char **envp);
 void                update_env_list(t_shell *shell, const char *key, const char *value);
 int                 ft_strcmp_echo(const char *s);
 char                **function_split_env(t_shell *shell);
@@ -175,5 +173,7 @@ void                ft_free_2d_array(char **arr);
 char                *get_env_value(char **env, const char *key);
 char **filter_empty_args(c_cmd *cmd);
 char **generate_envp_from_envlist(t_shell *shell);
+char *ft_strjoin_triple(char *a, char *b, char *c);
+int is_valid_var(const char *str);
 #endif
 

@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/28 15:28:52 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/28 16:13:40 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,22 +44,52 @@
 // 	close(fd);
 // }
 
+t_env *convert_envp_to_envlist(char **envp)
+{
+	t_env *head = NULL;
+	t_env *last = NULL;
+    int i = 0;
+	while (envp[i])
+	{
+		char *equal = ft_strchr(envp[i], '=');
+		if (!equal)
+			continue;
+
+		t_env *node = malloc(sizeof(t_env));
+		if (!node)
+			return NULL;
+
+		*equal = '\0'; // temporarily break key=value
+		node->key = ft_strdup(envp[i]);
+		node->value = ft_strdup(equal + 1);
+		*equal = '=';  // restore original string
+
+		node->next = NULL;
+		if (!head)
+			head = node;
+		else
+			last->next = node;
+		last = node;
+        i++;
+	}
+	return head;
+}
+
+
 int main(int argc, char **argv, char **envp)
 {
     (void)argc;
     (void)argv;
-    char *input_user;
+
+    t_shell shell;
     c_cmd *clist = NULL;
     w_list *wlist = NULL;
     T_list *token = NULL;
     pars_T *pars = NULL;
-    t_shell shell;
+    char *input_user;
 
-    shell.env = dup_envp(envp);
-    shell.copy_envp = dup_envp(envp);
+    shell.envv = convert_envp_to_envlist(envp);
     shell.last_exit_status = 0;
-    shell.envv = NULL;
-    build_env_list(&shell);
 
     while (1)
     {
@@ -92,6 +122,7 @@ int main(int argc, char **argv, char **envp)
     }
     return 0;
 }
+
 
 
 // minishell/
