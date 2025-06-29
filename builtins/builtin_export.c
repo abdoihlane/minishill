@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 12:19:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/28 16:22:16 by salah            ###   ########.fr       */
+/*   Updated: 2025/06/28 16:49:10 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,36 +163,124 @@ void print_env_sorted(t_env *envv)
 	}
 }
 
+// int builtin_export(c_cmd *cmd, t_shell *shell)
+// {
+//     int i = 1;
+// 	if (!cmd->array[1])
+// 	{
+// 		print_env_sorted(shell->envv);
+// 		return 0;
+// 	}
+
+// 	while (cmd->array[i])
+// 	{
+// 		char *arg = cmd->array[i];
+// 		char *eq = ft_strchr(arg, '=');
+
+// 		if (!is_valid_var(arg))
+// 		{
+// 			printf("minishell: export: `%s`: not a valid identifier\n", arg);
+// 			shell->last_exit_status = 1;
+// 			continue;
+// 		}
+
+// 		if (eq)
+// 		{
+// 			*eq = '\0';
+// 			update_env_variable(shell, arg, eq + 1);
+// 			*eq = '=';
+// 		}
+// 		else
+// 			update_env_variable(shell, arg, "");
+//         i++;
+// 	}
+// 	return 0;
+// }
+
+
 int builtin_export(c_cmd *cmd, t_shell *shell)
 {
     int i = 1;
-	if (!cmd->array[1])
-	{
-		print_env_sorted(shell->envv);
-		return 0;
-	}
 
-	while (cmd->array[i])
-	{
-		char *arg = cmd->array[i];
-		char *eq = ft_strchr(arg, '=');
+    // export with no args: print all sorted env
+    if (!cmd->array[1])
+    {
+        t_env *tmp = shell->envv;
+        while (tmp)
+        {
+            if (tmp->value)
+                printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
+            else
+                printf("declare -x %s\n", tmp->key);
+            tmp = tmp->next;
+        }
+        return 0;
+    }
 
-		if (!is_valid_var(arg))
-		{
-			printf("minishell: export: `%s`: not a valid identifier\n", arg);
-			shell->last_exit_status = 1;
-			continue;
-		}
+    // export with assignments
+    while (cmd->array[i])
+    {
+        char *arg = cmd->array[i];
+        char *equal = ft_strchr(arg, '=');
+        if (equal)
+        {
+            *equal = '\0';
+            char *key = arg;
+            char *value = equal + 1;
 
-		if (eq)
-		{
-			*eq = '\0';
-			update_env_variable(shell, arg, eq + 1);
-			*eq = '=';
-		}
-		else
-			update_env_variable(shell, arg, "");
+            // update existing or create new
+            t_env *node = shell->envv;
+            int found = 0;
+            while (node)
+            {
+                if (ft_strcmp(node->key, key) == 0)
+                {
+                    free(node->value);
+                    node->value = ft_strdup(value);
+                    found = 1;
+                    break;
+                }
+                node = node->next;
+            }
+
+            if (!found)
+            {
+                t_env *new = malloc(sizeof(t_env));
+                new->key = ft_strdup(key);
+                new->value = ft_strdup(value);
+                new->next = shell->envv;
+                shell->envv = new;
+            }
+
+            *equal = '=';
+        }
+        else
+        {
+            // just declare a var with no value (export var)
+            // check if already exists
+            t_env *node = shell->envv;
+            int exists = 0;
+            while (node)
+            {
+                if (ft_strcmp(node->key, arg) == 0)
+                {
+                    exists = 1;
+                    break;
+                }
+                node = node->next;
+            }
+            if (!exists)
+            {
+                t_env *new = malloc(sizeof(t_env));
+                new->key = ft_strdup(arg);
+                new->value = NULL;
+                new->next = shell->envv;
+                shell->envv = new;
+            }
+        }
+
         i++;
-	}
-	return 0;
+    }
+
+    return 0;
 }
