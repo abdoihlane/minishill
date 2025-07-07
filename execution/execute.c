@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
+/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 17:16:53 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/28 16:14:17 by salah            ###   ########.fr       */
+/*   Updated: 2025/07/01 19:18:27 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,9 +258,8 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
                 dup2(pipe_fd[1], STDOUT_FILENO);
                 close(pipe_fd[1]);
             }
-
-            setup_redirections(clist);
-
+            
+            // setup_redirections(clist);
             if (is_builtin(clist))
                 exit(execute_builtin(clist, shell));
 

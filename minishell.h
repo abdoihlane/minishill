@@ -142,8 +142,8 @@ int                 builtin_echo(c_cmd *cmd);                     // Echo comman
 int                 builtin_cd(c_cmd *cmd, t_shell *shell);       // Change directory
 int                 builtin_pwd(void);                            // Print working directory
 int                 builtin_export(c_cmd *cmd, t_shell *shell);   // Export env variables
-int                 builtin_unset(c_cmd *cmd, t_shell *shell);    // Unset env variables
 int builtin_env(t_shell *shell);
+int                 builtin_unset(c_cmd *cmd, t_shell *shell);    // Unset env variables
 //                  function utils check mul
 int                 is_numeric(const char *str);
 void                free_test_cmd(c_cmd *cmd);
@@ -171,9 +171,9 @@ void                execute_cmds(c_cmd *clist, t_shell *shell);
 void                heredoc_input(char *delimiter);
 void                ft_free_2d_array(char **arr);
 char                *get_env_value(char **env, const char *key);
-char **filter_empty_args(c_cmd *cmd);
-char **generate_envp_from_envlist(t_shell *shell);
-char *ft_strjoin_triple(char *a, char *b, char *c);
-int is_valid_var(const char *str);
+char                **filter_empty_args(c_cmd *cmd);
+char                **generate_envp_from_envlist(t_shell *shell);
+char                *ft_strjoin_triple(char *a, char *b, char *c);
+int                 is_valid_var(const char *str);
 #endif
 
