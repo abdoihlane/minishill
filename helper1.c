@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 20:20:16 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/09 18:36:33 by salah            ###   ########.fr       */
+/*   Updated: 2025/07/09 18:39:06 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ void build_env_list(t_shell *shell, char **envp)
 	t_env *last = NULL;
 	char *equal;
 
-	for (int i = 0; envp[i]; i++)
+	int i = 0;
+	while (envp[i])
 	{
 		equal = ft_strchr(envp[i], '=');
 		if (equal)
@@ -37,6 +38,7 @@ void build_env_list(t_shell *shell, char **envp)
 				last->next = new;
 			last = new;
 			*equal = '=';
+			i++;
 		}
 	}
 }
@@ -103,10 +105,12 @@ char **generate_envp_from_envlist(t_shell *shell)
 		return NULL;
 
 	tmp = shell->envv;
-	for (int i = 0; tmp; i++)
+	int	i = 0;
+	while (tmp)
 	{
 		envp[i] = ft_strjoin_triple(tmp->key, "=", tmp->value);
 		tmp = tmp->next;
+		i++;
 	}
 	envp[count] = NULL;
 	return envp;

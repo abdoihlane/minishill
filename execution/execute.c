@@ -101,8 +101,11 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
         i++;
     }
 
-    for (int j = 0; j < i; j++)
+    int j = 0;
+    while (j < i)
+    {
         waitpid(pids[j], NULL, 0);
-
+        j++;
+    }
     ft_free_2d_array(envp);
 }
