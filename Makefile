@@ -6,7 +6,7 @@
 #    By: salhali <salhali@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/19 17:02:36 by salhali           #+#    #+#              #
-#    Updated: 2025/06/22 17:18:17 by salhali          ###   ########.fr        #
+#    Updated: 2025/07/10 16:46:37 by salhali          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,8 @@ SRC = builtins/builtin_echo.c \
 			builtins/builtin_export.c \
 			builtins/builtin_exit.c \
 			tester_parsing.c \
-			utils.c \
+			utils/utils.c \
+			utils/signal.c \
 			helper.c \
 			helper1.c \
 			execution/execute.c \

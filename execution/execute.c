@@ -14,6 +14,7 @@
 
 char **filter_empty_args(c_cmd *cmd)
 {
+    char **filtered;
     int count = 0;
     int i = 0;
     int j;
@@ -23,11 +24,11 @@ char **filter_empty_args(c_cmd *cmd)
 
     while (cmd->array[i])
     {
-        if (strlen(cmd->array[i]) > 0)
+        if (ft_strlen(cmd->array[i]) > 0)
             count++;
         i++;
     }
-    char **filtered = malloc(sizeof(char *) * (count + 1));
+    filtered = malloc(sizeof(char *) * (count + 1));
     if (!filtered)
         return cmd->array;
 
@@ -78,6 +79,7 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
             }
 
             setup_redirections(clist);
+            // printf("spaam\n");
             if (is_builtin(clist))
                 exit(execute_builtin(clist, shell));
 
@@ -97,7 +99,6 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
             close(pipe_fd[1]);
             in_fd = pipe_fd[0];
         }
-
         clist = clist->next;
         i++;
     }
