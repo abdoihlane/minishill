@@ -14,12 +14,13 @@
 
 char **filter_empty_args(c_cmd *cmd)
 {
-    if (cmd->qflag == 0 || cmd->array == NULL)
-        return cmd->array;
-
     int count = 0;
     int i = 0;
     int j;
+    
+    if (cmd->qflag == 0 || cmd->array == NULL)
+        return cmd->array;
+
     while (cmd->array[i])
     {
         if (strlen(cmd->array[i]) > 0)
