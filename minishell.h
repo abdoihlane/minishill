@@ -1,7 +1,7 @@
 #ifndef MINISHELL_H
 #define MINISHELL_H
 
-#include <signal.h> //signal : 
+#include <signal.h> //signal :
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -177,5 +177,7 @@ char                **generate_envp_from_envlist(t_shell *shell);
 char                *ft_strjoin_triple(char *a, char *b, char *c);
 int                 is_valid_var(const char *str);
 
+void	sigint_handler(int sig);
+void sigint_heredoc(int sig);
 #endif
 

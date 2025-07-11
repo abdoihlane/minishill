@@ -1,0 +1,3 @@
+hello
+one  && cat out.txt
+one

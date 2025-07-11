@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/11 18:18:19 by salhali          ###   ########.fr       */
+/*   Updated: 2025/07/11 18:38:40 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ void	heredoc_input(char *delimiter)
 {
 	char	*line = NULL;
 	size_t	len = 0;
+    signal(SIGINT, sigint_heredoc);
 	int		fd = open(".heredoc_tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd < 0)
 	{
@@ -40,6 +41,8 @@ void	heredoc_input(char *delimiter)
 		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);
 	}
+    signal(SIGINT, sigint_handler);
+    signal(SIGQUIT, SIG_IGN);
 	free(line);
 	close(fd);
 }
@@ -81,6 +84,8 @@ int main(int argc, char **argv, char **envp)
     (void)argc;
     (void)argv;
 
+    signal(SIGINT, sigint_handler);
+    signal(SIGQUIT, SIG_IGN);
     t_shell shell;
     c_cmd *clist = NULL;
     w_list *wlist = NULL;
@@ -96,17 +101,16 @@ int main(int argc, char **argv, char **envp)
         input_user = readline("\001\033[38;2;255;105;180m\002➜  minishell \001\033[0m\002");
         if (!input_user)
             return 0;
-
+        signal(SIGINT, sigint_handler);
+        signal(SIGQUIT, SIG_IGN);
         if (HardcodeChecks(input_user) == 0)
         {
             printf("syntax error\n");
             continue;
         }
-
         call_all(input_user, &wlist);
         token = typesee(&wlist);
         splitit(token, &clist);
-        
             // ...existing code...
         add_history(input_user);
         if (clist != NULL && is_builtin(clist) != '\0' && clist->next == NULL && clist->file == NULL)
