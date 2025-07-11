@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tester_parsing.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 17:04:06 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/11 13:49:12 by salhali          ###   ########.fr       */
+/*   Updated: 2025/07/11 17:11:23 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,23 +139,52 @@ void	wlst_addback(w_list **lst, w_list *node)
 	tmp->next = node;
 }
 
+// void handle_redirection(c_cmd *list, T_list *token)
+// {
+// 	if (!list->file)
+// 	{
+// 		list->file = malloc(sizeof(T_list));
+// 		list->file->content = NULL;
+// 	}
+// 	if(token->next)
+// 		list->file->content = token->next->value;
+// 	if (token->type == TOKEN_REDIRECT_INPUT)
+// 		list->file->inout = 0;
+// 	else if(token->type == TOKEN_REDIRECT_OUTPUT)
+// 		list->file->inout = 1;
+// 	else if(token->type == TOKEN_REDIRECT_OUTPUT_AM )
+// 		list->file->inout = 3;
+// 	else if(token->type == TOKEN_HERDOC )
+// 		list->file->inout = 4;
+// }
+
+
 void handle_redirection(c_cmd *list, T_list *token)
 {
-	if (!list->file)
-	{
-		list->file = malloc(sizeof(T_list));
-		list->file->content = NULL;
-	}
-	if(token->next)
-		list->file->content = token->next->value;
+	r_list *new = malloc(sizeof(r_list));
+	if (!new)
+		return ;
+	new->content = token->next ? token->next->value : NULL;
+
 	if (token->type == TOKEN_REDIRECT_INPUT)
-		list->file->inout = 0;
-	else if(token->type == TOKEN_REDIRECT_OUTPUT)
-		list->file->inout = 1;
-	else if(token->type == TOKEN_REDIRECT_OUTPUT_AM )
-		list->file->inout = 3;
-	else if(token->type == TOKEN_HERDOC )
-		list->file->inout = 4;
+		new->inout = 0;
+	else if (token->type == TOKEN_REDIRECT_OUTPUT)
+		new->inout = 1;
+	else if (token->type == TOKEN_REDIRECT_OUTPUT_AM)
+		new->inout = 3;
+	else if (token->type == TOKEN_HERDOC)
+		new->inout = 4;
+	new->next = NULL;
+
+	if (!list->file)
+		list->file = new;
+	else
+	{
+		r_list *tmp = list->file;
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = new;
+	}
 }
 
 c_cmd *create_new_cmd(int array_size)
@@ -724,7 +753,7 @@ int HardcodeChecks(char *str)
 void call_all(char *in, w_list **wlist)
 {
 	pars_T *pars;
-	
+
 	pars = init_pars(in); // to free
 	fill_the_array(pars);
 	CommandOrnot(pars,wlist);

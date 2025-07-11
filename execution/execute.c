@@ -18,7 +18,7 @@ char **filter_empty_args(c_cmd *cmd)
     int count = 0;
     int i = 0;
     int j;
-    
+
     if (cmd->qflag == 0 || cmd->array == NULL)
         return cmd->array;
 
@@ -101,7 +101,7 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
         clist = clist->next;
         i++;
     }
-
+    
     int j = 0;
     while (j < i)
     {

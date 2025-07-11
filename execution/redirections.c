@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 17:13:24 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/11 13:51:58 by salhali          ###   ########.fr       */
+/*   Updated: 2025/07/11 16:56:26 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void  setup_redirections(c_cmd *cmd)
 
     while (tmp)
     {
-        if (tmp->inout == 0)   // <  in = 1;
+        if (tmp->inout == 0)   // <  in = 0;
         {
             int fd = open(tmp->content, O_RDONLY);
             if (fd < 0)
@@ -26,7 +26,7 @@ void  setup_redirections(c_cmd *cmd)
             dup2(fd, STDIN_FILENO);
             close(fd);
         }
-        else if (tmp->inout == 1) // > out = 0;
+        else if (tmp->inout == 1) // > out = 1;
         {
             int fd = open(tmp->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
             if (fd < 0)
