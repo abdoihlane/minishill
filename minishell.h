@@ -143,7 +143,7 @@ int                 builtin_echo(c_cmd *cmd);                     // Echo comman
 int                 builtin_cd(c_cmd *cmd, t_shell *shell);       // Change directory
 int                 builtin_pwd(void);                            // Print working directory
 int                 builtin_export(c_cmd *cmd, t_shell *shell);   // Export env variables
-int builtin_env(t_shell *shell);
+int                 builtin_env(t_shell *shell);
 int                 builtin_unset(c_cmd *cmd, t_shell *shell);    // Unset env variables
 //                  function utils check mul
 int                 is_numeric(const char *str);
