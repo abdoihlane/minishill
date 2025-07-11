@@ -558,11 +558,14 @@ void splitit(T_list *token, c_cmd **final)
         {
             if (tmp->type == TOKEN_REDIRECT_INPUT || tmp->type == TOKEN_REDIRECT_OUTPUT || 
                 tmp->type == TOKEN_HERDOC || tmp->type == TOKEN_REDIRECT_OUTPUT_AM)
-            {
-                handle_redirection(current, tmp);
-                tmp = tmp->next;
-                continue;
-            }
+				if (tmp->type == TOKEN_REDIRECT_INPUT || tmp->type == TOKEN_REDIRECT_OUTPUT || tmp->type == TOKEN_HERDOC ||tmp->type == TOKEN_REDIRECT_OUTPUT_AM)
+				{
+					handle_redirection(current, tmp);
+					tmp = tmp->next;  
+					if (tmp)         
+						tmp = tmp->next;
+					continue;
+				}
 			else if (tmp->type == TOKEN_WORD && tmp->value)
 			{
 				current->array[current->index] = strdup(tmp->value);
