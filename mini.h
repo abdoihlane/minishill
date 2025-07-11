@@ -11,6 +11,7 @@
 
 typedef struct PARSING_STRUCT 
 {
+	int expand_flag;
     unsigned int i;
     unsigned int k;
      int NumDollar;
@@ -67,7 +68,7 @@ typedef struct words_list
 
 }					w_list;
 
-
+void free_Plist(pars_T **list);
 void SkipWhiteSpaces(pars_T *pars);
 void Comands(pars_T *pars);
 void print_list(T_list *list);

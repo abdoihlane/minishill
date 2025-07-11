@@ -60,6 +60,7 @@
     "mini.h": "c",
     "libft.h": "c",
     "readline.h": "c",
-    "chrono": "c"
+    "chrono": "c",
+    "history.h": "c"
   }
 }

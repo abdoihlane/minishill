@@ -1,5 +1,4 @@
 #include "mini.h"
-
 char	*ft_strdup(const char *s)
 {
 	char	*dest;
@@ -33,7 +32,6 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
-
 size_t	ft_strlen(const char *str)
 {
 	size_t	len;
@@ -43,7 +41,6 @@ size_t	ft_strlen(const char *str)
 		len++;
 	return (len);
 }
-
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {

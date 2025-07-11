@@ -5,7 +5,7 @@ LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror #-lreadline -g3 #-fsanitize=address
+# CFLAGS = -Wall -Wextra -Werror #-lreadline -g3 -fsanitize=address
 CCFLAGS = -lreadline -g3 #-fsanitize=address
 
 OBJS = $(SRC:.c=.o)
