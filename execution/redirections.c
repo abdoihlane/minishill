@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
+/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 17:13:24 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/11 16:56:26 by salah            ###   ########.fr       */
+/*   Updated: 2025/07/11 18:17:06 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void  setup_redirections(c_cmd *cmd)
 
     while (tmp)
     {
-        if (tmp->inout == 0)   // <  in = 0;
+        if (tmp->inout == 0)   // <  in = 0; Redirect stdin from a file
         {
             int fd = open(tmp->content, O_RDONLY);
             if (fd < 0)
@@ -26,7 +26,7 @@ void  setup_redirections(c_cmd *cmd)
             dup2(fd, STDIN_FILENO);
             close(fd);
         }
-        else if (tmp->inout == 1) // > out = 1;
+        else if (tmp->inout == 1) // > out = 1;  Redirect stdout to a file (overwrite)
         {
             int fd = open(tmp->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
             if (fd < 0)
@@ -34,7 +34,7 @@ void  setup_redirections(c_cmd *cmd)
             dup2(fd, STDOUT_FILENO);
             close(fd);
         }
-        else if (tmp->inout == 3) // >>
+        else if (tmp->inout == 3) // >> Redirect stdout to a file (append)
         {
             int fd = open(tmp->content, O_WRONLY | O_CREAT | O_APPEND, 0644);
             if (fd < 0)
@@ -44,6 +44,7 @@ void  setup_redirections(c_cmd *cmd)
         }
         else if (tmp->inout == 4) // <<
         {
+            heredoc_input(tmp->content);
             // hna ghadi ndir `heredoc_input(tmp->content);`
             // o nfta7 `.heredoc_tmp`
         }

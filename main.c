@@ -6,43 +6,43 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/11 13:32:32 by salhali          ###   ########.fr       */
+/*   Updated: 2025/07/11 18:18:19 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// void	heredoc_input(char *delimiter)
-// {
-// 	char	*line = NULL;
-// 	size_t	len = 0;
-// 	int		fd = open(".heredoc_tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
-// 	if (fd < 0)
-// 	{
-// 		perror("heredoc open");
-// 		return;
-// 	}
+void	heredoc_input(char *delimiter)
+{
+	char	*line = NULL;
+	size_t	len = 0;
+	int		fd = open(".heredoc_tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (fd < 0)
+	{
+		perror("heredoc open");
+		return;
+	}
 
-// 	while (1)
-// 	{
-// 		write(1, "> ", 2);
-// 		ssize_t nread = getline(&line, &len, stdin);
-// 		if (nread == -1)
-// 			break;
+	while (1)
+	{
+		write(1, "> ", 2);
+		ssize_t nread = getline(&line, &len, stdin);
+		if (nread == -1)
+			break;
 
-// 		// delete newline for comparison
-// 		if (line[nread - 1] == '\n')
-// 			line[nread - 1] = '\0';
+		// delete newline for comparison
+		if (line[nread - 1] == '\n')
+			line[nread - 1] = '\0';
 
-// 		if (strcmp(line, delimiter) == 0)
-// 			break;
+		if (ft_strcmp(line, delimiter) == 0)
+			break;
 
-// 		write(fd, line, strlen(line));
-// 		write(fd, "\n", 1);
-// 	}
-// 	free(line);
-// 	close(fd);
-// }
+		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
+	}
+	free(line);
+	close(fd);
+}
 
 t_env *convert_envp_to_envlist(char **envp)
 {
