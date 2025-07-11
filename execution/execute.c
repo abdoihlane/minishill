@@ -79,7 +79,6 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
             }
 
             setup_redirections(clist);
-            // printf("spaam\n");
             if (is_builtin(clist))
                 exit(execute_builtin(clist, shell));
 

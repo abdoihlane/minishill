@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/07 13:59:22 by salhali          ###   ########.fr       */
+/*   Updated: 2025/07/11 13:32:32 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,13 +106,14 @@ int main(int argc, char **argv, char **envp)
         call_all(input_user, &wlist);
         token = typesee(&wlist);
         splitit(token, &clist);
+        
+            // ...existing code...
         add_history(input_user);
-
-        if (clist != NULL && is_builtin(clist) != '\0' && clist->next == NULL)
+        if (clist != NULL && is_builtin(clist) != '\0' && clist->next == NULL && clist->file == NULL)
             execute_builtin(clist, &shell);
         else
             execute_cmds(clist, &shell);
-
+        // ...existing code...
         free_wlist(&wlist);
         free_Plist(&pars);
         wlist = NULL;
@@ -122,7 +123,6 @@ int main(int argc, char **argv, char **envp)
     }
     return 0;
 }
-
 
 
 // minishell/

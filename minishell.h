@@ -31,7 +31,7 @@ typedef struct PARSING_STRUCT
 typedef struct REDIRECTION_list
 {
     char *content;                      // file name
-    int inout;                         // in or out (append) in = 1 out = 0;
+    int inout;                         // in or out (append) in = 0 out = 1;
     struct REDIRECTION_list *next;
 } r_list;
 

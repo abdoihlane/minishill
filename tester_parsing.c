@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 17:04:06 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/19 18:53:22 by salhali          ###   ########.fr       */
+/*   Updated: 2025/07/11 13:49:12 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,9 +149,9 @@ void handle_redirection(c_cmd *list, T_list *token)
 	if(token->next)
 		list->file->content = token->next->value;
 	if (token->type == TOKEN_REDIRECT_INPUT)
-		list->file->inout = 1;
-	else if(token->type == TOKEN_REDIRECT_OUTPUT)
 		list->file->inout = 0;
+	else if(token->type == TOKEN_REDIRECT_OUTPUT)
+		list->file->inout = 1;
 	else if(token->type == TOKEN_REDIRECT_OUTPUT_AM )
 		list->file->inout = 3;
 	else if(token->type == TOKEN_HERDOC )
@@ -232,10 +232,12 @@ void splitit(T_list *token, c_cmd **final)
 			current = new_cmd;
 			while (tmp && tmp->type != TOKEN_PIPE)
 			{
-				if (tmp->type == TOKEN_REDIRECT_INPUT || tmp->type == TOKEN_REDIRECT_OUTPUT || tmp->type == TOKEN_HERDOC ||tmp->type == TOKEN_REDIRECT_OUTPUT_AM  )
+				if (tmp->type == TOKEN_REDIRECT_INPUT || tmp->type == TOKEN_REDIRECT_OUTPUT || tmp->type == TOKEN_HERDOC ||tmp->type == TOKEN_REDIRECT_OUTPUT_AM)
 				{
 					handle_redirection(current, tmp);
-					tmp = tmp->next;
+					tmp = tmp->next;  // Skip redirection operator
+					if (tmp)         // Skip filename too
+						tmp = tmp->next;
 					continue;
 				}
 				if(tmp->type == TOKEN_quotes)
