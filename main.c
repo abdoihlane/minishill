@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/11 18:38:40 by salah            ###   ########.fr       */
+/*   Updated: 2025/07/12 18:01:52 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	heredoc_input(char *delimiter)
 	char	*line = NULL;
 	size_t	len = 0;
     signal(SIGINT, sigint_heredoc);
+
 	int		fd = open(".heredoc_tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd < 0)
 	{
@@ -31,21 +32,30 @@ void	heredoc_input(char *delimiter)
 		if (nread == -1)
 			break;
 
-		// delete newline for comparison
 		if (line[nread - 1] == '\n')
 			line[nread - 1] = '\0';
 
 		if (ft_strcmp(line, delimiter) == 0)
+		{
+			free(line);      //  free line
+			line = NULL;     //  reset line bach ma n3awdch nfreeeha
 			break;
+		}
 
 		write(fd, line, ft_strlen(line));
 		write(fd, "\n", 1);
+		free(line);          //  free normal line
+		line = NULL;         //  reset line
 	}
-    signal(SIGINT, sigint_handler);
-    signal(SIGQUIT, SIG_IGN);
-	free(line);
+
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
+
+	if (line)               //  free ghir ila mazal line ma tfreeatch
+		free(line);
 	close(fd);
 }
+
 
 t_env *convert_envp_to_envlist(char **envp)
 {

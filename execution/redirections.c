@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 17:13:24 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/11 18:17:06 by salhali          ###   ########.fr       */
+/*   Updated: 2025/07/12 17:40:02 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ void  setup_redirections(c_cmd *cmd)
         {
             int fd = open(tmp->content, O_RDONLY);
             if (fd < 0)
-                perror("open");
+            {
+                perror("bash");
+                exit(1);
+            }
             dup2(fd, STDIN_FILENO);
             close(fd);
         }
@@ -42,12 +45,8 @@ void  setup_redirections(c_cmd *cmd)
             dup2(fd, STDOUT_FILENO);
             close(fd);
         }
-        else if (tmp->inout == 4) // <<
-        {
+        else if (tmp->inout == 4) // << herdoc
             heredoc_input(tmp->content);
-            // hna ghadi ndir `heredoc_input(tmp->content);`
-            // o nfta7 `.heredoc_tmp`
-        }
         tmp = tmp->next;
     }
 }
