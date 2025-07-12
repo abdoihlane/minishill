@@ -6,14 +6,17 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/12 21:14:46 by salah            ###   ########.fr       */
+/*   Updated: 2025/07/12 22:22:12 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	heredoc_input(char *delimiter)
+
+
+void	heredoc_input(char *delimiter, r_list *head)
 {
+
 	char	*line = NULL;
 	size_t	len = 0;
     signal(SIGINT, sigint_heredoc);
@@ -34,24 +37,23 @@ void	heredoc_input(char *delimiter)
 
 		if (line[nread - 1] == '\n')
 			line[nread - 1] = '\0';
-
 		if (ft_strcmp(line, delimiter) == 0)
 		{
 			free(line);      //  free line
 			line = NULL;     //  reset line bach ma n3awdch nfreeeha
 			break;
 		}
+		write(fd, line, ft_strlen(line));
+		write(fd, "\n", 1);
 	}
-
-	// write(fd, line, ft_strlen(line));
-	// write(fd, "\n", 1);
-	free(line);          //  free normal line
-	line = NULL;         //  reset line
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
+	//
+	head->content = ft_strdup(".heredoc_tmp");
+	head->inout = 0; //  set inout to 4 for heredoc
 
-	// if (line)               //  free ghir ila mazal line ma tfreeatch
-	// 	free(line);
+	if (line)               //  free ghir ila mazal line ma tfreeatch
+		free(line);
 	close(fd);
 }
 

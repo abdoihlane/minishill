@@ -57,6 +57,7 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
     char **filtered_args;
     char **envp = generate_envp_from_envlist(shell);
 
+
     while (clist)
     {
         if (clist->next)
@@ -78,6 +79,12 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
                 close(pipe_fd[1]);
             }
 
+                // c_cmd *tmp = clist;
+        // while (tmp)
+        // {
+        //     printf("Command  %s\n", tmp->array[0]);
+        //     tmp = tmp->next;
+        // }
             setup_redirections(clist);
             if (is_builtin(clist))
                 exit(execute_builtin(clist, shell));
@@ -87,6 +94,12 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
                 exit(127);
 
             filtered_args = filter_empty_args(clist);
+            int i = 0;
+            while (filtered_args[i])
+            {
+                printf("Argument %d: %s\n", i, filtered_args[i]);
+                i++;
+            }
             execve(cmd_path, filtered_args, envp);
             exit(127);
         }
@@ -101,7 +114,7 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
         clist = clist->next;
         i++;
     }
-    
+
     int j = 0;
     while (j < i)
     {
