@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/12 18:01:52 by salah            ###   ########.fr       */
+/*   Updated: 2025/07/12 21:14:46 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,18 +41,17 @@ void	heredoc_input(char *delimiter)
 			line = NULL;     //  reset line bach ma n3awdch nfreeeha
 			break;
 		}
-
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
-		free(line);          //  free normal line
-		line = NULL;         //  reset line
 	}
 
+	// write(fd, line, ft_strlen(line));
+	// write(fd, "\n", 1);
+	free(line);          //  free normal line
+	line = NULL;         //  reset line
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
 
-	if (line)               //  free ghir ila mazal line ma tfreeatch
-		free(line);
+	// if (line)               //  free ghir ila mazal line ma tfreeatch
+	// 	free(line);
 	close(fd);
 }
 
