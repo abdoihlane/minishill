@@ -12,6 +12,7 @@
 typedef struct PARSING_STRUCT 
 {
 	int expand_flag;
+	int herdoc_flag;
     unsigned int i;
     unsigned int k;
      int NumDollar;
@@ -68,20 +69,46 @@ typedef struct words_list
 
 }					w_list;
 
-void free_Plist(pars_T **list);
-void SkipWhiteSpaces(pars_T *pars);
-void Comands(pars_T *pars);
-void print_list(T_list *list);
-void print_list1(w_list *list);
-pars_T *init_pars(char *in);
-r_list	*ccreate_node(char  *value);
-w_list	*wcreate_node(char *value);
 int ft_strcmp(char *s1, char *s2);
-void	clst_addback(r_list **lst, r_list *node);
-void	wlst_addback(w_list **lst, w_list *node);
-int valid(char c);
-// void expand_variables(T_list *tokens);
-char *expand_variables(char *input);
+/* ===== Parsing Functions ===== */
+void     CommandOrnot(pars_T *pars, w_list **wlist);
+void     typesee_plus(w_list *list, T_list *new_token);
+T_list  *typesee(w_list **list);
+
+int      is_whitespace(char c);
+int      is_redirection(char c);
+
+pars_T  *init_pars(char *in);
+void     fill_array_plus(pars_T *pars);
+void     fill_the_array(pars_T *pars);
+void     SkipWhiteSpaces(pars_T *pars);
+
+void     print_list(T_list *list);
+void     free_wlist(w_list **list);
+void     free_Plist(pars_T **list);
+void     call_all(char *in, w_list **wlist);
+
+int      check_quotes_closed(char *str);
+int      red_check(char *str);
+int      HardcodeChecks(char *str);
+
+
+/* ===== Expansion Functions ===== */
+char    *expand_variables(char *input);
+int      contains_single_quotes(const char *s);
+char    *expand_in_quotes(pars_T *pars, char *segment);
+char    *Handlequotes(pars_T *pars, char c);
+char    *ft_strjoin_all(char **array);
+
+
+/* ===== Redirection & Command Handling ===== */
+void     handle_red_plus(c_cmd *list, T_list *token);
+void     handle_redirection(c_cmd *list, T_list *token);
+
+c_cmd   *create_new_cmd(int array_size);
+int      count_cmd_args(T_list *start);
+void     splitit(T_list *token, c_cmd **final);
+void     print_cmd_list(c_cmd *cmd);
 
 
 #endif

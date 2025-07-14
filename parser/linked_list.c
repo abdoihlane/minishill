@@ -1,4 +1,5 @@
-#include "mini.h"
+#include "../mini.h"
+
 char	*ft_strdup(const char *s)
 {
 	char	*dest;
@@ -16,7 +17,7 @@ char	*ft_strdup(const char *s)
 	dest[i] = '\0';
 	return (dest);
 }
- 
+
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	size_t	i;
@@ -61,7 +62,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (join);
 }
 
-
 r_list	*ccreate_node(char *value)
 {
 	r_list	*new_node;
@@ -86,36 +86,19 @@ w_list	*wcreate_node(char *value)
 	return (new_node);
 }
 
-int ft_strcmp(char *s1, char *s2)
+int	ft_strcmp(char *s1, char *s2)
 {
-	int i = 0;
-	while(s1[i])
+	int	i;
+
+	i = 0;
+	while (s1[i])
 	{
-		if(s1[i] != s2[i])
-			return 1;
+		if (s1[i] != s2[i])
+			return (1);
 		i++;
 	}
-	return 0;
+	return (0);
 }
-
-// void	clst_addback(c_list **lst, c_list *node)
-// {
-// 	c_list	*tmp;
-
-// 	if (!node)
-// 		return ;
-// 	if (!*lst)
-// 	{
-// 		*lst = node;
-// 		return ;
-// 	}
-// 	tmp = *lst;
-// 	while (tmp->next)
-// 	{
-// 		tmp = tmp->next;
-// 	}
-// 	tmp->next = node;
-// }
 
 void	wlst_addback(w_list **lst, w_list *node)
 {
@@ -134,4 +117,60 @@ void	wlst_addback(w_list **lst, w_list *node)
 		tmp = tmp->next;
 	}
 	tmp->next = node;
+}
+
+c_cmd	*create_new_cmd(int array_size)
+{
+	c_cmd	*cmd;
+
+	cmd = malloc(sizeof(c_cmd));
+	if (!cmd)
+		return (NULL);
+	cmd->array = malloc(sizeof(char *) * (array_size + 1));
+	if (!cmd->array)
+	{
+		free(cmd);
+		return (NULL);
+	}
+	cmd->qflag = 0;
+	cmd->index = 0;
+	cmd->file = NULL;
+	cmd->cmd = NULL;
+	cmd->next = NULL;
+	return (cmd);
+}
+
+int	count_cmd_args(T_list *start)
+{
+	int	count;
+
+	count = 0;
+	while (start && start->type != TOKEN_PIPE)
+	{
+		if (start->type == TOKEN_WORD || start->type == TOKEN_quotes)
+			count++;
+		else if (start->type == TOKEN_REDIRECT_INPUT
+			|| start->type == TOKEN_REDIRECT_OUTPUT
+			|| start->type == TOKEN_REDIRECT_OUTPUT_AM
+			|| start->type == TOKEN_HERDOC)
+		{
+			count++;
+			start = start->next;
+		}
+		if (start && start->next)
+			start = start->next;
+		else
+			return (count);
+	}
+	return (count);
+}
+
+void	CommandOrnot(pars_T *pars, w_list **wlist)
+{
+	int i = 0;
+	while (pars->content1[i])
+	{
+		wlst_addback(wlist, wcreate_node(pars->content1[i]));
+		i++;
+	}
 }

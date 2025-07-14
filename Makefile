@@ -1,23 +1,28 @@
 NAME = minishell
 
-SRC = parsing1.c linked_list.c
+SRC_DIRS = parser tokenizer
+
+# Find all .c files under the source directories
+SRCS = $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.c)) main.c
+
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 CC = cc
-# CFLAGS = -Wall -Wextra -Werror #-lreadline -g3 -fsanitize=address
-CCFLAGS = -lreadline -g3 #-fsanitize=address
+CFLAGS = -Wall -Wextra -Werror
+CCFLAGS = -lreadline -g3
 
-OBJS = $(SRC:.c=.o)
+# Generate object files list from SRCS
+OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	$(CC) $(SRC) $(LIBFT) $(CCFLAGS) -o $(NAME)
+	$(CC) $(OBJS) $(LIBFT) $(CCFLAGS) -o $(NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
-	
+
 $(LIBFT):
 	make -C $(LIBFT_DIR)
 
