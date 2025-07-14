@@ -176,6 +176,7 @@ char                **filter_empty_args(c_cmd *cmd);
 char                **generate_envp_from_envlist(t_shell *shell);
 char                *ft_strjoin_triple(char *a, char *b, char *c);
 int                 is_valid_var(const char *str);
+// void    heredoc_input(char *delimiter);
 
 void	sigint_handler(int sig);
 void sigint_heredoc(int sig);

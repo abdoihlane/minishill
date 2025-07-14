@@ -94,12 +94,12 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
                 exit(127);
 
             filtered_args = filter_empty_args(clist);
-            int i = 0;
-            while (filtered_args[i])
-            {
-                printf("Argument %d: %s\n", i, filtered_args[i]);
-                i++;
-            }
+            // int i = 0;
+            // while (filtered_args[i])
+            // {
+            //     printf("Argument %d: %s\n", i, filtered_args[i]);
+            //     i++;
+            // }
             execve(cmd_path, filtered_args, envp);
             exit(127);
         }

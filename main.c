@@ -3,21 +3,62 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
+/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/12 22:22:12 by salah            ###   ########.fr       */
+/*   Updated: 2025/07/14 16:39:16 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+// void    heredoc_input(char *delimiter)
+// {
+//     char    *line = NULL;
+//     char    *expanded = NULL;
+//     size_t    len = 0;
+//     ssize_t    nread;
+//     int        fd;
 
+//     signal(SIGINT, sigint_heredoc);
+//     fd = open(".heredoc_tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+//     if (fd < 0)
+//     {
+//         perror("heredoc open");
+//         return;
+//     }
+//     while (1)
+//     {
+//         write(1, "> ", 2);
+//         nread = getline(&line, &len, stdin);
+//         if (nread == -1)
+//             break;
+//         if (line[nread - 1] == '\n')
+//             line[nread - 1] = '\0';
 
+        
+//         if (ft_strcmp(line, delimiter) == 0)
+//         {
+//             printf("spaaam\n");
+//             free(line);      //  free line
+//             line = NULL;     //  reset line bach ma n3awdch nfreeeha
+//             break;
+//         }
+//         expanded = expand_variables(line);
+//         write(fd, expanded, ft_strlen(expanded));
+//         write(fd, "\n", 1);
+//         free(expanded);
+//     }
+//     free(line);
+//     signal(SIGINT, sigint_handler);
+//     signal(SIGQUIT, SIG_IGN);
+//     close(fd);
+// }
 void	heredoc_input(char *delimiter, r_list *head)
 {
 
 	char	*line = NULL;
+    char    *expanded = NULL;
 	size_t	len = 0;
     signal(SIGINT, sigint_heredoc);
 
@@ -39,12 +80,15 @@ void	heredoc_input(char *delimiter, r_list *head)
 			line[nread - 1] = '\0';
 		if (ft_strcmp(line, delimiter) == 0)
 		{
+            printf("spaaam\n");
 			free(line);      //  free line
 			line = NULL;     //  reset line bach ma n3awdch nfreeeha
 			break;
 		}
-		write(fd, line, ft_strlen(line));
-		write(fd, "\n", 1);
+        expanded = expand_variables(line);
+        write(fd, expanded, ft_strlen(expanded));
+        // write(fd, "\n", 1);
+        free(expanded);
 	}
 	signal(SIGINT, sigint_handler);
 	signal(SIGQUIT, SIG_IGN);
