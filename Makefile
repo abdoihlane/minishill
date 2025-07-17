@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: salhali <salhali@student.42.fr>            +#+  +:+       +#+         #
+#    By: salah <salah@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/19 17:02:36 by salhali           #+#    #+#              #
-#    Updated: 2025/07/14 16:44:45 by salhali          ###   ########.fr        #
+#    Updated: 2025/07/17 15:04:57 by salah            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,8 +39,15 @@ SRC = builtins/builtin_echo.c \
 			execution/execute.c \
 			execution/redirections.c \
 			execution/path.c \
-			gnl/get_next_line.c \
-			gnl/get_next_line_utils.c \
+			parser / expand.c \
+			parser /fill_array.c \
+			parser /free.c \
+			parser /helpers.c \
+			parser /initializer.c \
+			parser /linked_list.c \
+			parser /parsing.c \
+			parser /print.c \
+			parser /quotes.c \
 			main.c \
 
 OBJ = $(SRC:.c=.o)
