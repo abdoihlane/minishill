@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 17:13:24 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/17 16:19:36 by salah            ###   ########.fr       */
+/*   Updated: 2025/07/17 16:48:37 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,6 @@
 void  setup_redirections(c_cmd *cmd)
 {
     r_list *tmp = cmd->file;
-    //  r_list *head = cmd->file;
-    // while (head)
-    // {
-    //     printf("content: {%s}, cmd : {%s} inout: {%d}\n", head->content,cmd->array[1],  head->inout);
-    //     head = head->next;
-    // }
     while (tmp)
     {
         if (tmp->inout == 0)   // <  in = 0; Redirect stdin from a file
@@ -54,20 +48,8 @@ void  setup_redirections(c_cmd *cmd)
         {
             heredoc_input(tmp->content, tmp);
             continue;
-            // r_list *head = cmd->file;
-            //     while (head)
-            //     {
-            //         printf("Redirection content: %s, inout: %d\n", head->content, head->inout);
-            //         head = head->next;
-            //     }
         }
         tmp = tmp->next;
     }
     // printf("Redirections setup completed.\n");
-    // r_list *head = cmd->file;
-    // while (head)
-    // {
-    //     printf("Redirection content: %s, inout: %d\n", head->content, head->inout);
-    //     head = head->next;
-    // }
 }

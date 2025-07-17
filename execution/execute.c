@@ -78,33 +78,16 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
                 dup2(pipe_fd[1], STDOUT_FILENO);
                 close(pipe_fd[1]);
             }
-
-                // c_cmd *tmp = clist;
-        // while (tmp)
-        // {
-        //     printf("Command  %s\n", tmp->array[0]);
-        //     tmp = tmp->next;
-        // }
             setup_redirections(clist);
-            printf("im here !\n");
             if (is_builtin(clist))
                 exit(execute_builtin(clist, shell));
-
             cmd_path = find_path(clist->array[0], envp);
             if (!cmd_path)
                 exit(127);
-
             filtered_args = filter_empty_args(clist);
-            // int i = 0;
-            // while (filtered_args[i])
-            // {
-            //     printf("Argument %d: %s\n", i, filtered_args[i]);
-            //     i++;
-            // }
             execve(cmd_path, filtered_args, envp);
             exit(127);
         }
-
         if (in_fd != 0)
             close(in_fd);
         if (clist->next)
