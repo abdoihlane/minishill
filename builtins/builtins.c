@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 17:09:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/28 16:50:09 by salah            ###   ########.fr       */
+/*   Updated: 2025/07/17 16:27:10 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int is_builtin(c_cmd *cmd)
 {
-    if (!cmd || !cmd->array || !cmd->array[0])
+    if (!cmd || !cmd->array || !cmd->array[1])
         return 0;
     if (ft_strcmp(cmd->array[0], "echo") == 0)
         return 1;
@@ -25,7 +25,7 @@ int is_builtin(c_cmd *cmd)
     if (ft_strcmp(cmd->array[0], "env") == 0)
         return 1;
     if (ft_strcmp(cmd->array[0], "export") == 0)
-        return 1;
+        return(1);
     if (ft_strcmp(cmd->array[0], "unset") == 0)
         return 1;
     if (ft_strcmp(cmd->array[0], "exit") == 0)

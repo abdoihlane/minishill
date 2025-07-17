@@ -3,17 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 17:13:38 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/22 17:22:54 by salhali          ###   ########.fr       */
+/*   Updated: 2025/07/17 16:18:05 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
- 
+
  char *find_path(char *cmd, char **envp)
 {
+    if(cmd == NULL || cmd[0] == '\0')
+    {
+        printf("is here !!\n");
+        return(NULL);
+    }
     if (access(cmd, X_OK) == 0)
         return ft_strdup(cmd); // full path already
 

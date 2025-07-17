@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/22 17:13:24 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/14 16:36:29 by salhali          ###   ########.fr       */
+/*   Updated: 2025/07/17 16:19:36 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void  setup_redirections(c_cmd *cmd)
             int fd = open(tmp->content, O_RDONLY);
             if (fd < 0)
             {
-                perror("bash");
+                perror("open");
                 exit(1);
             }
             dup2(fd, STDIN_FILENO);
@@ -63,6 +63,7 @@ void  setup_redirections(c_cmd *cmd)
         }
         tmp = tmp->next;
     }
+    // printf("Redirections setup completed.\n");
     // r_list *head = cmd->file;
     // while (head)
     // {

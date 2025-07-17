@@ -6,7 +6,7 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/17 14:59:08 by salah            ###   ########.fr       */
+/*   Updated: 2025/07/17 16:14:03 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,15 @@ void	heredoc_input(char *delimiter, r_list *head)
 
 		if (line[nread - 1] == '\n')
 			line[nread - 1] = '\0';
+
 		if (ft_strcmp(line, delimiter) == 0)
 		{
+			printf("spaam\n");
 			free(line);      //  free line
 			line = NULL;     //  reset line bach ma n3awdch nfreeeha
 			break;
 		}
+
 		expanded = expand_variables(line);
 		write(fd, expanded, ft_strlen(expanded));
 		write(fd, "\n", 1);
