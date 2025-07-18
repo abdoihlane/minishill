@@ -135,12 +135,18 @@ void call_all(char *input_user, w_list **wlist);
 // ------ EXECUTION FUNCTIONS --------  //
 
 //                  Main builtin functions
+int             builtin_cd(c_cmd *cmd, t_shell *shell);       // Change directory
+void            update_pwd_variables(t_shell *shell, char *old_pwd);
+int             handle_cd_error(char *path);
+char            *get_target_path(c_cmd *cmd, t_shell *shell, char *current_dir);
+int             get_array_length(char **array);
+
+
 int                 is_builtin(c_cmd *command);
 int                 execute_builtin(c_cmd *cmd, t_shell *shell);  // CORRECTED: c_cmd instead of t_command
 //                  Individual builtin implementations
 void                builtin_exit(c_cmd *cmd, t_shell *shell);     // Exit shell
 int                 builtin_echo(c_cmd *cmd);                     // Echo command
-int                 builtin_cd(c_cmd *cmd, t_shell *shell);       // Change directory
 int                 builtin_pwd(void);                            // Print working directory
 int                 builtin_export(c_cmd *cmd, t_shell *shell);   // Export env variables
 int                 builtin_env(t_shell *shell);
