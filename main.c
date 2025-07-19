@@ -1,22 +1,54 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ahabibi- <ahabibi-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/19 04:46:55 by ahabibi-          #+#    #+#             */
+/*   Updated: 2025/07/19 11:44:46 by ahabibi-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "mini.h"
 
-void	call_all(char *in, w_list **wlist)
+void	call_all(char *in, t_wlist **wlist)
 {
-	pars_T *pars = init_pars(in); // to free
+	t_token	*token;
+	t_pars	*pars;
+	char	*history_in;
+	t_cmd	*clist;
+
+	if (hardcodechecks(in) == 0)
+	{
+		printf("syntax error\n");
+		free(in);
+		return ;
+	}
+	if (in)
+	{
+		history_in = ft_strdup(in);
+		add_history(history_in);
+	}
+	clist = NULL;
+	pars = init_pars(in);
 	fill_the_array(pars);
-	CommandOrnot(pars, wlist);
+	commandornot(pars, wlist);
+	token = typesee(wlist);
+	splitit(token, &clist);
+	print_cmd_list(clist);
+	free_plist(&pars);
 }
 
 int	main(void)
 {
 	char	*in;
-	c_cmd	*clist;
-	char	*history_in;
+	// char	*history_in;
+	t_wlist	*wlist;
+	t_pars	*pars;
 
-	clist = NULL;
-	w_list *wlist = NULL;
-	T_list *token = NULL; 
-	pars_T *pars = NULL;  // to free
+	wlist = NULL;
+	pars = NULL;
 	while (1)
 	{
 		in = readline("\001\033[38;2;255;105;180m\002➜  minishell \001\033[0m\002");
@@ -24,30 +56,13 @@ int	main(void)
 			return (0);
 		else
 		{
-			if (in)
-			{
-				history_in = ft_strdup(in);
-				add_history(history_in);
-			}
-			if (HardcodeChecks(in) == 0)
-			{
-				printf("syntax error\n");
-				free(in);
-				continue ;
-			}
 			call_all(in, &wlist);
-			token = typesee(&wlist);
-			splitit(token, &clist);
-			free_Plist(&pars);
-			free_wlist(&wlist);
-			print_cmd_list(clist);
+			// free(pars);
 			wlist = NULL;
-			free(pars);
 			pars = NULL;
 			free(in);
-			rl_on_new_line();       // Regenerate the prompt on a newline
-			rl_replace_line("", 0); // Clear the previous text
-			// rl_redisplay();
+			rl_on_new_line();
+			rl_replace_line("", 0);
 		}
 	}
 	return (0);

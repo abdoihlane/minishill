@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   quotes.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ahabibi- <ahabibi-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/19 02:49:57 by ahabibi-          #+#    #+#             */
+/*   Updated: 2025/07/19 11:39:13 by ahabibi-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../mini.h"
 
 int	contains_single_quotes(const char *s)
@@ -11,7 +23,7 @@ int	contains_single_quotes(const char *s)
 	return (0);
 }
 
-char	*expand_in_quotes(pars_T *pars, char *segment)
+char	*expand_in_quotes(t_pars *pars, char *segment)
 {
 	int		z;
 	char	*new_segment;
@@ -19,7 +31,7 @@ char	*expand_in_quotes(pars_T *pars, char *segment)
 
 	z = 0;
 	new_segment = segment;
-	while (z < pars->NumDollar)
+	while (z < pars->numdollar)
 	{
 		tmp = expand_variables(new_segment);
 		free(new_segment);
@@ -30,7 +42,7 @@ char	*expand_in_quotes(pars_T *pars, char *segment)
 	return (new_segment);
 }
 
-char	*Handlequotes(pars_T *pars, char c)
+char	*handlequotes(t_pars *pars, char c)
 {
 	int		start;
 	int		len;
@@ -39,10 +51,7 @@ char	*Handlequotes(pars_T *pars, char c)
 
 	pars->i++;
 	if (pars->content[pars->i] && pars->content[pars->i] == c)
-	{
-		pars->i++;
-		return (ft_strdup(""));
-	}
+		return ((pars->i++), ft_strdup(""));
 	start = pars->i;
 	while (pars->content[pars->i] && pars->content[pars->i] != c)
 		pars->i++;
@@ -50,12 +59,9 @@ char	*Handlequotes(pars_T *pars, char c)
 	segment = malloc(len + 2);
 	if (!segment)
 		return (NULL);
-	j = 0;
-	while (j < len)
-	{
+	j = -1;
+	while (++j < len)
 		segment[j] = pars->content[start + j];
-		j++;
-	}
 	segment[len] = '\0';
 	pars->i++;
 	if (c == '"')
@@ -65,10 +71,13 @@ char	*Handlequotes(pars_T *pars, char c)
 
 int	check_quotes_closed(char *str)
 {
-	int i = 0;
-	int in_single = 0;
-	int in_double = 0;
+	int	i;
+	int	in_single;
+	int	in_double;
 
+	i = 0;
+	in_single = 0;
+	in_double = 0;
 	while (str[i])
 	{
 		if (str[i] == '\'' && in_double == 0)

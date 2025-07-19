@@ -1,6 +1,6 @@
 #include "../mini.h"
 
-void	print_cmd_list(c_cmd *cmd)
+void	print_cmd_list(t_cmd *cmd)
 {
 	int	i;
 
@@ -43,7 +43,7 @@ void	print_cmd_list(c_cmd *cmd)
 		cmd = cmd->next;
 	}
 }
-void	print_list(T_list *list)
+void	print_token(t_token *list)
 {
 	while (list)
 	{

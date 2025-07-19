@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   helpers.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ahabibi- <ahabibi-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/19 02:46:46 by ahabibi-          #+#    #+#             */
+/*   Updated: 2025/07/19 11:38:37 by ahabibi-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../mini.h"
 
 char	*ft_strjoin_all(char **array)
@@ -31,9 +43,25 @@ int	is_whitespace(char c)
 	return (c == 32 || (c >= 9 && c <= 13));
 }
 
-void	SkipWhiteSpaces(pars_T *pars)
+void	skipwhitespaces(t_pars *pars)
 {
 	while (pars->content[pars->i] && is_whitespace(pars->content[pars->i]))
 		pars->i++;
 	pars->c = pars->content[pars->i];
+}
+
+int	is_quotes(char c)
+{
+	if (c == '\'' || c == '\"')
+		return (1);
+	return (0);
+}
+
+int	check_spaces_and_red(t_pars *pars)
+{
+	if (pars->content[pars->i] && !is_whitespace(pars->content[pars->i])
+		&& !is_redirection(pars->content[pars->i])
+		&& pars->content[pars->i] != '\'' && pars->content[pars->i] != '\"')
+		return (1);
+	return (0);
 }

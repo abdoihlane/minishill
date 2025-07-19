@@ -1,39 +1,49 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ahabibi- <ahabibi-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/19 02:46:56 by ahabibi-          #+#    #+#             */
+/*   Updated: 2025/07/19 11:38:37 by ahabibi-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../mini.h"
 
-void	free_wlist(w_list **list)
+void	free_wlist(t_wlist **list)
 {
-	w_list	*temp;
-	w_list	*temp2;
-
-	temp = NULL;
-	temp2 = NULL;
-	temp = *list;
-	if (temp)
-	{
-		while (temp->next)
-		{
-			temp2 = temp->next;
-			if (temp)
-				free(temp);
-			temp = temp2;
-		}
-	}
-}
-void	free_Plist(pars_T **list)
-{
-	pars_T	*temp;
+	t_wlist	*curr;
+	t_wlist	*next;
 
 	if (!list || !*list)
 		return ;
-	temp = *list;
-	if (temp->content1)
+	curr = *list;
+	while (curr)
 	{
-		for (int i = 0; temp->content1[i]; i++)
-			free(temp->content1[i]);
-		free(temp->content1);
+		next = curr->next;
+		free(curr);
+		curr = next;
 	}
-	if (temp->content)
-		free(temp->content);
-	free(temp);
 	*list = NULL;
+}
+
+void	free_plist(t_pars **par)
+{
+	t_pars	*p;
+	int		i;
+
+	if (!par || !*par)
+		return ;
+	p = *par;
+	if (p->content1)
+	{
+		i = 0;
+		while (p->content1[i])
+			free(p->content1[i++]);
+		free(p->content1);
+	}
+	free(p);
+	*par = NULL;
 }
