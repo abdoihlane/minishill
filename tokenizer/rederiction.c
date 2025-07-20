@@ -6,7 +6,7 @@
 /*   By: ahabibi- <ahabibi-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 02:47:25 by ahabibi-          #+#    #+#             */
-/*   Updated: 2025/07/19 11:45:28 by ahabibi-         ###   ########.fr       */
+/*   Updated: 2025/07/20 22:49:13 by ahabibi-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	handle_redirection(t_cmd *list, t_token *token)
 {
 	if (!list->file)
 	{
-		list->file = malloc(sizeof(r_list));
+		list->file = malloc(sizeof(t_red_list));
 		if (!list->file)
 			return ;
 		list->file->content = NULL;

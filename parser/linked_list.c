@@ -6,7 +6,7 @@
 /*   By: ahabibi- <ahabibi-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 02:46:15 by ahabibi-          #+#    #+#             */
-/*   Updated: 2025/07/19 04:50:28 by ahabibi-         ###   ########.fr       */
+/*   Updated: 2025/07/20 22:49:13 by ahabibi-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,11 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (join);
 }
 
-r_list	*ccreate_node(char *value)
+t_red_list	*ccreate_node(char *value)
 {
-	r_list	*new_node;
+	t_red_list	*new_node;
 
-	new_node = malloc(sizeof(r_list));
+	new_node = malloc(sizeof(t_red_list));
 	if (!new_node)
 		return (NULL);
 	new_node->content = value;

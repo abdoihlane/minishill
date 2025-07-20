@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mini.h                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ahabibi- <ahabibi-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/20 22:51:56 by ahabibi-          #+#    #+#             */
+/*   Updated: 2025/07/20 23:08:01 by ahabibi-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINI_H
 # define MINI_H
 # include "./libft/libft.h"
@@ -6,6 +18,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+# define COLOR_RESET "\001\033[0m\002"
+# define COLOR_PINK "\001\033[38;2;255;105;180m\002"
 
 typedef struct PARSING_STRUCT
 {
@@ -26,38 +40,38 @@ typedef struct PARSING_STRUCT
 
 typedef struct REDIRECTION_list
 {
-	char *content; // file name
-	int inout;     // in or out (append) in = 1 out = 0;
+	char					*content;
+	int						inout;
 	struct REDIRECTION_list	*next;
+}							t_red_list;
 
-}							r_list;
+enum e_token
+{
+	TOKEN_quotes,
+	TOKEN_PIPE,
+	TOKEN_WORD,
+	TOKEN_REDIRECT_OUTPUT_AM,
+	TOKEN_HERDOC,
+	TOKEN_REDIRECT_INPUT,
+	TOKEN_REDIRECT_OUTPUT
+};
 
 typedef struct token_list
 {
+	enum e_token			type;
 	struct token_list		*next;
 	int						index;
-	enum					token
-	{
-		TOKEN_quotes,
-		TOKEN_PIPE,
-		TOKEN_WORD,
-		TOKEN_REDIRECT_OUTPUT_AM,
-		TOKEN_HERDOC,
-		TOKEN_REDIRECT_INPUT,
-		TOKEN_REDIRECT_OUTPUT,
-	} type;
 	char					*value;
 }							t_token;
 
 typedef struct t_cmd
 {
 	int						index;
-	int capacity;
-	char **array; // words splited by pipes
+	int						capacity;
+	char					**array;
 	char					*cmd;
-	int qflag; // single quote
-	// int dflag; // double quote
-	r_list *file; // any rederection
+	int						qflag;
+	t_red_list				*file;
 	struct t_cmd			*next;
 }							t_cmd;
 

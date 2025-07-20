@@ -6,7 +6,7 @@
 /*   By: ahabibi- <ahabibi-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 04:46:55 by ahabibi-          #+#    #+#             */
-/*   Updated: 2025/07/19 11:44:46 by ahabibi-         ###   ########.fr       */
+/*   Updated: 2025/07/20 23:09:30 by ahabibi-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void	call_all(char *in, t_wlist **wlist)
 	if (hardcodechecks(in) == 0)
 	{
 		printf("syntax error\n");
-		free(in);
 		return ;
 	}
 	if (in)
@@ -36,14 +35,12 @@ void	call_all(char *in, t_wlist **wlist)
 	commandornot(pars, wlist);
 	token = typesee(wlist);
 	splitit(token, &clist);
-	print_cmd_list(clist);
 	free_plist(&pars);
 }
 
 int	main(void)
 {
 	char	*in;
-	// char	*history_in;
 	t_wlist	*wlist;
 	t_pars	*pars;
 
@@ -51,13 +48,13 @@ int	main(void)
 	pars = NULL;
 	while (1)
 	{
-		in = readline("\001\033[38;2;255;105;180m\002➜  minishell \001\033[0m\002");
+		in = readline(COLOR_PINK
+				"➜ minishell" COLOR_RESET);
 		if (!in)
 			return (0);
 		else
 		{
 			call_all(in, &wlist);
-			// free(pars);
 			wlist = NULL;
 			pars = NULL;
 			free(in);

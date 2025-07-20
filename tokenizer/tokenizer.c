@@ -6,7 +6,7 @@
 /*   By: ahabibi- <ahabibi-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/19 02:42:20 by ahabibi-          #+#    #+#             */
-/*   Updated: 2025/07/19 11:48:38 by ahabibi-         ###   ########.fr       */
+/*   Updated: 2025/07/20 22:43:41 by ahabibi-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,30 +78,28 @@ int	add_token_node(t_wlist *begin, t_token **tokens, t_token **last, int *index)
 	return (1);
 }
 
-int count_cmd_args(t_token *start)
+int	count_cmd_args(t_token *start)
 {
-    int count = 0;
+	int	count;
 
-    while (start && start->type != TOKEN_PIPE)
-    {
-        if (start->type == TOKEN_WORD
-         || start->type == TOKEN_quotes)
-        {
-            count++;
-        }
-        else if (start->type == TOKEN_REDIRECT_INPUT
-              || start->type == TOKEN_REDIRECT_OUTPUT
-              || start->type == TOKEN_REDIRECT_OUTPUT_AM
-              || start->type == TOKEN_HERDOC)
-        {
-            // skip the next token (the filename), but do NOT count it
-            start = start->next;
-        }
-        // advance to next token
-        if (start)
-            start = start->next;
-    }
-    return (count);
+	count = 0;
+	while (start && start->type != TOKEN_PIPE)
+	{
+		if (start->type == TOKEN_WORD || start->type == TOKEN_quotes)
+		{
+			count++;
+		}
+		else if (start->type == TOKEN_REDIRECT_INPUT
+			|| start->type == TOKEN_REDIRECT_OUTPUT
+			|| start->type == TOKEN_REDIRECT_OUTPUT_AM
+			|| start->type == TOKEN_HERDOC)
+		{
+			start = start->next;
+		}
+		if (start)
+			start = start->next;
+	}
+	return (count);
 }
 
 void	commandornot(t_pars *pars, t_wlist **wlist)
