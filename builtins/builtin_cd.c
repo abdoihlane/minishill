@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 19:45:22 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/22 20:10:23 by salhali          ###   ########.fr       */
+/*   Updated: 2025/07/22 22:13:04 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+
 
 int builtin_cd(c_cmd *cmd, t_shell *shell)
 {
@@ -36,8 +38,10 @@ int builtin_cd(c_cmd *cmd, t_shell *shell)
             path = cmd->array[1]; // 3tini hadak path ndik lih
         // ila kan cd "" maybadl walo nkhalik f nafs path
         if(cmd->array[1] && cmd->qflag == 1)
+        {
             path = getcwd(current_dir, 1024);
-        // printf("path = %s\n", path);
+        }
+        printf("path = %s\n", path);
         if (path == NULL)
         {
             ft_putstr_fd("cd: HOME not set\n", 2);
@@ -50,6 +54,9 @@ int builtin_cd(c_cmd *cmd, t_shell *shell)
             ft_putstr_fd(path, 2);
             ft_putstr_fd("No such file or directory\n", 2);
             return (1);
+        }else
+        {
+            printf("Changed directory to: %s\n", path);
         }
 
         // Update PWD and OLDPWD environment variables

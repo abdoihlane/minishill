@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 17:09:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/22 19:56:26 by salhali          ###   ########.fr       */
+/*   Updated: 2025/07/22 21:40:25 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int is_builtin(c_cmd *cmd)
 
 int execute_builtin(c_cmd *cmd, t_shell *shell)
 {
+    printf("Executing builtin command: %s\n", cmd->cmd);
     if (ft_strcmp("echo", cmd->cmd) == 0)
         return (builtin_echo(cmd));
     else if (ft_strcmp("cd", cmd->cmd) == 0)
@@ -48,7 +49,7 @@ int execute_builtin(c_cmd *cmd, t_shell *shell)
         return builtin_export(cmd, shell);
     else if (ft_strcmp("unset", cmd->cmd) == 0)
         return (builtin_unset(cmd, shell));
-    if (ft_strcmp(cmd->array[0], "env") == 0)
+    if (ft_strcmp("env", cmd->cmd) == 0)
         return builtin_env(cmd, shell);
     else if (ft_strcmp("exit", cmd->cmd) == 0)
         builtin_exit(cmd, shell); // if your exit returns int

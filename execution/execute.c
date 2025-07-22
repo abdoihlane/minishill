@@ -79,7 +79,10 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
             }
             setup_redirections(clist);
             if (is_builtin(clist))
+            {
+                printf("Executing builtin command: %s\n", clist->cmd);
                 exit(execute_builtin(clist, shell));
+            }
             cmd_path = find_path(clist->array[0], envp);
             if (!cmd_path)
             {
