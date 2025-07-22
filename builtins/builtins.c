@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
+/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 17:09:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/17 16:27:10 by salah            ###   ########.fr       */
+/*   Updated: 2025/07/22 14:39:07 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,12 @@
 
 int is_builtin(c_cmd *cmd)
 {
-    if (!cmd || !cmd->array || !cmd->array[1])
-        return 0;
+    // printf("is_builtin called with cmd->array[0] = %s\n", cmd->array[0]);
+    // if (!cmd || !cmd->array || !cmd->array[1])
+    // {
+    //     printf("is_builtin: cmd or cmd->array is NULL\n");
+    //     return 0;
+    // }
     if (ft_strcmp(cmd->array[0], "echo") == 0)
         return 1;
     if (ft_strcmp(cmd->array[0], "cd") == 0)
@@ -23,8 +27,8 @@ int is_builtin(c_cmd *cmd)
     if (ft_strcmp(cmd->array[0], "pwd") == 0)
         return 1;
     if (ft_strcmp(cmd->array[0], "env") == 0)
-        return 1;
-    if (ft_strcmp(cmd->array[0], "export") == 0)
+        return (1);
+    if(ft_strcmp(cmd->array[0], "export") == 0)
         return(1);
     if (ft_strcmp(cmd->array[0], "unset") == 0)
         return 1;
@@ -41,7 +45,7 @@ int execute_builtin(c_cmd *cmd, t_shell *shell)
         return (builtin_cd(cmd, shell));
     else if (ft_strcmp("pwd", cmd->cmd) == 0)
         return (builtin_pwd());
-    else if (ft_strcmp(cmd->array[0], "export") == 0)
+    else if (ft_strcmp("export", cmd->array[0]) == 0)
         return builtin_export(cmd, shell);
     else if (ft_strcmp("unset", cmd->cmd) == 0)
         return (builtin_unset(cmd, shell));

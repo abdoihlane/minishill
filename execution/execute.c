@@ -57,7 +57,6 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
     char **filtered_args;
     char **envp = generate_envp_from_envlist(shell);
 
-
     while (clist)
     {
         if (clist->next)
@@ -80,10 +79,16 @@ void execute_cmds(c_cmd *clist, t_shell *shell)
             }
             setup_redirections(clist);
             if (is_builtin(clist))
+            {
+                printf("Executing builtin command: %s\n", clist->cmd);
                 exit(execute_builtin(clist, shell));
+            }
             cmd_path = find_path(clist->array[0], envp);
             if (!cmd_path)
+            {
+                printf("Command not found: %s\n", clist->array[0]);
                 exit(127);
+            }
             filtered_args = filter_empty_args(clist);
             execve(cmd_path, filtered_args, envp);
             exit(127);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
+/*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/17 16:48:52 by salah            ###   ########.fr       */
+/*   Updated: 2025/07/22 14:39:05 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,10 +123,13 @@ int main(int argc, char **argv, char **envp)
         splitit(token, &clist);
             // ...existing code...
         add_history(input_user);
-        if (clist != NULL && is_builtin(clist) != '\0' && clist->next == NULL && clist->file == NULL)
-            execute_builtin(clist, &shell);
-        else
-            execute_cmds(clist, &shell);
+        // if (clist != NULL && is_builtin(clist) != '\0' && clist->next == NULL && clist->file == NULL)
+		// {
+		// 	printf("is here !!\n");
+        //     execute_builtin(clist, &shell);
+		// }
+        // else
+        	execute_cmds(clist, &shell);
         free_wlist(&wlist);
         free_Plist(&pars);
         wlist = NULL;
