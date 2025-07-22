@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 17:09:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/22 14:39:07 by salhali          ###   ########.fr       */
+/*   Updated: 2025/07/22 19:45:22 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int execute_builtin(c_cmd *cmd, t_shell *shell)
         return (builtin_cd(cmd, shell));
     else if (ft_strcmp("pwd", cmd->cmd) == 0)
         return (builtin_pwd());
-    else if (ft_strcmp("export", cmd->array[0]) == 0)
+    else if (ft_strcmp("export", cmd->cmd) == 0)
         return builtin_export(cmd, shell);
     else if (ft_strcmp("unset", cmd->cmd) == 0)
         return (builtin_unset(cmd, shell));
