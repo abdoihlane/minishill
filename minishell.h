@@ -130,8 +130,6 @@ void            update_pwd_variables(t_shell *shell, char *old_pwd);
 int             handle_cd_error(char *path);
 char            *get_target_path(c_cmd *cmd, t_shell *shell, char *current_dir);
 int             get_array_length(char **array);
-
-
 int                 is_builtin(c_cmd *command);
 int                 execute_builtin(c_cmd *cmd, t_shell *shell);  // CORRECTED: c_cmd instead of t_command
 //                  Individual builtin implementations
@@ -139,7 +137,7 @@ void                builtin_exit(c_cmd *cmd, t_shell *shell);     // Exit shell
 int                 builtin_echo(c_cmd *cmd);                     // Echo command
 int                 builtin_pwd(void);                            // Print working directory
 int                 builtin_export(c_cmd *cmd, t_shell *shell);   // Export env variables
-int builtin_env(c_cmd *cmd, t_shell *shell);
+int                 builtin_env(c_cmd *cmd, t_shell *shell);
 int                 builtin_unset(c_cmd *cmd, t_shell *shell);    // Unset env variables
 //                  function utils check mul
 int                 is_numeric(const char *str);
@@ -172,9 +170,7 @@ char                **filter_empty_args(c_cmd *cmd);
 char                **generate_envp_from_envlist(t_shell *shell);
 char                *ft_strjoin_triple(char *a, char *b, char *c);
 int                 is_valid_var(const char *str);
-// void    heredoc_input(char *delimiter);
-
-void	sigint_handler(int sig);
-void sigint_heredoc(int sig);
+void                sigint_handler(int sig);
+void                sigint_heredoc(int sig);
 #endif
 
