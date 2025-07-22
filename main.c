@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/22 14:39:05 by salhali          ###   ########.fr       */
+/*   Updated: 2025/07/22 19:56:51 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	heredoc_input(char *delimiter, r_list *head)
 {
-
 	char	*line = NULL;
     char    *expanded = NULL;
 	size_t	len = 0;

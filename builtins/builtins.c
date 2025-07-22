@@ -6,7 +6,7 @@
 /*   By: salhali <salhali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 17:09:02 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/22 19:45:22 by salhali          ###   ########.fr       */
+/*   Updated: 2025/07/22 19:56:26 by salhali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 int is_builtin(c_cmd *cmd)
 {
-    // printf("is_builtin called with cmd->array[0] = %s\n", cmd->array[0]);
     // if (!cmd || !cmd->array || !cmd->array[1])
     // {
     //     printf("is_builtin: cmd or cmd->array is NULL\n");
@@ -50,7 +49,7 @@ int execute_builtin(c_cmd *cmd, t_shell *shell)
     else if (ft_strcmp("unset", cmd->cmd) == 0)
         return (builtin_unset(cmd, shell));
     if (ft_strcmp(cmd->array[0], "env") == 0)
-        return builtin_env(shell);
+        return builtin_env(cmd, shell);
     else if (ft_strcmp("exit", cmd->cmd) == 0)
         builtin_exit(cmd, shell); // if your exit returns int
     return (1); // Error
