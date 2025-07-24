@@ -3,88 +3,60 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 11:40:42 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/22 22:04:35 by root             ###   ########.fr       */
+/*   Updated: 2025/07/23 19:10:25 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	heredoc_input(char *delimiter, r_list *head)
+t_env	*create_env_node_from_pair(char *env_str, char *equal_pos)
 {
-	char	*line = NULL;
-    char    *expanded = NULL;
-	size_t	len = 0;
-    signal(SIGINT, sigint_heredoc);
+	t_env	*node;
 
-	int		fd = open(".heredoc_tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (fd < 0)
-	{
-		perror("heredoc open");
-		return;
-	}
-
-	while (1)
-	{
-		write(1, "> ", 2);
-		ssize_t nread = getline(&line, &len, stdin);
-		if (nread == -1)
-			break;
-
-		if (line[nread - 1] == '\n')
-			line[nread - 1] = '\0';
-
-		if (ft_strcmp(line, delimiter) == 0)
-		{
-			free(line);      //  free line
-			line = NULL;     //  reset line bach ma n3awdch nfreeeha
-			break;
-		}
-		expanded = expand_variables(line);
-		write(fd, expanded, ft_strlen(expanded));
-		write(fd, "\n", 1);
-		free(expanded);
-	}
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
-	head->content = ft_strdup(".heredoc_tmp");
-	head->inout = 0; //  set inout to 4 for heredoc
-	if (line)               //  free ghir ila mazal line ma tfreeatch
-		free(line);
-	close(fd);
+	*equal_pos = '\0';
+	node = malloc(sizeof(t_env));
+	if (!node)
+		return (NULL);
+	node->key = ft_strdup(env_str);
+	node->value = ft_strdup(equal_pos + 1);
+	*equal_pos = '=';
+	node->next = NULL;
+	return (node);
 }
 
 t_env *convert_envp_to_envlist(char **envp)
 {
-	t_env *head = NULL;
-	t_env *last = NULL;
-    int i = 0;
+	t_env	*head;
+	t_env	*last;
+	t_env	*node;
+	char	*equal;
+	int		i;
+
+	head = NULL;
+	last = NULL;
+	i = 0;
 	while (envp[i])
 	{
-		char *equal = ft_strchr(envp[i], '=');
+		equal = ft_strchr(envp[i], '=');
 		if (!equal)
+		{
+			i++;
 			continue;
-
-		t_env *node = malloc(sizeof(t_env));
+		}
+		node = create_env_node_from_pair(envp[i], equal);
 		if (!node)
-			return NULL;
-
-		*equal = '\0'; // temporarily break key=value
-		node->key = ft_strdup(envp[i]);
-		node->value = ft_strdup(equal + 1);
-		*equal = '=';  // restore original string
-
-		node->next = NULL;
+			return (NULL);
 		if (!head)
 			head = node;
 		else
 			last->next = node;
 		last = node;
-        i++;
+		i++;
 	}
-	return head;
+	return (head);
 }
 
 

@@ -6,7 +6,7 @@
 #    By: salah <salah@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/05/19 17:02:36 by salhali           #+#    #+#              #
-#    Updated: 2025/07/17 15:51:10 by salah            ###   ########.fr        #
+#    Updated: 2025/07/24 00:37:29 by salah            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,6 +36,7 @@ SRC = builtins/builtin_echo.c \
 			utils/memory.c \
 			helper.c \
 			helper1.c \
+			heredoc_input.c \
 			execution/execute.c \
 			execution/redirections.c \
 			execution/path.c \

@@ -6,17 +6,35 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 20:17:29 by salhali           #+#    #+#             */
-/*   Updated: 2025/06/22 00:20:06 by salah            ###   ########.fr       */
+/*   Updated: 2025/07/23 19:01:10 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	add_new_env_node(t_shell *shell, const char *key, const char *value)
+{
+	t_env	*tmp;
+	t_env	*new;
+
+	new = create_env_node((char *)key, (char *)value);
+	if (!new)
+		return ;
+	if (shell->envv == NULL)
+		shell->envv = new;
+	else
+	{
+		tmp = shell->envv;
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = new;
+	}
+}
+
 void update_env_list(t_shell *shell, const char *key, const char *value)
 {
     t_env *tmp = shell->envv;
 
-    // Check if key already exists in env list
     while (tmp)
     {
         if (ft_strcmp(tmp->key, key) == 0)
@@ -30,22 +48,7 @@ void update_env_list(t_shell *shell, const char *key, const char *value)
         }
         tmp = tmp->next;
     }
-
-    // Create new node if key doesn't exist
-    t_env *new = create_env_node((char *)key, (char *)value);
-    if (!new)
-        return ; // optionally handle malloc failure
-
-    // Add new node to env list
-    if (shell->envv == NULL)
-        shell->envv = new;
-    else
-    {
-        tmp = shell->envv;
-        while (tmp->next)
-            tmp = tmp->next;
-        tmp->next = new;
-    }
+    add_new_env_node(shell, key, value);
 }
 
 t_env *create_env_node(char *key, char *value)
@@ -65,6 +68,7 @@ t_env *create_env_node(char *key, char *value)
     new->next = NULL;
     return new;
 }
+
 char *get_env_value_ll(t_env *env, const char *key)
 {
     while (env)
@@ -75,6 +79,7 @@ char *get_env_value_ll(t_env *env, const char *key)
     }
     return NULL;
 }
+
 void print_env(char **env)
 {
     int i = 0;

@@ -6,47 +6,60 @@
 /*   By: salah <salah@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/01 20:20:16 by salhali           #+#    #+#             */
-/*   Updated: 2025/07/09 18:39:06 by salah            ###   ########.fr       */
+/*   Updated: 2025/07/23 19:04:31 by salah            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+t_env	*create_env_from_string(char *env_str, char *equal_pos)
+{
+	t_env	*new;
+
+	*equal_pos = '\0';
+	new = malloc(sizeof(t_env));
+	if (!new)
+		return (NULL);
+	new->key = ft_strdup(env_str);
+	new->value = ft_strdup(equal_pos + 1);
+	new->next = NULL;
+	*equal_pos = '=';
+	return (new);
+}
+
 void build_env_list(t_shell *shell, char **envp)
 {
-	t_env *new;
-	t_env *last = NULL;
-	char *equal;
+	t_env	*new;
+	t_env	*last;
+	char	*equal;
+	int		i;
 
-	int i = 0;
+	last = NULL;
+	i = 0;
 	while (envp[i])
 	{
 		equal = ft_strchr(envp[i], '=');
 		if (equal)
 		{
-			*equal = '\0';
-			new = malloc(sizeof(t_env));
+			new = create_env_from_string(envp[i], equal);
 			if (!new)
-				return;
-			new->key = ft_strdup(envp[i]);
-			new->value = ft_strdup(equal + 1);
-			new->next = NULL;
-
+				return ;
 			if (!shell->envv)
 				shell->envv = new;
 			else
 				last->next = new;
 			last = new;
-			*equal = '=';
-			i++;
 		}
+		i++;
 	}
 }
 
 void update_env_variable(t_shell *shell, const char *name, const char *value)
 {
-	t_env *tmp = shell->envv;
+	t_env	*tmp;
+	t_env	*new;
 
+	tmp = shell->envv;
 	while (tmp)
 	{
 		if (ft_strcmp(tmp->key, name) == 0)
@@ -57,9 +70,7 @@ void update_env_variable(t_shell *shell, const char *name, const char *value)
 		}
 		tmp = tmp->next;
 	}
-
-	// variable not found → add it
-	t_env *new = malloc(sizeof(t_env));
+	new = malloc(sizeof(t_env));
 	if (!new)
 		return;
 	new->key = ft_strdup(name);

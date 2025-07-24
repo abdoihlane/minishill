@@ -125,11 +125,10 @@ void call_all(char *input_user, w_list **wlist);
 // ------ EXECUTION FUNCTIONS --------  //
 
 //                  Main builtin functions
-int             builtin_cd(c_cmd *cmd, t_shell *shell);       // Change directory
-void            update_pwd_variables(t_shell *shell, char *old_pwd);
-int             handle_cd_error(char *path);
-char            *get_target_path(c_cmd *cmd, t_shell *shell, char *current_dir);
-int             get_array_length(char **array);
+int                 builtin_cd(c_cmd *cmd, t_shell *shell);
+char                *get_cd_path(c_cmd *cmd, t_shell *shell);
+int                 handle_cd_change(char *path, char *current_dir, t_shell *shell);
+int                 get_array_length(char **array);
 int                 is_builtin(c_cmd *command);
 int                 execute_builtin(c_cmd *cmd, t_shell *shell);  // CORRECTED: c_cmd instead of t_command
 //                  Individual builtin implementations
@@ -152,17 +151,21 @@ void                print_env(char **env);
 void                print_env_sorted(t_env *env);
 char                *get_env_value_ll(t_env *env, const char *key);
 t_env               *create_env_node(char *key, char *value);
+t_env               *create_env_from_string(char *env_str, char *equal_pos);
 void                build_env_list(t_shell *shell, char **envp);
 void                update_env_list(t_shell *shell, const char *key, const char *value);
 int                 ft_strcmp_echo(const char *s);
 char                **function_split_env(t_shell *shell);
 void                add_env_node(t_env **head, t_env *new);
+t_env               *create_env_node_from_pair(char *env_str, char *equal_pos);
+t_env               *convert_envp_to_envlist(char **envp);
 char	            *find_path(char *cmd, char **envp);
 void	            ft_free(char **str);
 void	            execute(char *cmd, char **env);
 void                free_env(char **env); //check env is free or not
 void                setup_redirections(c_cmd *cmd);
 void                execute_cmds(c_cmd *clist, t_shell *shell);
+void                write_heredoc_line(int fd, char *line);
 void                heredoc_input(char *delimiter, r_list *head);
 void                ft_free_2d_array(char **arr);
 char                *get_env_value(char **env, const char *key);
@@ -172,5 +175,6 @@ char                *ft_strjoin_triple(char *a, char *b, char *c);
 int                 is_valid_var(const char *str);
 void                sigint_handler(int sig);
 void                sigint_heredoc(int sig);
+void	            add_new_env_node(t_shell *shell, const char *key, const char *value);
 #endif
 
